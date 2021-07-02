@@ -8,6 +8,12 @@ topic: "Learning Theory"
 conf: "NeurIPS"
 ---
 
+This post is based from the book: Pattern Recognition and Machine Learning, where we aim to give and expands most proofs and interesting results regarding Gaussian distributions, together with some results that makes the complete picture. 
+
+## Gaussian Definition and Fundamental Integral
+
+**Definition (Single Variable Gaussian Distribution)**: The Gaussian distribution is defined as 
+
 <div>
 \begin{equation*}
 \newcommand{\dby}{\ \mathrm{d}}\newcommand{\argmax}[1]{\underset{#1}{\arg\max \ }}\newcommand{\argmin}[1]{\underset{#1}{\arg\min \ }}\newcommand{\const}{\text{const.}}\newcommand{\bracka}[1]{\left( #1 \right)}\newcommand{\brackb}[1]{\left[ #1 \right]}\newcommand{\brackc}[1]{\left\{ #1 \right\}}\newcommand{\brackd}[1]{\left\langle #1 \right\rangle}\newcommand{\correctquote}[1]{``#1''}\newcommand{\norm}[1]{\left\lVert#1\right\rVert}\newcommand{\abs}[1]{\left|#1\right|}
@@ -15,20 +21,175 @@ conf: "NeurIPS"
 \end{equation*}
 </div>
 
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+where $\mu$ is a parameter called mean, while $\sigma$ is a parameter called standard derivation. However, we also define $\sigma^2$ as variance. Finally, the standard normal distribution is Gaussian distribution with mean $0$ and variance $1$. 
 
-### Where does it come from?
+**Proposition (Gaussian integral)**: The integration of $\exp(-x^2)$ is equal to
 
-Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+<div>
+\begin{equation*}
+    \int^\infty_{-\infty}\exp(-x^2)\dby x = \sqrt{\pi}
+\end{equation*}
+</div>
 
-The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+We can use this identity to find the normalizing factor of Gaussian distribution.
 
-### Why do we use it?
+_Proof_: We will transform the problem into $2$D polar coordinate system, which make the integration easier. 
 
-It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+<div>
+\begin{equation*}
+\begin{aligned}
+    \bracka{\int^\infty_{-\infty}\exp(-x^2)\dby x}^2 &= \bracka{\int^\infty_{-\infty}\exp(-x^2)\dby x}\bracka{\int^\infty_{-\infty}\exp(-y^2)\dby y} \\
+&= \int^\infty_{-\infty}\int^\infty_{-\infty}\exp\bracka{-(x^2+y^2)}\dby x\dby y \\
+&= \int^{2\pi}_{0}\int^\infty_{0}\exp\bracka{-r^2}r\dby r\dby\theta \\
+&= 2\pi\int^\infty_{0}\exp\bracka{-r^2}r\dby r = \pi\int^{0}_{-\infty} \exp\bracka{u}\dby u = \pi
+\end{aligned}
+\end{equation*}
+</div>
 
-### Where can I get some?
+Please note that we use $u$-substution with $-r^2$, in the last step. $\tag*{$\Box$}$
 
-There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
+<span class="anchor" id="corollary-1"></span>**Corollary (Normalization of Gaussian Distribution)**: We consider the integration
+<div>
+\begin{equation*}
+    \int^\infty_{-\infty}\exp\left\{ -\frac{(x-\mu)^2}{2\sigma^2}\right\} \dby x = \sqrt{2\pi\sigma^2}
+\end{equation*}
+</div>
 
-> This content was copied from http://www.lipsum.com/ as an example of post article.
+*Proof*: Starting by setting $z=x-\mu$, which we have:
+<div>
+\begin{equation*}
+\begin{aligned}
+    \int^\infty_{-\infty}\exp\left\{ -\frac{z^2}{2\sigma^2}\right\} \dby z &= \sigma\sqrt{2} \int^\infty_{-\infty}\frac{1}{\sqrt{2}\sigma}\exp\left\{ -\frac{z^2}{2\sigma^2}\right\} \dby z \\
+&= \sigma\sqrt{2} \int^\infty_{-\infty} \exp(-y^2)\dby = \sigma\sqrt{2\pi}
+\end{aligned}
+\end{equation*}
+</div>
+where we have $y = z/(\sqrt{2}\sigma)$, and we finishes the proof. $\tag*{$\Box$}$
+
+## Statistics of Single Variable Gaussian Distribution
+
+**Definition (Odd Function)**: The function $f(x)$ is an odd function iff $f(-x) = -x$
+
+<span class="anchor" id="lemma-1"></span>**Lemma (Odd Function Integration):** The integral over $[-a, a]$, where $a\in\mathbb{R}^+$ of an odd function $f(x)$ is $0$ i.e
+<div>
+\begin{equation*}\int^a_{-a}f(x)\dby x = 0\end{equation*}
+</div>
+
+_Proof_: We can see that:
+<div>
+\begin{equation*}
+\begin{aligned}
+    \int^a_{-a}f(x)\dby x &= \int^0_{-a}f(x)\dby x + \int^a_{0}f(x)\dby x \\
+    &= \int^a_{0}f(-x)\dby x + \int^a_{0}f(x)\dby x \\
+    &= -\int^a_{0}f(x)\dby x + \int^a_{0}f(x)\dby x = 0
+\end{aligned}
+\end{equation*}
+</div>
+
+Thus complete the proof $\tag*{$\Box$}$
+
+**Proposition (Mean of Gaussian)**: The expectation $\mathbb{E}_{x}[x]$ of nornally distributed Gaussian is $\mu$
+
+_Proof_: Let's consider the following integral 
+<div>
+\begin{equation*}
+\begin{aligned}
+    \frac{1}{\sqrt{2\pi\sigma^2}}\int^\infty_{-\infty} \exp\bracka{-\frac{(x-\mu)^2}{2\sigma^2}}x\dby x
+\end{aligned}
+\end{equation*}
+</div>
+We will set $z = x - \mu$, where we have:
+<div>
+\begin{equation*}
+\begin{aligned}
+    \frac{1}{\sqrt{2\pi\sigma^2}}&\int^\infty_{-\infty} \exp\bracka{-\frac{z^2}{2\sigma^2}}(z+\mu)\dby x \\
+    &= \frac{1}{\sqrt{2\pi\sigma^2}}\Bigg[ \underbrace{\int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}z\dby z}_{I_1} + \underbrace{\int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}\mu\dby z}_{I_2} \Bigg]
+\end{aligned}
+\end{equation*}
+</div>
+Let's consider $I_1$, where it is clear that 
+<div>
+\begin{equation*}
+    g(x) = \exp\bracka{-\frac{z^2}{2\sigma^2}}z = -\bracka{-\exp\bracka{-\frac{(-z)^2}{2\sigma^2}}z} = -g(-x)
+\end{equation*}
+</div>
+Thus the function $g(x)$ is and odd function. Therefore, making the integration $I_1$ vanishes to $0$. Please see the <a href="#lemma-1">Lemma</a> above for the proof. Now, for the second integration, we can simply recall the <a href="#corollary-1">normalization result</a> of the Gaussian, where
+<div>
+\begin{equation*}
+    \int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}\mu\dby z = \mu\int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}\dby z = \mu\sqrt{2\pi\sigma^2}
+\end{equation*}
+</div>
+Finally, we have
+<div>
+\begin{equation*}
+\begin{aligned}
+    \frac{1}{\sqrt{2\pi\sigma^2}}\int^\infty_{-\infty} \exp\bracka{-\frac{z^2}{2\sigma^2}}(z+\mu)\dby x = \frac{1}{\sqrt{2\pi\sigma^2}}\Bigg[ 0 + \mu\sqrt{2\pi\sigma^2} \Bigg] = \mu
+\end{aligned}
+\end{equation*}
+</div>
+Thus complete the proof. $\tag*{$\Box$}$
+
+**Lemma**: The variance $\operatorname{var}(x) = \mathbb{E}[(x - \mu)^2]$ is equal to $\mathbb{E}[x^2] - \mathbb{E}[x]^2$
+
+_Proof_: This is an application of expanding the definition
+<div>
+\begin{equation*}
+\begin{aligned}
+    \mathbb{E}[(x - \mu)^2] &= \mathbb{E}[x^2 -2x\mu + \mu^2] \\
+    &= \mathbb{E}[x^2] - 2\mathbb{E}[x]\mu + \mathbb{E}[\mu^2] \\
+    &= \mathbb{E}[x^2] - 2\mathbb{E}[x]^2 + \mathbb{E}[x]^2 \\
+    &= \mathbb{E}[x^2] - \mathbb{E}[x]^2 \\
+\end{aligned}
+\end{equation*}
+</div>
+$\tag*{$\Box$}$
+
+**Proposition**: The variance of normal distribution is $\sigma^2$
+
+_Proof_: Let's consider the following equation, where we set $z = x-\mu$:
+<div>
+\begin{equation*}
+\begin{aligned}
+    \frac{1}{\sqrt{2\pi\sigma^2}}& \int^\infty_{-\infty} \exp\bracka{-\frac{(x-\mu)^2}{2\sigma^2}}x^2\dby x  = \frac{1}{\sqrt{2\pi\sigma^2}} \int^\infty_{-\infty} \exp\bracka{-\frac{z^2}{2\sigma^2}}(z+\mu)^2\dby z \\
+    &=\frac{1}{\sqrt{2\pi\sigma^2}}\brackb{\int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}z^2\dby z + \int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}2\mu z\dby z + \int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}\mu^2\dby z } \\
+    &=\frac{1}{\sqrt{2\pi\sigma^2}}\brackb{\int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}z^2\dby z + 0 + \mu^2\sqrt{2\pi\sigma^2} \dby z }
+\end{aligned}
+\end{equation*}
+</div>
+Now let's consider the first integral, please note that
+<div>
+\begin{equation*}
+    \frac{d}{dz} \exp\bracka{-\frac{z^2}{2\sigma^2}} = \exp\bracka{-\frac{z^2}{2\sigma^2}}\bracka{-\frac{z}{\sigma^2}}
+\end{equation*}
+</div>
+So we can perform an integration by-part considering $u=z$ and $dv = \exp\bracka{-\frac{z^2}{2\sigma^2}}\bracka{-\frac{z}{\sigma^2}}$:
+<div>
+\begin{equation*}
+\begin{aligned}
+    \int^\infty_{-\infty}&\exp\bracka{-\frac{z^2}{2\sigma^2}}z^2\dby z = -\sigma^2\int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}\bracka{-\frac{z}{\sigma^2}}z\dby z \\
+    &= -\sigma^2\brackb{\left.z\exp\bracka{-\frac{z^2}{2\sigma^2}}\right|^\infty_{-\infty} - \int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}\dby z} \\
+    &= -\sigma^2[0 - \sqrt{2\pi\sigma^2}] = \sigma^2\sqrt{2\pi\sigma^2}
+\end{aligned}
+\end{equation*}
+</div>
+To show that the evaluation on the left-hand side is zero, we have
+<div>
+\begin{equation*}
+\begin{aligned}
+    \lim_{z\rightarrow\infty} z\exp\bracka{-\frac{z^2}{2\sigma^2}} &- \lim_{z\rightarrow-\infty} z\exp\bracka{-\frac{z^2}{2\sigma^2}} \\
+    &= 0 - \lim_{z\rightarrow-\infty}1\cdot\exp\bracka{-\frac{x^2}{2\sigma^2}}\bracka{-\frac{\sigma^2}{z}} \\
+    &= 0-0 = 0
+\end{aligned}
+\end{equation*}
+</div>
+The first equality comes from L'Hospital's rule. Combinding the results:
+<div>
+\begin{equation*}
+\begin{aligned}
+    \mathbb{E}[x^2] &- \mathbb{E}[x]^2 = \sigma^2 + \mu^2 - \mu^2 = \sigma^2
+\end{aligned}
+\end{equation*}
+</div>
+Thus complete the proof. $\tag*{$\Box$}$
+
+
