@@ -3,7 +3,7 @@ title_left    : "Phu's "
 title_right   : "Blog" # default: ""
 description   : "Some Technical Writing on Machine Learning and Others"
 keywords      : "Jekyll, theme, free, download, SEO, blog, web, minimalist, thinkspace"
-url           : https://phutoast.github.io/ # site url
+url           : https://phutoast.github.io # site url
 baseurl       : "" # apply repo name like "/myproject" if used under gh-pages branch, else (under master branch) just leave empty/blank
 cover         : "" # image uri like logo/cover image for site seo
 
@@ -20,6 +20,11 @@ highlighter : rouge
 
 source      : ./
 destination : ./_site
+
+collections:
+  notes:
+    output: true
+    permalink: /:collection/:name
 
 # Sass configuration
 sass:
@@ -41,6 +46,8 @@ navbar:
     title: About
   - slug : blog
     title: Blog
+  - slug : papers
+    title: Papers Notes
 
 exclude:
   - "gulp"
