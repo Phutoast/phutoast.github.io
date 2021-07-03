@@ -25,6 +25,12 @@ collections:
   notes:
     output: true
     permalink: /:collection/:name
+  studies:
+    output: true
+    permalink: /:collection/:name
+  others:
+    output: true
+    permalink: /:collection/:name
 
 # Sass configuration
 sass:
@@ -48,6 +54,10 @@ navbar:
     title: Blog
   - slug : papers
     title: Papers Notes
+  - slug : study
+    title: Study Notes
+  - slug : others
+    title: Other Notes
 
 exclude:
   - "gulp"
