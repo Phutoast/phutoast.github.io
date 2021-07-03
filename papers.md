@@ -3,8 +3,6 @@ layout: page
 permalink: /papers/
 ---
 
-### Paper Notes
-
 <section class="post-list">
   <div class="container">
     {% assign topics =  site.notes | map: 'topic' | join: ','  | split: ',' | uniq %}
