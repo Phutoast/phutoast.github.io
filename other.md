@@ -3,6 +3,9 @@ layout: page
 permalink: /others/
 ---
 
+### Other Notes
+
+
 <section class="post-list">
   <div class="container">
     {% assign topics =  site.others | map: 'subject' | join: ','  | split: ',' | uniq %}

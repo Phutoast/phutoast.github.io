@@ -3,6 +3,8 @@ layout: page
 permalink: /studies/
 ---
 
+### Study Notes
+
 <section class="post-list">
   <div class="container">
     {% assign topics =  site.studies | map: 'subject' | join: ','  | split: ',' | uniq %}
