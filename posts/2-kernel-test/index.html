@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="author-name-here">
+<meta name="dcterms.date" content="2023-11-28">
+<meta name="description" content="A cheat overview of the use of kernel method to perform high dimensional statistical test.">
+
+<title>Phu’s Website - Kernel Statistical Test</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Phu’s Website</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../writings.html">
+ <span class="menu-text">Writings</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../works.html">
+ <span class="menu-text">Works</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../miscellaneous.html">
+ <span class="menu-text">Miscellaneous</span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Kernel Statistical Test</h1>
+                  <div>
+        <div class="description">
+          A cheat overview of the use of kernel method to perform high dimensional statistical test.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">Machine Learning</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>author-name-here </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 28, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#kernel-testing" id="toc-kernel-testing" class="nav-link active" data-scroll-target="#kernel-testing">Kernel Testing</a>
+  <ul class="collapse">
+  <li><a href="#quick-introduction-to-rkhs" id="toc-quick-introduction-to-rkhs" class="nav-link" data-scroll-target="#quick-introduction-to-rkhs">Quick Introduction to RKHS</a></li>
+  <li><a href="#interlude-why-kernel-in-statistical-testing" id="toc-interlude-why-kernel-in-statistical-testing" class="nav-link" data-scroll-target="#interlude-why-kernel-in-statistical-testing">Interlude (Why Kernel in Statistical Testing?)</a></li>
+  <li><a href="#statistical-testing-with-kernel-method" id="toc-statistical-testing-with-kernel-method" class="nav-link" data-scroll-target="#statistical-testing-with-kernel-method">Statistical Testing with Kernel Method</a>
+  <ul class="collapse">
+  <li><a href="#mean-embedding" id="toc-mean-embedding" class="nav-link" data-scroll-target="#mean-embedding">Mean Embedding</a></li>
+  <li><a href="#maximum-mean-discrepancy-mmd" id="toc-maximum-mean-discrepancy-mmd" class="nav-link" data-scroll-target="#maximum-mean-discrepancy-mmd">Maximum Mean Discrepancy (MMD)</a></li>
+  </ul></li>
+  <li><a href="#hilbert-schmidt-indepdent-criterion" id="toc-hilbert-schmidt-indepdent-criterion" class="nav-link" data-scroll-target="#hilbert-schmidt-indepdent-criterion">Hilbert-Schmidt Indepdent Criterion</a>
+  <ul class="collapse">
+  <li><a href="#preliminary-defintions-covariance-operators" id="toc-preliminary-defintions-covariance-operators" class="nav-link" data-scroll-target="#preliminary-defintions-covariance-operators">Preliminary Defintions + Covariance Operators</a></li>
+  <li><a href="#definitionpropertiesestimation" id="toc-definitionpropertiesestimation" class="nav-link" data-scroll-target="#definitionpropertiesestimation">Definition/Properties/Estimation</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="kernel-testing" class="level1">
+<h1>Kernel Testing</h1>
+<p>In this document, I would like to explain how the MMD and HSIC are derived (roughly). We will start with the brief introduction to RKHS, and then moving on to the statistical testing procedures. This is based on <a href="https://github.com/Phutoast/UCL-CSML-Notes/blob/main/adv-topic-in-ml/adv-topic.pdf">lecture note</a> of the course <a href="http://www.gatsby.ucl.ac.uk/~gretton/coursefiles/rkhscourse.html">Reproducing kernel Hilbert spaces in Machine Learning</a></p>
+<section id="quick-introduction-to-rkhs" class="level2">
+<h2 class="anchored" data-anchor-id="quick-introduction-to-rkhs">Quick Introduction to RKHS</h2>
+<p>We recall that the Hilbert space (HS) is a vector space that are equipped with an inner product between vectors and returns a scalar result. Reproducing Kernel HS (RKHS) is the Hilbert spaces that is equipped with the a kernel (that is constructed by the non-unique feature maps). Let’s unpack this, by starting from the definition of kernel</p>
+<blockquote class="blockquote">
+<p><strong>Definition (Kernel):</strong> Given the non-empty set <span class="math inline">\(\mathcal{X}\)</span>, we define a <em>kernel</em> to be <span class="math inline">\(k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}\)</span> such that there is a Hilber space <span class="math inline">\(\mathcal{H}\)</span> and a function (called <em>feature map</em>) <span class="math inline">\(\phi:\mathcal{X}\rightarrow\mathcal{H}\)</span> where: <span class="math display">\[k(x, y) = \langle \phi(x), \phi(y)\rangle_\mathcal{H}\]</span> Noted that vector space <span class="math inline">\(\mathcal{H}\)</span> doesn’t need to be finite dimension (and so it can have infinite dimension i.e a function like object).</p>
+</blockquote>
+<p>The good example of feature maps that doesn’t have to be unique is when:</p>
+<p><span class="math display">\[
+\phi_1(x) = x \qquad \phi_2(x) = \begin{bmatrix}x/\sqrt{2} \\ x/\sqrt{2}\end{bmatrix}
+\]</span></p>
+<p>We have the following way to construct a new kernel from the old one, given the fact that <span class="math inline">\(k_1\)</span> and <span class="math inline">\(k_2\)</span> are kernels, then we can show that, for any <span class="math inline">\(x, y\in\mathcal{X}\)</span>:</p>
+<ul>
+<li><span class="math inline">\(k_1(x, y)+k_2(x, y)\)</span></li>
+<li><span class="math inline">\(k_1(x, y)*k_2(x, y)\)</span></li>
+<li>For <span class="math inline">\(a\in\mathbb{R}\)</span>, such that <span class="math inline">\(ak_1(x,y)\)</span></li>
+<li>For any function <span class="math inline">\(f:\mathcal{X}\rightarrow\mathcal{X}'\)</span> (can be neural network or any kind of functions) and kernel <span class="math inline">\(k':\mathcal{X}'\times\mathcal{X}'\rightarrow\mathbb{R}\)</span>, such that <span class="math inline">\(k'(\phi(x), \phi(y))\)</span></li>
+</ul>
+<p>are all kernel. With this would means that the following function <span class="math inline">\(k(x, x') = (c + \langle x, x'\rangle)^m\)</span> is also a kernel, or if we have a function that admits Taylor series <span class="math inline">\(f\)</span> (with convergences properties etc.), then <span class="math inline">\(f(\langle x, x'\rangle)\)</span> is also a kernel.</p>
+<p>Now, we are ready to define the RKHS, in which it is a special Hilbert space with a special kind of kernel that satisfies additional</p>
+<blockquote class="blockquote">
+<p><strong>Definition (Reproducing Kernel Hilber Space):</strong> Given a Hilbert space <span class="math inline">\(\mathcal{H}\)</span> of <span class="math inline">\(\mathbb{R}\)</span> valued functions on non-empty set <span class="math inline">\(\mathcal{X}\)</span>, the kernel <span class="math inline">\(k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}\)</span> is called <em>reproducing</em> and <span class="math inline">\(\mathcal{H}\)</span> is called RKHS if:</p>
+<ul>
+<li>For all <span class="math inline">\(x\in\mathcal{X}\)</span>, <span class="math inline">\(k(\cdot, x) \in\mathcal{H}\)</span>, then <span class="math inline">\(k(\cdot, x)\in\mathcal{H}\)</span></li>
+<li>For all <span class="math inline">\(x\in\mathcal{X}\)</span>, <span class="math inline">\(\langle{f(\cdot), k(\cdot,x)\rangle}_\mathcal{H} = f(x)\)</span></li>
+</ul>
+</blockquote>
+<p>Given the defintion, one can see that:</p>
+<p><span class="math display">\[
+\langle k(\cdot, x), k(\cdot, y)\rangle_\mathcal{H} = k(x, y)
+\]</span></p>
+<p>which means that <span class="math inline">\(k(\cdot,x)\)</span> for any <span class="math inline">\(x\in\mathcal{X}\)</span> can be seen as the feature map (recall that it doesn’t have to be unique), we will call this a <em>canonical feature map</em>.</p>
+<p>We also have the follows result that illustrate why RKHS is preferable compared to the normal HS of functions.</p>
+<blockquote class="blockquote">
+<p><strong>Advanced Topics:</strong> Intuitively, we just say that the functions in RKHS acts “smoothly” and “predictably”, in the sense that: - If the distance between functions <span class="math inline">\(\|f-g\|_\mathcal{H}\)</span> is close to each other then its pointwise evaluation <span class="math inline">\(|f(x)-g(x)|\)</span> for any <span class="math inline">\(x\)</span> would also be close to each other. - This can be shown by the fact that the HS <span class="math inline">\(\mathcal{H}\)</span> has reproducing kernel iff the evaluation operator (defined as <span class="math inline">\(\delta_x : \mathcal{H}\rightarrow\mathbb{R}\)</span> where <span class="math inline">\(\delta_x(f)=f(x)\)</span>) is bounded i.e <span class="math inline">\(|\delta_x(f)|\le \lambda_x\|f\|_\mathcal{H}\)</span> for positive constant <span class="math inline">\(\lambda_x\in\mathbb{R}\)</span> (the proof uses the Riesz representation theorem)</p>
+</blockquote>
+<p>Furthermore, if the kernel satisfies the special property, then there is going to be an RHKS that is equipped with the given kernel as:</p>
+<blockquote class="blockquote">
+<p><strong>Theorem (Moore-Aronszajn):</strong> A symmetric function <span class="math inline">\(k:\mathcal{X}\times\mathcal{X}\rightarrow \mathbb{R}\)</span> is positive definite if: for all <span class="math inline">\(a_1,a_2,\dots,a_n\in \mathbb{R}\)</span> and for all <span class="math inline">\(x_1,x_2,\dots,x_n\in\mathcal{X}\)</span>: <span class="math display">\[\sum^n_{i=1}\sum^n_{j=1}a_ia_jk(x_i, x_j)\ge0\]</span> If the kernel is <em>positive definite</em>, then there is a unique RKHS with the reproducing kernel <span class="math inline">\(k\)</span>.</p>
+</blockquote>
+</section>
+<section id="interlude-why-kernel-in-statistical-testing" class="level2">
+<h2 class="anchored" data-anchor-id="interlude-why-kernel-in-statistical-testing">Interlude (Why Kernel in Statistical Testing?)</h2>
+<p>Given the sample <span class="math inline">\((x_i)^m_{i=1}\sim p\)</span> and <span class="math inline">\((y_i)^m_{i=1}\sim q\)</span>. Given any feature extraction function <span class="math inline">\(\phi\)</span>, one can find related kernel <span class="math inline">\(k(\cdot,\cdot)\)</span> to be: <span class="math inline">\(k(a, b)=\langle \phi(a), \phi(b)\rangle\)</span>. Therefore, the distance between their mean in a feature space of the kernel <span class="math inline">\(k(\cdot,\cdot)\)</span> can be computed as:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Bigg\| \frac{1}{m}&amp;\sum^m_{i=1}\phi(x_i) - \frac{1}{n}\sum^n_{i=1}\phi(y_i) \Bigg\|^2 \\
+&amp;= \frac{1}{m^2}\sum^m_{i=1}\sum^m_{j=1}k(x_i,x_j) + \frac{1}{n^2}\sum^n_{i=1}\sum^n_{j=1}k(y_i, y_j) - \frac{2}{mn}\sum^m_{i=1}\sum^n_{j=1}k(x_i, y_i)
+\end{aligned}
+\]</span></p>
+<p>We can observe 2 things here: 1. If we set the feature extraction function to be <span class="math inline">\(\phi(a)=[a \ a^2]\)</span>, then we are able to compare both means and variance. 2. One can set the feature extraction function to be arbitrary, as long as one can find the appropriate corresponding kernel (that should be easier to compute than just an inner product of each other). For instance, with RBF, one can have feature extraction function with infinite features! (via Taylor series).</p>
+<p>Therefore, intuitively, we can perform a more power/non-linear relationship between samples. Let’s now move to the actual formulation of the statistical testing.</p>
+</section>
+<section id="statistical-testing-with-kernel-method" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-testing-with-kernel-method">Statistical Testing with Kernel Method</h2>
+<p>In this section, we are going to given the description of 2 main statistical testing technique that relies on the kernel method: MMD and HSIC (together with its variations). Let’s start with some operators that will be useful for both.</p>
+<section id="mean-embedding" class="level3">
+<h3 class="anchored" data-anchor-id="mean-embedding">Mean Embedding</h3>
+<p>Given the example above in the interlude, we can generalizes the <em>mean</em> of the features map given an element <span class="math inline">\(x\sim P\)</span>, as follows.</p>
+<blockquote class="blockquote">
+<p><strong>Definition (Mean Embedding):</strong> Given positive definite kernel <span class="math inline">\(k(x,x')\)</span> with probability distribution <span class="math inline">\(P\)</span> and <span class="math inline">\(Q\)</span>, we define <span class="math inline">\(\mu_P\)</span> and <span class="math inline">\(\mu_Q\)</span> such that: <span class="math display">\[\langle{\mu_P, \mu_Q\rangle} = \mathbb{E}_{P, Q}[k(x, y)]\]</span> where <span class="math inline">\(x\sim P\)</span> and <span class="math inline">\(y \sim Q\)</span>. We can consider the expectation in an RKHS as <span class="math inline">\(\mathbb{E}_P[f(x)] = \langle{f, \mu_P}\rangle_\mathcal{H}\)</span> for any function <span class="math inline">\(f\in\mathcal{H}\)</span>, the function in the corresponding RKHS</p>
+</blockquote>
+<p>With this, one can see that the empirical mean embedding can be given in the form of:</p>
+<p><span class="math display">\[
+\hat{\mu}_P = \frac{1}{m}\sum^m_{i=1}\phi(x_i) \qquad \text{ where } \qquad x_i\sim P
+\]</span></p>
+<p>In which, one can show that this element exists.</p>
+<blockquote class="blockquote">
+<p><strong>Theorem:</strong> The element <span class="math inline">\(\mu_P\in\mathcal{F}\)</span> defined as <span class="math display">\[\mathbb{E}_P[f(x)] = \langle{f, \mu_P}\rangle_\mathcal{H}\]</span> if the kernel <span class="math inline">\(k\)</span> of RKHS has the property that <span class="math inline">\(\mathbb{E}_P[\sqrt{k(x, x)}]&lt; \infty\)</span></p>
+</blockquote>
+<p><em>Proof Sketch:</em> We can use the Riesz representation theorem by showing that the operator <span class="math inline">\(T_Pf=\mathbb{E}_P[f(x)]\)</span> is boudned, and thus there is <span class="math inline">\(\mu_P\)</span> such that <span class="math inline">\(T_Pf=\langle f,\mu_P\rangle\)</span>).</p>
+</section>
+<section id="maximum-mean-discrepancy-mmd" class="level3">
+<h3 class="anchored" data-anchor-id="maximum-mean-discrepancy-mmd">Maximum Mean Discrepancy (MMD)</h3>
+<p>Let’s formally define the notion of MMD, which tries to answer the question, does the samples <span class="math inline">\(\{x_i\}^n_{i=1}\)</span> and <span class="math inline">\(\{y_i\}^n_{i=1}\)</span> comes from the same distribution or not ?</p>
+<blockquote class="blockquote">
+<p><strong>Definition (MMD):</strong> Now, we define the quantity of MMD being the distance between <span class="math inline">\(2\)</span> probability distributions <span class="math inline">\(P\)</span> and <span class="math inline">\(Q\)</span> as (together with its, more computable form) <span class="math display">\[ \begin{aligned} \operatorname{MMD}^2&amp;(P, Q) = \|\mu_P-\mu_Q\|^2_\mathcal{F} \\ &amp;= \mathbb{E}_P[k(x, x')] + \mathbb{E}_Q[k(y, y')] - 2\mathbb{E}_{P, Q}[k(x, y)] \end{aligned} \]</span> whereby, we have the following unbiased estimate of its quantity: <span class="math display">\[ \widehat{\operatorname{MMD}}^2(P, Q) = \frac{1}{n(n-1)}\sum_{i\ne j}k(x_i, x_j) + \frac{1}{n(n-1)}\sum_{i\ne j}k(y_i, y_j) - \frac{2}{n^2}\sum_{i,j}k(x_i, y_j) \]</span> for <span class="math inline">\(x_i\sim P\)</span> and <span class="math inline">\(y_i\sim Q\)</span></p>
+</blockquote>
+<p>You may wonder, why does MMD is called <em>maximum mean</em> discrepancy ? One can show MMD can be written in an alternative form of:</p>
+<blockquote class="blockquote">
+<p><strong>Theorem:</strong> We can show that the MMD can be written in an alternative form of: <span class="math display">\[\operatorname{MMD}(P, Q) = \sup_{\|f\|\le1}\big(\mathbb{E}_P[f(x)] - \mathbb{E}_Q[f(x)]\big)\]</span></p>
+</blockquote>
+<p>This can be interpreted as, given “smooth” function within a ball (therefore not being too extream), we find such a function that maximally distingush the sample of <span class="math inline">\(P\)</span> and <span class="math inline">\(Q\)</span>, and the maximum disagreement is the MMD value.</p>
+<p>Now, back to the statistical testing, we can show that the value of MMD will have the following asympototics distribution of:</p>
+<blockquote class="blockquote">
+<p><strong>Theorem:</strong> We have the following distribution of the empirical MMD statistics as follows: - When <span class="math inline">\(P\ne Q\)</span>, we have: <span class="math display">\[\frac{\widehat{\operatorname{MMD}}^2 - \operatorname{MMD}(P, Q)^2}{\sqrt{V_n(P, Q)}} \xrightarrow{D} \mathcal{N}(0, 1)\]</span>where the variance <span class="math inline">\(V_n(P, Q) = \mathcal{O}(n^{-1})\)</span> but depends on the chosen kernel. - When <span class="math inline">\(P=Q\)</span>, we have: <span class="math display">\[n\widehat{\operatorname{MMD}}^2 \sim \sum^\infty_{l=1} \lambda_l[z^2_l - 2] \qquad \text{ where } \qquad \lambda_i\phi_i(x) = \int_\mathcal{X}\widetilde{k}(x,\widetilde{x})\phi_i(x)\text{ d}P(x)\]</span>where <span class="math inline">\(\widetilde{k}\)</span> is a centered kernel and <span class="math inline">\(z_l\sim\mathcal{N}(0, 2)\)</span></p>
+</blockquote>
+<p>However, to compute such a distribution with null-hypothesis <span class="math inline">\(P=Q\)</span> in closed form is hard, therefore:</p>
+<ul>
+<li>We have to rely on using a boostrap method which is done by <em>permuting</em> the set <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> before testing (i.e mixing them up)</li>
+<li>This would gives us the estimate of the MMD statistics when <span class="math inline">\(P=Q\)</span>, which can them be used to compute the threshold for statistical test.</li>
+</ul>
+<p>Now, to find a best kernel, we have that:</p>
+<blockquote class="blockquote">
+<p><em>Remark (Finding a best kernek):</em> Given the distribution when <span class="math inline">\(P=Q\)</span>, one can see that the power of the test is given to be: <span class="math display">\[\text{Pr}_1\left({n\widehat{\operatorname{MMD}} &gt; \hat{c}_\alpha }\right) \rightarrow  \Phi\left({\frac{\operatorname{MMD}^2(P, Q)}{\sqrt{V_n(P, Q)}} - \frac{c_\alpha}{n\sqrt{V_n(P, Q)}} }\right)\]</span> To find the best kernel, we can find the kernel that maximize the test power. We would like to note the following: <span class="math display">\[\frac{\operatorname{MMD}^2(P, Q)}{\sqrt{V_n(P, Q)}} = \mathcal{O}(\sqrt{n}) \qquad \frac{c_\alpha}{n\sqrt{V_n(P, Q)}} =\mathcal{O}(n^{-1/2})\]</span> therefore, we can ignore the second term, and we can maximize the first term only, by setting this to be the objective of the neural network (that perform the feature extraction of the kernel). Note that we can derive the estimator for <span class="math inline">\(V_n\)</span> too.</p>
+</blockquote>
+<p>For example, one can use the following kernel <a href="https://arxiv.org/abs/2002.09116">from</a></p>
+<p><span class="math display">\[
+k_\theta(x, y) = \big[(1-\varepsilon)\kappa(\Phi_\theta(x), \Phi_\theta(y))+\varepsilon\big]q(x, y)
+\]</span></p>
+<p>where <span class="math inline">\(\Phi_\theta\)</span> is a neural network and <span class="math inline">\(\kappa\)</span> and <span class="math inline">\(q\)</span> are Gaussian kernel, which is able to distinguish between CIFAR-10 vs CIFAR-10 (image dataset).</p>
+<p>Now come the more important question, can we use any kernel to give us the appropriate MMD test ? The answer is obviously no, but what kind of kernel would be approriate ? Starting with a defintion of a good kernel (or we will call it characteristic):</p>
+<blockquote class="blockquote">
+<p><strong>Definition (Charateristic kernel):</strong> A RKHS (with corresponding kernel) is called <em>characteristic</em> if <span class="math inline">\(\operatorname{MMD}(P, Q; \mathcal{F}) = 0\)</span> iff <span class="math inline">\(P = Q\)</span></p>
+</blockquote>
+<p>That is when <span class="math inline">\(P\)</span> and <span class="math inline">\(Q\)</span> are the same, the value of MMD should be zero. What would be an appropriate kernel ? In this case, we would like to assume that kernel that we are working on is <em>Translation Invariance</em> i.e</p>
+<blockquote class="blockquote">
+<p><strong>Definition (Translation Invariance):</strong> The kernel <span class="math inline">\(k\)</span> is called <em>Translation Invariance</em> if there is a function <span class="math inline">\(f\)</span> such that: <span class="math display">\[k(x,y)=f(x-y)\]</span> for any <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span></p>
+</blockquote>
+<p>Then, one can have a fourier representation/coefficient of the kernel to be (assume we are within the domain of <span class="math inline">\([-\pi,\pi]\)</span>) the multiple within the fourier series expansion:</p>
+<p><span class="math display">\[
+k(x, y) = \sum^\infty_{l=-\infty} \hat{k}_l \exp(il(x-y)) = \sum^\infty_{l=-\infty}\underbrace{\left[{\sqrt{\hat{k}_l} \exp(ilx) }\right]}_{\phi_l(x)}\underbrace{\left[{\sqrt{\hat{k}_l}\exp(-ily)}\right]}_{\overline{\phi_l(y)}}
+\]</span></p>
+<p><span class="math inline">\(\hat{k}_l\)</span> is called the fourier coefficient of the kernel. For the probability distribution, one can also have a similar way to find the fourier coefficient of them. We have the following result.</p>
+<blockquote class="blockquote">
+<p><strong>Theorem:</strong> The value of MMD can be written as: <span class="math display">\[\operatorname{MMD}^2(P, Q;\mathcal{F}) = \sum^\infty_{l=-\infty} |\phi_{P,l} - \phi_{Q, l}|^2\hat{k}_l\]</span> for <span class="math inline">\(\hat{k}_l\)</span> being the fourier coefficient of the kernel, <span class="math inline">\(\phi_{P,l}\)</span> and <span class="math inline">\(\phi_{Q,l}\)</span> are fourier coefficient of the probability distributions <span class="math inline">\(P\)</span> and <span class="math inline">\(Q\)</span>, respectively.</p>
+</blockquote>
+<p>Therefore, the kernel is characterisic iff none of the <span class="math inline">\(\hat{k}_l\)</span> is equal to zero.</p>
+<p>On the other hand, instead of considering within specific range <span class="math inline">\([\pi,-\pi]\)</span>, one can also define the RKHS to be universal, which is when:</p>
+<blockquote class="blockquote">
+<p><strong>Definition (Universal RKHS):</strong> Given RKHS, it is <em>universal</em> if when: - <span class="math inline">\(k(x, x')\)</span> is continuous - <span class="math inline">\(\mathcal{X}\)</span> is compact. - <span class="math inline">\(\mathcal{F}\)</span> is dense in <span class="math inline">\(C(\mathcal{X})\)</span> wrt. <span class="math inline">\(L_\infty\)</span> i.e for <span class="math inline">\(\varepsilon&gt;0\)</span> and <span class="math inline">\(f\in C(\mathcal{X})\)</span>, there is <span class="math inline">\(g\in\mathcal{F}\)</span> such that: <span class="math display">\[\|f-g\|_\infty\le\varepsilon\]</span></p>
+</blockquote>
+<p>in which we can show that:</p>
+<blockquote class="blockquote">
+<p><strong>Theorem:</strong> If <span class="math inline">\(\mathcal{F}\)</span> is universal then <span class="math inline">\(\operatorname{MMD}(P, Q;\mathcal{F}) = 0\)</span> iff <span class="math inline">\(P = Q\)</span></p>
+</blockquote>
+</section>
+</section>
+<section id="hilbert-schmidt-indepdent-criterion" class="level2">
+<h2 class="anchored" data-anchor-id="hilbert-schmidt-indepdent-criterion">Hilbert-Schmidt Indepdent Criterion</h2>
+<p>Now, we are interested in given a pair of variables <span class="math inline">\(\{(x_i, y_i)\}^n_{i=1}\sim P_{XY}\)</span> are they dependent of each other ? - Usually one can use the MMD to find the differences whether this sample is sampled from the <span class="math inline">\(P_XP_Y\)</span> (i.e product of marginal distribution). However, we don’t have an access to this. - Another question is: which kind of kernel would we be use ? is it a product kernel ? or different kind of kernels</p>
+<section id="preliminary-defintions-covariance-operators" class="level3">
+<h3 class="anchored" data-anchor-id="preliminary-defintions-covariance-operators">Preliminary Defintions + Covariance Operators</h3>
+<p>We start off by defining the tensor product between elements in the Hilber space.</p>
+<blockquote class="blockquote">
+<p><strong>Definition (Tensor Product):</strong> Given element <span class="math inline">\(a,b,c\in\mathcal{H}\)</span> of the Hilbert space, the <em>tensor product</em> between <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> is denoted as <span class="math inline">\(a\otimes b\)</span> such that: <span class="math display">\[(a\otimes b)c = \langle b,c\rangle_\mathcal{H}a\]</span> Note that this is analogous to when <span class="math inline">\(a,b\)</span> and <span class="math inline">\(c\)</span> are vector, then <span class="math inline">\((ab^\top)c=b^\top ca\)</span></p>
+</blockquote>
+<p>Now, we would like to extends the notion of the inner product (and norm) to the linear transformation between Hilbert space. This would gives us Hilbert-Schmidt Operators i.e</p>
+<blockquote class="blockquote">
+<p><strong>Definition (Hilbert-Schmidt Operators):</strong> Given a separable (countable orthonormal basis Hilbert spaces <span class="math inline">\(\mathcal{F}\)</span> and <span class="math inline">\(\mathcal{G}\)</span> with orthonormal basis <span class="math inline">\((f_i)_{i\in I}\)</span> and <span class="math inline">\((g_j)_{j\in I}\)</span>, respectively and 2 linear transformation between them: <span class="math inline">\(L:\mathcal{G}\rightarrow\mathcal{F}\)</span> and <span class="math inline">\(M:\mathcal{G}\rightarrow\mathcal{F}\)</span>: <span class="math display">\[\langle{L, M}\rangle_{\operatorname{HS}} = \sum_{j\in J}\langle{Lg_j, Mg_j}\rangle_\mathcal{F}\]</span></p>
+</blockquote>
+<p>Now, we can define the covariance operator (in similar manners to the mean embedding) as:</p>
+<blockquote class="blockquote">
+<p><strong>Definition (Covariance Operator):</strong> The <em>covariance operators</em> <span class="math inline">\(C_{xy} : \mathcal{G} \rightarrow \mathcal{F}\)</span> is given by: <span class="math display">\[\langle{f, C_{xy}g}\rangle_\mathcal{F} = \mathbb{E}_{xy}[f(x)g(y)]\]</span> which we can show to exists if the kernel associated <span class="math inline">\(\mathcal{G}\)</span> and <span class="math inline">\(\mathcal{F}\)</span>: <span class="math inline">\(k_1\)</span> and <span class="math inline">\(k_2\)</span>, respectively, are such that <span class="math inline">\(k_1(x,x) &lt; \infty\)</span> and <span class="math inline">\(k_2(y,y)&lt;\infty\)</span></p>
+</blockquote>
+<p>The existances can be proven by observe that, for any linear operator <span class="math inline">\(A:\mathcal{G} \rightarrow \mathcal{F}\)</span>, we have:</p>
+<p><span class="math display">\[
+\langle{C_{xy}, A}\rangle_{\operatorname{HS}} = \mathbb{E}_{xy}\big[\langle\psi(x)\otimes\phi(y), A\rangle_{\operatorname{HS}}\big]
+\]</span></p>
+<p>and so we can use Riesz representation thoerem to proof the existence. Then, we are ready to define the HSIC</p>
+</section>
+<section id="definitionpropertiesestimation" class="level3">
+<h3 class="anchored" data-anchor-id="definitionpropertiesestimation">Definition/Properties/Estimation</h3>
+<blockquote class="blockquote">
+<p><strong>Definition (Hilbert-Schmidt Indepdent Criterion):</strong> The HSIC can be seen as the norm of the centered covariance operator i.e: <span class="math display">\[\operatorname{HSIC}(P_{XY};\mathcal{F}, \mathcal{G}) = \|{C_{xy} - \mu_x\otimes\mu_y}\|_{\operatorname{HS}} = \|{\widetilde{C}_{xy}}\|_{\operatorname{HS}}\]</span></p>
+</blockquote>
+<p>In relation to MMD, we can show that</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
