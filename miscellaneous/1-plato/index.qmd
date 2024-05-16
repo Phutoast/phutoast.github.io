@@ -1,0 +1,303 @@
+---
+title: "Introduction to Plato"
+description: "They all come together under Plato !! This is an notes that gives an overview of Plato's corpus and how the expert classify his work"
+author:
+  - name: author-name-here
+    url: https://samanthacsik.github.io/
+date: 8/2/2022
+categories: [philosophers]
+draft: false
+---
+
+<style>
+blue { color: #2980B9 }
+pink { color: #E74C3C }
+</style>
+
+This post is a distillation of "Introduction to the study of Plato", which is the first chapter of *The Cambridge Companion to Plato*. We will try to add other contents as well, for example: Stanford Encyclopedia of Philosophy (SEP) article on Plato [^1]. The main contents is to provides an overview/introduction of Plato's works and development of his thought. Finally, the traslation will comes from <a href="https://www.perseus.tufts.edu/hopper/" target="_blank"> Perseus Digital Library</a>.
+
+### Who is Plato ?
+
+Plato was borned around 427 (approximately)-347 BCE. He has contributed to many areas of philosophy that includes: Metaphysics, Epistemology, Ethics, etc. Or even, outside philosophy (according to our way to categorizing subjects), including Art, Mathematics, Science, Religions and more.
+
+He was the first person to start treating philosophical subjects together in a unified framework while believing that philosophy is a subject that has unique *methods* of investigation - via dialogues or conversation. Although he is innovative in his own right, he still built on top of past philosophers and his contemporaries.
+
+
+### Plato Influences
+
+There are many influences on Plato thought and its development, which includes:
+
+- Political Development in Athens and Sparta 
+- Intellectual movement in 4<sup>th</sup> and 5<sup>th</sup> century, including:
+  - Sophistic Movement 
+  - Works in Mathematics 
+  - Theory of Flux by Heraclitus and Cratylus
+  - Unchaining and Unitary Being ideas of Parmenides
+
+But the biggest influences on Plato was his teacher *Socrates*, who was excecuted by people of Athens from Trial in 399 BCE (from a charge because they believe Socrates corrupting his fellows/youth by creating a new gods [^2].) There are some examples of Socrates' influence on Plato:
+
+- Plato has writting most (if not all) of his works after Socrates death. 
+- Socrates' method of philosophy is displayed in Plato works, as it is a form of adversarial dialogues (although his main interest is on how man should live one life, see later on this distinction). 
+- Hence Plato works are mostly dialogues form, while his teacher is the main subject in *most* of Plato's dialogues. 
+
+
+### Plato Development
+
+The common consensus on phases of Plato works can be divided into 3 parts: Early, Middle and Late [^3] works for instance:
+
+|     Early     |            Early (2)            |        Middle       |    Late   |
+|:-------------:|:-------------------------------:|:-------------------:|:---------:|
+|    Apology    |              Laches             |  <pink>Meno</pink>  |  Timaeus  |
+|   Charmides   |            Protagoras           | <pink>Phaedo</pink> |  Critias  |
+|     Crito     |    <blue> Euthydemus </blue>    |      Symposium      |  Sophist  |
+|   Euthyphro   |   <blue> Hippias Major </blue>  |       Republic      | Statesman |
+|    Gorgias    |       <blue>Lysis  </blue>      |      Parmenides     |  Philebus |
+| Hippias Minor |    <blue> Mennexenus </blue>    |      Theaetetus     |    Laws   |
+| Ion           | <blue> Replublic Book I </blue> | Phaedrus            |           |
+
+There are some further notes on this:
+
+- The exact order of Early works isn't clear, so it is displayed in alphabetical order. 
+- The general consensus that from *Euthydemus* to *Republic Book I* are later of for Early period since they are closer to the middle dialogues, while *Gorgias* should also be latter work compares to the others. 
+- The order in middle and late dialogues is one of the plausible order, as there are still some disagreements. However, it is quite agree upon that *Laws* should be in one of the latest Plato's writing.
+
+Now, we will provide an overviews of Early Plato works. 
+
+### Plato Earlier Works
+Plato's early works, while on high influences of Socrates, sought to answer some of the Socrates question on how to live one life. Consider the part of *Apology* that contains the defending speech of Socrates' in his trial, where Socreates described his position as [^4]: 
+<figure>
+    <blockquote>
+        <p>This one of you, O human beings, is wisest, who, like Socrates, recognizes that he is in truth of no account in respect to wisdom.</p>
+        <p>—<cite>Apology <span class="loc-quote">23b</span></cite></p>
+    </blockquote>
+</figure>
+while Socrates declared that knowledge belong to the gods and incomparable to human's wisdom (*Apology* <span class="loc-quote">23a</span>). In Plato's earlier works, such as: *Lache*, *Charmides*, *Hippias Major*, and *Euthyphro*. There are several theme that are in common with each other, such as:
+
+- Socrates declared that he doesn't know anything
+- Most of the works focuses on the nature of virtue or ethics (by finding the definition) almost exclusively, but ends with unsuccessful outcomes [^5]. 
+
+Finally, Plato is still attached to certain doctrines for instance: One is immune from misfortune as long as they are "good". To posess virtue is the same as knowing a certain subject matter, while the knowledge can be acquired by philosophizing (conversation). Note that, Plato will eventually change some of his views in the later works, which leads to some change of style, as see in: *Republic* (a Middle dialogue), where
+
+- Socrates (the character) is trying to define and defend justice rather than claiming that he doesn't have such a knowledge. 
+- Or, when he argued that training in virtue also required emotional training and not necessary restricted to reason alone. 
+
+Nonetheless, Plato still keep Socrates as a main interlocutors throughtout his works (excepting some late dialogues).
+
+---
+
+### Transitional Dialogues
+
+#### Meno
+
+*Meno*, which we believed to be one of the earliest dialogue, is written around 386-382 BCE after Socrates death for 13 years. In this work, we can see that Plato has broken from his earlier themes, in which the dialogue can be split into 2 sections:
+
+- **First Section (<span class="loc-quote">70a</span>-<span class="loc-quote">79e</span>)**: Meno (the character) ask Socrates "whether virtue can be taught", which leads to a question of "what is meaning of being good" (*Meno* <span class="loc-quote">71a</span>). This brief examination is similar to the early dialogues also ended with unsuccessful search. 
+
+- **Second Section (<span class="loc-quote">80b</span>-<span class="loc-quote">100c</span>)**: This is where the changes is taking place: Meno questions Socrates on his method of investigation as Socrates claimed to know nothing beforehand, so how can one come to know if he/she doesn't have a knowledge before (*Meno* <span class="loc-quote">80d</span>)
+
+This second section is a shift in Plato's work as he investigated in such a topic for the first time. To answer the question, Socrates proposed a theory of recollection, which states that "learning" is actually an act of remembering from an knowledges that has been accumulated from our past lives [^6]. To prove this, Socrates demonstrated to Meno by teaching one of the slaves (or make him remember again) mathematics [^7] by asking a series of questions (*Meno* <span class="loc-quote">81b</span>-<span class="loc-quote">86c</span>). 
+
+#### Theory of Form in *Phaedo*
+The Phaedo is written, it is Plato dialogue that is installed as part of "Last days or Socrates", which is the last one in the series of dialogues (following from *Euthyphro*, *Apology*, and *Crito*). Although the dialogues in the series are all earlier works, *Phaedo* is in transitional dialogue. Regarding position relative to *Meno*, *Phaedo* shoud be after, since there is a clear reference to *Meno* (see *Phaedo* <span class="loc-quote">72e</span>-<span class="loc-quote">73a</span>). 
+
+The main topic of *Phaedo* is on the immortality of the soul and the first proposal of the "theory of forms", where Plato speculated about the realm of objects, differ from what we have seen (<span class="loc-quote">74a</span>), where they are:
+
+- Changeless (*Phaedo* <span class="loc-quote">78d</span>)
+- Can be revealed by thought rather than sensation (*Phaedo* <span class="loc-quote">79a</span>)
+- Difference from both body and soul (*Phaedo* <span class="loc-quote">79b</span>-<span class="loc-quote">79c</span>)
+- Everlasting (*Phaedo* <span class="loc-quote">79d</span>)
+
+*Plato's Example*: In *Phaedo*, Plato gave the example of the form of "Equality". He shows that we can't make a mistake on Equality, but we can make mistake on 2 equal sticks. This means that 2 equal sticks is inferior to the Equality (*Phaedo* <span class="loc-quote">74d</span>-<span class="loc-quote">74e</span>) [^8]. 
+
+Plato proposed the Form as an object that (the historical) Socrates tried to investigate. However, in *Phaedo*, he didn't address other questions about the nature of Form, such as:
+
+- Is what we are looking for exists independently of human thought ?
+- Is it something that can be detected by our senses ? 
+- Can it change or perish ? 
+- How can we able to learn about it ? 
+- What is its relationship with people and action that are consider virtuous but are not identical to what virtue is ? 
+- How are these objects of thought related to each other ?
+
+The theory of Form is where Plato attempts to answer these questions. 
+
+#### Theory of Form Development
+
+His thought on the theory is developed throughout his works in Middle till the Later periods. Let's consider 3 differences dialogues: *Meno*, *Republic*, and *Stateman* and Plato's opinion on the Forms:
+
+- *Meno*: Plato didn't give us the definition of the forms. However, he proposed an instance of it, for example, Equality, Beauty, Goodness, Justice and Piety. 
+
+- *Republic*: Plato gives us the definition of the forms, as:
+  <figure>
+      <blockquote>
+          <p>I take it, of positing a single idea or form in the case of the various multiplicities to which we give the same name.</p>
+          <p>—<cite>Republic <span class="loc-quote">596a</span></cite></p>
+      </blockquote>
+  </figure>
+  However, this definition is incomplete as there are some concerning question such as:
+    - What happen to the word that is invented ? 
+    - Is there is any justification to introduce such word so that it corresponds to the Form ? 
+- *Stateman*: Plato clarify that Form can't exists without justified classification of reality into groups. For instance, we don't have the form for non-Greek as there is nothing that unify them together apart from Greek itself (<span class="loc-quote">262c</span>-<span class="loc-quote">262e</span>).
+
+---
+
+### Middle Dialogues
+
+#### From *Phaedo* to *Republic*
+
+Plato has developed his idea further in *Republic*, where there are several changes in his idea regarding the theory of Form and achieving knowledge:
+
+- **Phaedo**: Our attempts to understand the form is blocked by the bodily needs, and so philosopher wishes to die and to be free from these needs [^9] (*Phaedo* <span class="loc-quote">65e-67b</span>)
+- **Republic**: However, Plato suggested that there are 3 components of the soul and there is a part of the soul that prevent us from achieving knowledge in philosophy (not the body). Furthermore, Plato proposed that one can attain knowledge of the Form if he/she persue the right track.
+
+Plato has placed the Form of Good is the greatest importance. However, he noted that the path of understnading the form is unfit from political life. Finally, the biggest difference of *Phaedo* and *Republic* is Plato's attitude toward how philosopher lives:
+
+- In *Phaedo*, Plato tried to prove immortality of the soul for the sake of happiness afterlife. 
+- On the other hand, in *Republic*, Plato proves immortality of the soul for the sake of living philosphoical life and fullu virtuous life, regardless of immortality of the soul. 
+
+#### Main Theme of *The Republic*
+
+*The Republic* can be seen as the corner stone of Plato works because it contains many philsophical topics that he will explore in his later works. The main purpose of this work is an attempt to answer the question that Socrates has been persuing. It is divided into 9 books, let's see how the themes are divided into:
+
+- **Book 1 and Beginning of Book 2**: Book 1 is similar in the style of Plato's early dialogues where the characters tried to answer the definition of justices and ended in failure near the end of the books. However, at the start of book 2, one of the characters (Glaucon) ask Socrates to justify being just, which sets the tone for the books afterward. 
+
+- **Book 2 Onward**: Plato has taken a new route by exploring and unifying multiple fields such as: Epistimology, Ethical Theory, Political Thoery and Psychological Theory. As Plato will, subsequentially, develop these topics together with theory of Form further in his later works, his work (of these topics) in *The Republic* is still immature. 
+
+Looking further, in his later dialogues, we can see that Plato examine each philosophical topics that has been started in *The Republic* for instance:
+
+- **Metaphysics**: *Parmenides* and *Sophist*
+- **Epsitimology**: *Theaetetus*
+- **Form and Sensible World**: *Timaeus*
+- **How to live one's life**: *Philebus*
+- **Political Theory**: *Laws*
+- **Human Psychology**: *Phaedrus, Philebus* and *Laws*
+
+#### Plato's Allegory of the Cave 
+In book 7, we see Plato's famous *Allegory of the Cave*, which captures the human condition and philosophical life:
+
+- People who are not touched by philosophy are prisoners who gazes at the shadow casted on the wall bu various objects by unknown manipulators (*The Republic* <span class="loc-quote">514a</span>-<span class="loc-quote">519a</span>). 
+- They are fooled to think that the shadow is real, while they are accustomed to the normal way of living, and so they disregard any kind of interruption. 
+- We can see this as an analogy to psychological response when people are questioned by Socrates (*The Republic* <span class="loc-quote">517a</span>). 
+
+This is also connected to the theory of Form as Plato claimed that the shadow is reality degraded, thus being less real (*The Republic* <span class="loc-quote">515a</span>-<span class="loc-quote">515e</span>). The story goes on as one of the prisoners escaped the cave, he encountered the realm of objects that is more real, which can be seen as he learn to understand the realm of Forms (*The Republic* <span class="loc-quote">518c</span>). 
+
+#### Plato's Hierarchy of Objects
+
+In Book 10 Plato gave the example of "Bed" where he gives the hierarchy of objects related to Bed (in ascending order): A painting of a bed, a bed created by carpenter and a form of bed. We have the following observation:
+
+- Painter's image deviated from the real bed, but it has the saame relationship as between the real bed and the Form of bed. 
+- When we say that the painting has "bed", we mean that the image in the painting has correct relationship to the real bed. In this case, it has the visual similarity. 
+- However, the relationship between the Form and the bed isn't visual similarity as there 
+- Similarly, Plato suggested that there should be some relationship between the visible bed and the Form of *bed*. By correctly calling some object to be bed, there should be a right relationship between it and the Form of bed (which should be difference property).
+- When Plato declared that the Form is completely real, he means that the Form is situated on the highest hierarchy of objects (ranking via degree of ontological dependencies). Thus the form doesn't depend on anything even its name. 
+
+#### Plato's Political Philosophy in *The Republic*
+The allegory of the cave also contains political philosophy of Plato, as it provided us the psychological state of ordinary people. Plato suggested that people who are limited in their view of the world aren't the best judge of their own interst, and might even made mistake on what good for them is:
+
+- Thus, Plato disagree with political system that comes from people concents, as people will choose the system that they agree but don't necessary be good. 
+- Good system, in his view, should be one that promotes their well being. If the citizens fail to understand, then it is the system's job to educate them. 
+- Plato, therefore, suggests giving the power to one ruler, who have philosophical understanding of human good (Philosophy king). However, he doesn't consider much about how this power can be misused  [^10]. 
+- Afterall the ultimate goal of the city is to promote happiness for and benefits everyone, not just only certain group of people. 
+
+By consider a relationship between human in political community, Plato suggested an analogous relationship that exists between difference Form (they form an *kosmos*, *Republic* <span class="loc-quote">500c</span>), which implies that we might have to study them not in isolation but a harmonized unified political order. And, in turns, we should strives to be in such order. 
+
+#### Plato's Theory of Form, onward
+Plato, however, in *Republic*, paid little attention to the relationship of the Forms, and suggested that the Form of good is the most important Form that is cruitial to understand the other Forms (*Republic* <span class="loc-quote">505a</span>-<span class="loc-quote">509c</span>), as the Forms are constituted in hierarchy inwith the form of Good at the top. Nonetheless, in later dialogues, Plato returns to study multiple kinds of Form, notably: 
+
+- **Phaedus**: Plato investigate into difference kinds of form such as unity and diversity together with the concept of love. 
+- **Parmenides**: Plato studies relationship between Form of unity and other kinds of Forms (such as Sameness, etc.) as a continuation to his studies in the Form of Goodness. 
+- **Timaeus**: Plato stated that the sensible work is constructed by divine craftman based on difference kinds of Forms (*Timaeus* <span class="loc-quote">29a-30b</span>)
+
+This also includes other Late works such as *Stateman*, *Sophist*, and *Philebus*
+
+---
+
+### After *Republic*
+
+#### Order of Late Dialogues
+There is many consensus on the theme and content of the dialogues after *The Republic*. One of the main problems is how the theory of Form is developed in his later works, as there are conflicting theories:
+
+- Plato has abandoned the theory of Form.
+- Plato aware of the shortcoming of the theory of Form but couldn't fix because he can't find the source of issues. 
+- Plato slightly change the content by modify some of its claimed. 
+
+This also ties to the debate about chronological sequence of works after *The Republic*. However, there is a wide consensus that *Laws* is the later works, as we can find 5 other works that are related to *Laws*, which are: *Critias*, *Philebus*, *Sophist*, *Stateman* and *Timaeus*
+
+Furthermore, there is a consensus that *Stateman* was written after *Sophist* and *Timaeus* before *Critias* (It is obvious that *Critias*'s subject is discussed in *Timaeus*). The rest of the order is still on going debate; for instance:
+
+- Diogenes Laertius believed that  *Laws* is the last work, while the *Critas* is incomplete which means that it can potentially be the last position. 
+- For stylistic studies suggested the order: *Timaeus*, *Critias*, *Sophist*, *Stateman*, *Philebus*, and *Laws*
+
+Now, if we consider the role of Socrates in these Late dialogues, we can see that in most works, execept Philebus, his role is minor. We may see this as the departure from Plato's middle periods [^11]. 
+
+#### Stylistic Comparision
+
+G.E.L. Owen disagreed with the stylistic studies claiming that the *Timaeus* is in middle periods, right after the composition of *The Republic* [^12]. The major shift in Plato's thought happened in *Parmenides* and *Theaetetus*. Note that Socrates' position in these 2 dialogues is unsual. Both of the dialogues are most in critical with the doctrinces put forth in *The Republic* as: 
+
+- **Parmenides**: The theory of Form is critized by Parmenides, but Socrates is too young to gives an answer. (*Parmenides* <span class="loc-quote">126a</span>-<span class="loc-quote">135d</span>)
+- **Theatetus**: Unsuccessful search for the definition of knowledge which is taken for granted in *The Republic* and earlier works. Socrates acts only as a guide as he claims that he can't produce a positive view of his own (*Theatetus* <span class="loc-quote">148e</span>-<span class="loc-quote">151d</span>)
+
+This unusual role can be see as the Plato's new theory of Metaphysics and Epsitimology associated with theory of Form, while the theories are under hard questionings, making Socrates to be a passive role. This carries on to Socrates role in the latter works. 
+
+In addition, given this observation, it implies that Plato has modified his idea (to unknown degree), or change in Socrates role might not make sense (unless there is another explanation). Note that Plato might change Socrates' role even with a small changes in his idea; thus, this might not be a strong signal on Plato's intellectual development. Therefore, we will have to look into the contents of Plato's work. 
+
+#### Theory of Form Criticism and Afters
+
+Consider *Parmenides* opening, where it contains the arguments against the theory of Form, and afterward, there are no objection to this criticism in any of Plato works. The argument goes as follows:
+
+- If there is a form of largeness, then we can consider multiple number of such a form. 
+- The form of largeness (in our sense) is when the number of things are large. 
+- Consider the Form of largeness together with large things, we then create a Form of largeness. 
+- This can be repeated infinitely, and therefore, there is no form of largeness, leading to a contradiction. 
+
+The plausible rejection is whether the Form of largeness is a large thing in itself or not ? This would leads to many follow-up questions, regarding the assumptions that Plato has to make: 
+
+- Has Plato use this assumption throughout his middle periods works ? 
+- Did he plan to examine this assumption more clearly in the later part of *Parmenides* ? 
+- How this objective affect Plato's development of theory of Form ?
+
+This also have a consequences on how we place some of the dialogues in relative to each others. If we consider *Timaeus* to be in the late periods, then it must be written after *Parmenides*. However, in *Timaeus*, Plato still relies on the middle periods theory of Form (as he claimed that the Form is object that a craftman ued to creating the sensible world). Thus need to mean that, Plato hasn't extensively modify his theory of Form into late periods. 
+
+#### Development in Moral/Political Theory
+Let's compare/constract the proposals of ideal society in both *The Republic* (a Middle period) and *Laws* (a Late period) as we have:
+
+| Similarity                                                                           | Differences (In *Laws*)                                                                                                                        |
+|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| One of the roles of political community is to premotes/takes part in moral education | No specialized philosophical training for elite groups and delegate the decision making to small group of people                               |
+| The state shouldn't untermine its citizens' value                                    | The function of government is distributed to prevent the abuse of power, and no citizens is completely deprived of legislative or judical role |
+
+Given the limited democracy description in *Laws*, Plato seem to prefer the philosophical kings as he described in *Laws*  as the second best political community (*Laws* <span class="loc-quote">739a</span>-<span class="loc-quote">740a</span>)
+
+#### Plato's Attitude for Writing
+
+Most of the works from the early Greek and Hellenistic philosophy are lost to us. There might be some part of Plato's writing that were loss. We will now consider what this Plato's view toward writing. In *Phaedrus*, Plato suggests 2 reasons to favour speaking rather than writing when doing philosophy:
+
+- Speaking allow the listener to response immediately (*Phaedrus* <span class="loc-quote">275c</span>-<span class="loc-quote">276a</span>)
+- One can practice his or her philosophy more regulary and therefor being fresh all the time. Writing can have a negative effect, as one can write it and forgot the contents (*Phaedrus* <span class="loc-quote">275a</span>-<span class="loc-quote">275b</span>)
+
+This doesn't mean that Plato abandoned on writing as he did more of it in his latter works. He suggested that writing can be useful when use properly (i.e when memory deterorate with age or helping student when one discuss philosophy). Nonetheless, some scholar believed that Plato's important ideas may not be written down and passes via oral mean only.
+
+
+
+[^1]: The author of most of the articles is <a href="https://en.wikipedia.org/wiki/Richard_Kraut" target="_blank">Richard Kraut</a>, where he is the prominant scholar on greek philosophy. 
+
+[^2]: This comes from Eutyphro <span class="loc-quote">2c</span> and <span class="loc-quote">3b</span>. Plato has writting a series of dialogues about the trial and death of Socrates, which are (in chronological order): Eutyphro, Apology, Crito and Phaedo. All of them will be closely examined in later blog posts. 
+
+[^3]: This is based on 19<sup>th</sup> century works and Aristotle.
+
+[^4]: This is a quotation from the Orcacle (see *Apology* <span class="loc-quote">23a</span>) given as the explanation to the *riddle* that Socrates tried to understand, stated as: Delphi (the Orcale) declared, when Chaerephon asked who is the wisest, that <q>no one was wiser [than Socrates]</q> (*Apology* <span class="loc-quote">20e</span>-<span class="loc-quote">21a</span>). This puzzled Socrates since he is <q>conscious that I am not wise either much or little</q> (*Apology* <span class="loc-quote">21b</span>). We will explore this in more detail in later posts.
+
+[^5]: For More details, in *Apology* Socrates sought to under the Oracle's statement (see the note above) by examine people who claim to posess some wisdom (*Apology* <span class="loc-quote">21b</span>) in order to invalidate the Oracle.
+
+[^6]: This relies on the fact that the soul is immortal, which is yet to be proven. The immortality will be main topic in *Phaedo*.
+
+[^7]: Plato used mathematics as a tool for explaination. His love for mathematics isn't presented in the eariler works, while appearing regulary in this middle and late dialogues.
+
+[^8]: Plato also combined the theory of recollection and theory of form, as when we observe 2 equal sticks, as in our mind, we think about Equality. Since both 2 objects are not the same, the act of thinking should be an act of recollection. (*Phaedo* <span class="loc-quote">74d</span>)
+
+[^9]: However, Plato doesn't encorage truth-seeker to commit suicide in order to be free from the body. He gives the reason that we belong to Gods and thus it is best for us to be free when our owner said so (*Phaedo* <span class="loc-quote">62d</span>)
+
+[^10]: That is why he suggested abolishing the private wealth in ruling part as a partial solution, and of course to preven the lower class to be exploited. Furthermore, in Plato's ideal city should have the sense of community, even if, they don't share an equal understanding of human good. 
+
+[^11]: The topic discussed in *Philebus* is concerning about the place of pleasure in the best human life, so it is logical to bring Socrates back as the main interlocutors. 
+
+[^12]: The openning of the of *Timaeus* alludes to the conversation about the best city (talked to *The Republic*), but this might holds any weight.

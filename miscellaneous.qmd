@@ -1,0 +1,10 @@
+---
+title: ""
+listing: 
+  contents: miscellaneous # all Quarto docs in the `posts` directory will be included on your listing page
+  type: table # or `default` or `table`; each type has its own set of yaml options to include
+  sort: "date desc" # can also sort on more than one field
+  categories: true # allows you to sort posts by assigned categories 
+---
+
+Here is the collection of writing/exposition/summary of philosophy (and other humanities subjects) notes/talks/books/chapters, please proceed with causion...

@@ -1,0 +1,231 @@
+---
+title: "Kernel Statistical Test"
+description: "A cheat overview of the use of kernel method to perform high dimensional statistical test."
+author:
+  - name: author-name-here
+    url: https://samanthacsik.github.io/
+date: 11/28/2023
+categories: [Machine Learning]
+draft: false
+---
+
+# Kernel Testing
+
+In this document, I would like to explain how the MMD and HSIC are derived (roughly). We will start with the brief introduction to RKHS, and then moving on to the statistical testing procedures. This is based on [lecture note](https://github.com/Phutoast/UCL-CSML-Notes/blob/main/adv-topic-in-ml/adv-topic.pdf) of the course [Reproducing kernel Hilbert spaces in Machine Learning](http://www.gatsby.ucl.ac.uk/~gretton/coursefiles/rkhscourse.html)
+
+## Quick Introduction to RKHS
+
+We recall that the Hilbert space (HS) is a vector space that are equipped with an inner product between vectors and returns a scalar result. Reproducing Kernel HS (RKHS) is the Hilbert spaces that is equipped with the a kernel (that is constructed by the non-unique feature maps). Let's unpack this, by starting from the definition of kernel
+
+> **Definition (Kernel):** Given the non-empty set $\mathcal{X}$, we define a *kernel* to be $k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}$ such that there is a Hilber space $\mathcal{H}$ and a function (called *feature map*) $\phi:\mathcal{X}\rightarrow\mathcal{H}$ where:
+> $$k(x, y) = \langle \phi(x), \phi(y)\rangle_\mathcal{H}$$
+> Noted that vector space $\mathcal{H}$ doesn't need to be finite dimension (and so it can have infinite dimension i.e a function like object).
+
+The good example of feature maps that doesn't have to be unique is when:
+
+$$
+\phi_1(x) = x \qquad \phi_2(x) = \begin{bmatrix}x/\sqrt{2} \\ x/\sqrt{2}\end{bmatrix}
+$$
+
+We have the following way to construct a new kernel from the old one, given the fact that $k_1$ and $k_2$ are kernels, then we can show that, for any $x, y\in\mathcal{X}$:
+
+- $k_1(x, y)+k_2(x, y)$
+- $k_1(x, y)*k_2(x, y)$
+- For $a\in\mathbb{R}$, such that $ak_1(x,y)$
+- For any function $f:\mathcal{X}\rightarrow\mathcal{X}'$ (can be neural network or any kind of functions) and kernel $k':\mathcal{X}'\times\mathcal{X}'\rightarrow\mathbb{R}$, such that $k'(\phi(x), \phi(y))$
+
+are all kernel. With this would means that the following function $k(x, x') = (c + \langle x, x'\rangle)^m$ is also a kernel, or if we have a function that admits Taylor series $f$ (with convergences properties etc.), then $f(\langle x, x'\rangle)$ is also a kernel.
+
+Now, we are ready to define the RKHS, in which it is a special Hilbert space with a special kind of kernel that satisfies additional 
+
+> **Definition (Reproducing Kernel Hilber Space):** Given a Hilbert space $\mathcal{H}$ of $\mathbb{R}$ valued functions on non-empty set $\mathcal{X}$, the kernel $k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}$ is called *reproducing* and $\mathcal{H}$ is called RKHS if:
+>
+> - For all $x\in\mathcal{X}$, $k(\cdot, x) \in\mathcal{H}$, then $k(\cdot, x)\in\mathcal{H}$
+> - For all $x\in\mathcal{X}$, $\langle{f(\cdot), k(\cdot,x)\rangle}_\mathcal{H} = f(x)$
+
+Given the defintion, one can see that:
+
+$$
+\langle k(\cdot, x), k(\cdot, y)\rangle_\mathcal{H} = k(x, y)
+$$
+
+which means that $k(\cdot,x)$ for any $x\in\mathcal{X}$ can be seen as the feature map (recall that it doesn't have to be unique), we will call this a *canonical feature map*. 
+
+We also have the follows result that illustrate why RKHS is preferable compared to the normal HS of functions. 
+
+> **Advanced Topics:**  Intuitively, we just say that the functions in RKHS acts "smoothly" and "predictably", in the sense that:
+> - If the distance between functions $\|f-g\|_\mathcal{H}$ is close to each other then its pointwise evaluation $|f(x)-g(x)|$ for any $x$ would also be close to each other.
+> - This can be shown by the fact that the HS $\mathcal{H}$ has reproducing kernel iff the evaluation operator (defined as $\delta_x : \mathcal{H}\rightarrow\mathbb{R}$ where $\delta_x(f)=f(x)$) is bounded i.e  $|\delta_x(f)|\le \lambda_x\|f\|_\mathcal{H}$ for positive constant $\lambda_x\in\mathbb{R}$ (the proof uses the Riesz representation theorem)
+
+Furthermore, if the kernel satisfies the special property, then there is going to be an RHKS that is equipped with the given kernel as:
+
+> **Theorem (Moore-Aronszajn):** A symmetric function $k:\mathcal{X}\times\mathcal{X}\rightarrow \mathbb{R}$ is positive definite if: for all $a_1,a_2,\dots,a_n\in \mathbb{R}$ and for all $x_1,x_2,\dots,x_n\in\mathcal{X}$: $$\sum^n_{i=1}\sum^n_{j=1}a_ia_jk(x_i, x_j)\ge0$$
+> If the kernel is *positive definite*, then there is a unique RKHS with the reproducing kernel $k$. 
+
+## Interlude (Why Kernel in Statistical Testing?)
+
+Given the sample $(x_i)^m_{i=1}\sim p$ and $(y_i)^m_{i=1}\sim q$. Given any feature extraction function $\phi$, one can find related kernel $k(\cdot,\cdot)$ to be: $k(a, b)=\langle \phi(a), \phi(b)\rangle$. Therefore, the distance between their mean in a feature space of the kernel $k(\cdot,\cdot)$ can be computed as:
+
+$$
+\begin{aligned}
+\Bigg\| \frac{1}{m}&\sum^m_{i=1}\phi(x_i) - \frac{1}{n}\sum^n_{i=1}\phi(y_i) \Bigg\|^2 \\
+&= \frac{1}{m^2}\sum^m_{i=1}\sum^m_{j=1}k(x_i,x_j) + \frac{1}{n^2}\sum^n_{i=1}\sum^n_{j=1}k(y_i, y_j) - \frac{2}{mn}\sum^m_{i=1}\sum^n_{j=1}k(x_i, y_i)
+\end{aligned}
+$$
+
+We can observe 2 things here:
+1. If we set the feature extraction function to be $\phi(a)=[a \ a^2]$, then we are able to compare both means and variance.
+2. One can set the feature extraction function to be arbitrary, as long as one can find the appropriate corresponding kernel (that should be easier to compute than just an inner product of each other). For instance, with RBF, one can have feature extraction function with infinite features! (via Taylor series). 
+
+Therefore, intuitively, we can perform a more power/non-linear relationship between samples. Let's now move to the actual formulation of the statistical testing. 
+
+
+## Statistical Testing with Kernel Method
+
+In this section, we are going to given the description of 2 main statistical testing technique that relies on the kernel method: MMD and HSIC (together with its variations). Let's start with some operators that will be useful for both.
+
+### Mean Embedding
+
+Given the example above in the interlude, we can generalizes the *mean* of the features map given an element $x\sim P$, as follows.
+
+> **Definition (Mean Embedding):** Given positive definite kernel $k(x,x')$ with probability distribution $P$ and $Q$, we define $\mu_P$ and $\mu_Q$ such that: $$\langle{\mu_P, \mu_Q\rangle} = \mathbb{E}_{P, Q}[k(x, y)]$$
+> where $x\sim P$ and $y \sim Q$. We can consider the expectation in an RKHS as $\mathbb{E}_P[f(x)] = \langle{f, \mu_P}\rangle_\mathcal{H}$ for any function $f\in\mathcal{H}$, the function in the corresponding RKHS
+
+
+With this, one can see that the empirical mean embedding can be given in the form of:
+
+$$
+\hat{\mu}_P = \frac{1}{m}\sum^m_{i=1}\phi(x_i) \qquad \text{ where } \qquad x_i\sim P
+$$
+
+In which, one can show that this element exists.
+
+> **Theorem:** The element $\mu_P\in\mathcal{F}$ defined as $$\mathbb{E}_P[f(x)] = \langle{f, \mu_P}\rangle_\mathcal{H}$$
+> if the kernel $k$ of RKHS has the property that $\mathbb{E}_P[\sqrt{k(x, x)}]<
+\infty$ 
+
+*Proof Sketch:* We can use the Riesz representation theorem by showing that the operator $T_Pf=\mathbb{E}_P[f(x)]$ is boudned, and thus there is $\mu_P$ such that $T_Pf=\langle f,\mu_P\rangle$). 
+
+
+### Maximum Mean Discrepancy (MMD)
+
+Let's formally define the notion of MMD, which tries to answer the question, does the samples $\{x_i\}^n_{i=1}$ and $\{y_i\}^n_{i=1}$ comes from the same distribution or not ?
+
+> **Definition (MMD):** Now, we define the quantity of MMD being the distance between $2$ probability distributions $P$ and $Q$ as (together with its, more computable form) 
+> $$ \begin{aligned} \operatorname{MMD}^2&(P, Q) = \|\mu_P-\mu_Q\|^2_\mathcal{F} \\ &= \mathbb{E}_P[k(x, x')] + \mathbb{E}_Q[k(y, y')] - 2\mathbb{E}_{P, Q}[k(x, y)] \end{aligned} $$
+> whereby, we have the following unbiased estimate of its quantity:
+> $$ \widehat{\operatorname{MMD}}^2(P, Q) = \frac{1}{n(n-1)}\sum_{i\ne j}k(x_i, x_j) + \frac{1}{n(n-1)}\sum_{i\ne j}k(y_i, y_j) - \frac{2}{n^2}\sum_{i,j}k(x_i, y_j) $$
+> for $x_i\sim P$ and $y_i\sim Q$
+
+You may wonder, why does MMD is called *maximum mean* discrepancy ? One can show MMD can be written in an alternative form of:
+
+> **Theorem:** We can show that the MMD can be written in an alternative form of: 
+> $$\operatorname{MMD}(P, Q) = \sup_{\|f\|\le1}\big(\mathbb{E}_P[f(x)] - \mathbb{E}_Q[f(x)]\big)$$
+
+This can be interpreted as, given "smooth" function within a ball (therefore not being too extream), we find such a function that maximally distingush the sample of $P$ and $Q$, and the maximum disagreement is the MMD value. 
+
+Now, back to the statistical testing, we can show that the value of MMD will have the following asympototics distribution of: 
+
+> **Theorem:** We have the following distribution of the empirical MMD statistics as follows:
+> - When $P\ne Q$, we have: $$\frac{\widehat{\operatorname{MMD}}^2 - \operatorname{MMD}(P, Q)^2}{\sqrt{V_n(P, Q)}} \xrightarrow{D} \mathcal{N}(0, 1)$$where the variance $V_n(P, Q) = \mathcal{O}(n^{-1})$ but depends on the chosen kernel.
+> - When $P=Q$, we have: $$n\widehat{\operatorname{MMD}}^2 \sim \sum^\infty_{l=1} \lambda_l[z^2_l - 2] \qquad \text{ where } \qquad \lambda_i\phi_i(x) = \int_\mathcal{X}\widetilde{k}(x,\widetilde{x})\phi_i(x)\text{ d}P(x)$$where $\widetilde{k}$ is a centered kernel and $z_l\sim\mathcal{N}(0, 2)$
+
+However, to compute such a distribution with null-hypothesis $P=Q$ in closed form is hard, therefore:
+
+- We have to rely on using a boostrap method which is done by *permuting* the set $X$ and $Y$ before testing (i.e mixing them up)
+- This would gives us the estimate of the MMD statistics when $P=Q$, which can them be used to compute the threshold for statistical test.
+
+Now, to find a best kernel, we have that:
+
+> *Remark (Finding a best kernek):* Given the distribution when $P=Q$, one can see that the power of the test is given to be:
+> $$\text{Pr}_1\left({n\widehat{\operatorname{MMD}} > \hat{c}_\alpha }\right) \rightarrow  \Phi\left({\frac{\operatorname{MMD}^2(P, Q)}{\sqrt{V_n(P, Q)}} - \frac{c_\alpha}{n\sqrt{V_n(P, Q)}} }\right)$$
+> To find the best kernel, we can find the kernel that maximize the test power. We would like to note the following:
+> $$\frac{\operatorname{MMD}^2(P, Q)}{\sqrt{V_n(P, Q)}} = \mathcal{O}(\sqrt{n}) \qquad \frac{c_\alpha}{n\sqrt{V_n(P, Q)}} =\mathcal{O}(n^{-1/2})$$
+> therefore, we can ignore the second term, and we can maximize the first term only, by setting this to be the objective of the neural network (that perform the feature extraction of the kernel). Note that we can derive the estimator for $V_n$ too.
+
+For example, one can use the following kernel [from](https://arxiv.org/abs/2002.09116)
+
+$$
+k_\theta(x, y) = \big[(1-\varepsilon)\kappa(\Phi_\theta(x), \Phi_\theta(y))+\varepsilon\big]q(x, y)
+$$
+
+where $\Phi_\theta$ is a neural network and $\kappa$ and $q$ are Gaussian kernel, which is able to distinguish between CIFAR-10 vs CIFAR-10 (image dataset).
+
+Now come the more important question, can we use any kernel to give us the appropriate MMD test ? The answer is obviously no, but what kind of kernel would be approriate ? Starting with a defintion of a good kernel (or we will call it characteristic):
+
+> **Definition (Charateristic kernel):** A RKHS (with corresponding kernel) is called *characteristic* if $\operatorname{MMD}(P, Q; \mathcal{F}) = 0$ iff $P = Q$
+
+That is when $P$ and $Q$ are the same, the value of MMD should be zero. What would be an appropriate kernel ? In this case, we would like to assume that kernel that we are working on is *Translation Invariance* i.e
+
+> **Definition (Translation Invariance):** The kernel $k$ is called *Translation Invariance* if there is a function $f$ such that:
+> $$k(x,y)=f(x-y)$$
+> for any $x$ and $y$
+
+Then, one can have a fourier representation/coefficient of the kernel to be (assume we are within the domain of $[-\pi,\pi]$) the multiple within the fourier series expansion:
+
+$$
+k(x, y) = \sum^\infty_{l=-\infty} \hat{k}_l \exp(il(x-y)) = \sum^\infty_{l=-\infty}\underbrace{\left[{\sqrt{\hat{k}_l} \exp(ilx) }\right]}_{\phi_l(x)}\underbrace{\left[{\sqrt{\hat{k}_l}\exp(-ily)}\right]}_{\overline{\phi_l(y)}}
+$$
+
+$\hat{k}_l$ is called the fourier coefficient of the kernel. For the probability distribution, one can also have a similar way to find the fourier coefficient of them. We have the following result.
+
+> **Theorem:** The value of MMD can be written as:
+> $$\operatorname{MMD}^2(P, Q;\mathcal{F}) = \sum^\infty_{l=-\infty} |\phi_{P,l} - \phi_{Q, l}|^2\hat{k}_l$$
+> for $\hat{k}_l$ being the fourier coefficient of the kernel, $\phi_{P,l}$ and $\phi_{Q,l}$ are fourier coefficient of the probability distributions $P$ and $Q$, respectively.
+
+Therefore, the kernel is characterisic iff none of the $\hat{k}_l$ is equal to zero.
+
+On the other hand, instead of considering within specific range $[\pi,-\pi]$, one can also define the RKHS to be universal, which is when:
+
+> **Definition (Universal RKHS):** Given RKHS, it is *universal* if when:
+> - $k(x, x')$ is continuous
+> - $\mathcal{X}$ is compact.
+> - $\mathcal{F}$ is dense in $C(\mathcal{X})$ wrt. $L_\infty$ i.e for $\varepsilon>0$ and $f\in C(\mathcal{X})$, there is $g\in\mathcal{F}$ such that: $$\|f-g\|_\infty\le\varepsilon$$
+
+in which we can show that:
+
+> **Theorem:** If $\mathcal{F}$ is universal then $\operatorname{MMD}(P, Q;\mathcal{F}) = 0$ iff $P = Q$
+
+
+## Hilbert-Schmidt Indepdent Criterion
+
+Now, we are interested in given a pair of variables $\{(x_i, y_i)\}^n_{i=1}\sim P_{XY}$ are they dependent of each other ?
+- Usually one can use the MMD to find the differences whether this sample is sampled from the $P_XP_Y$ (i.e product of marginal distribution). However, we don't have an access to this. 
+- Another question is: which kind of kernel would we be use ? is it a product kernel ? or different kind of kernels 
+
+### Preliminary Defintions + Covariance Operators
+
+We start off by defining the tensor product between elements in the Hilber space. 
+
+> **Definition (Tensor Product):** Given element $a,b,c\in\mathcal{H}$ of the Hilbert space, the *tensor product* between $a$ and $b$ is denoted as $a\otimes b$ such that: 
+> $$(a\otimes b)c = \langle b,c\rangle_\mathcal{H}a$$
+> Note that this is analogous to when $a,b$ and $c$ are vector, then $(ab^\top)c=b^\top ca$
+
+Now, we would like to extends the notion of the inner product (and norm) to the linear transformation between Hilbert space. This would gives us Hilbert-Schmidt Operators i.e
+
+> **Definition (Hilbert-Schmidt Operators):** Given a separable (countable orthonormal basis Hilbert spaces $\mathcal{F}$ and $\mathcal{G}$ with orthonormal basis $(f_i)_{i\in I}$ and $(g_j)_{j\in I}$, respectively and 2 linear transformation between them: $L:\mathcal{G}\rightarrow\mathcal{F}$ and $M:\mathcal{G}\rightarrow\mathcal{F}$: 
+> $$\langle{L, M}\rangle_{\operatorname{HS}} = \sum_{j\in J}\langle{Lg_j, Mg_j}\rangle_\mathcal{F}$$
+
+
+Now, we can define the covariance operator (in similar manners to the mean embedding) as:
+
+> **Definition (Covariance Operator):** The *covariance operators* $C_{xy} : \mathcal{G} \rightarrow \mathcal{F}$ is given by:
+> $$\langle{f, C_{xy}g}\rangle_\mathcal{F} = \mathbb{E}_{xy}[f(x)g(y)]$$
+> which we can show to exists if the kernel associated $\mathcal{G}$ and $\mathcal{F}$: $k_1$ and $k_2$, respectively, are such that  $k_1(x,x) < \infty$ and $k_2(y,y)<\infty$
+
+The existances can be proven by observe that, for any linear operator $A:\mathcal{G} \rightarrow \mathcal{F}$, we have:
+
+$$
+\langle{C_{xy}, A}\rangle_{\operatorname{HS}} = \mathbb{E}_{xy}\big[\langle\psi(x)\otimes\phi(y), A\rangle_{\operatorname{HS}}\big]
+$$
+
+and so we can use Riesz representation thoerem to proof the existence. Then, we are ready to define the HSIC
+
+### Definition/Properties/Estimation
+
+> **Definition (Hilbert-Schmidt Indepdent Criterion):** The HSIC can be seen as the norm of the centered covariance operator i.e: 
+> $$\operatorname{HSIC}(P_{XY};\mathcal{F}, \mathcal{G}) = \|{C_{xy} - \mu_x\otimes\mu_y}\|_{\operatorname{HS}} = \|{\widetilde{C}_{xy}}\|_{\operatorname{HS}}$$
+
+In relation to MMD, we can show that
+
+

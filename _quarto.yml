@@ -1,0 +1,25 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Phu's Website"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+      - href: writings.qmd
+        text: Writings
+      - works.qmd
+      - href: miscellaneous.qmd
+        text: Miscellaneous
+
+format:
+  html:
+    theme: flatly
+    css: styles.css
+    toc: true
+
+
+
