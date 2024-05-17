@@ -1,16 +1,16 @@
 [
   {
-    "listing": "/miscellaneous.html",
-    "items": [
-      "/miscellaneous/1-plato/index.html"
-    ]
-  },
-  {
     "listing": "/writings.html",
     "items": [
       "/posts/3-yoneda-explore/index.html",
       "/posts/2-kernel-test/index.html",
       "/posts/1-GiHKAL/index.html"
+    ]
+  },
+  {
+    "listing": "/miscellaneous.html",
+    "items": [
+      "/miscellaneous/1-plato/index.html"
     ]
   }
 ]
