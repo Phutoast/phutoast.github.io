@@ -2,7 +2,7 @@
 title: "Hey!"
 ---
 
-> When we first begin to believe anything, what we believe is not a single proposition, it is a whole system of propositions. (Light dawns gradually over the whole.)
+> When we first begin to believe anything, what we believe is not a single proposition, it is a whole system of propositions. (Light dawns gradually over the whole.)[^1]
 >
 > —<cite>Ludwig Wittgenstein's <i>On Certainty</i> <span class="loc-quote">§141</span></cite></p>
 
@@ -30,3 +30,4 @@ If you find any mistakes and/or wanted to contact me, please send an email to:
 
 without any separation between first and last name
 
+[^1]: I first heard this quote from <a href="https://www.routledge.com/The-Pittsburgh-School-of-Philosophy-Sellars-McDowell-Brandom/Maher/p/book/9781138813557" target="blank">The Pittsburgh School of Philosophy</a>
