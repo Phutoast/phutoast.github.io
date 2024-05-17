@@ -4,7 +4,7 @@
     "href": "works.html",
     "title": "Works",
     "section": "",
-    "text": "Apart from blogs, I also works on larger scale projects, here are the list of them.\n\n\n  \n\nThai Translation of Category theory for Programmers (ทฤษฎีcategoryสำหรับโปรแกรมเมอร์)"
+    "text": "Apart from blogs, I also work on larger scale projects, here are the list of them.\n\n\n  \n\nThai Translation of Category theory for Programmers (ทฤษฎีcategoryสำหรับโปรแกรมเมอร์)"
   },
   {
     "objectID": "posts/1-GiHKAL/index.html",
@@ -88,7 +88,14 @@
     "href": "index.html",
     "title": "Hey!",
     "section": "",
-    "text": "When we first begin to believe anything, what we believe is not a single proposition, it is a whole system of propositions. (Light dawns gradually over the whole.)\n—Ludwig Wittgenstein’s On Certainty §141\n\n\nNice to meet you. I’m Phu Sakulwongtana (ภูร์ สกุลวงศ์ธนา) from Thailand. I’m generally interested in machine learning and mathematics (especially category theory and its application).\n\n\n\n\nThis website contains what I have learnt over the year. I decided to split my contents to be in 3 types:\n\nTechnical Writing: mainly about math (especially category theory) and machine learning\nCollection of my larger works: including my WIP thai translation of the book Category theory for Programmers by Bartosz Milewski, and other longer form writing.\nNotes on subjects that I am quite new into, for example: philosophy and other related fields (might be abit of chemistry and neuroscience mixed in). These are mostly expository/summary notes from the book that I have read.\n\n\n\nIf you find any mistakes and/or wanted to contact me, please send an email to:\n\n(first name)(last name)@gmail.com\n\nwithout any separation between first and last name"
+    "text": "When we first begin to believe anything, what we believe is not a single proposition, it is a whole system of propositions. (Light dawns gradually over the whole.)1\n—Ludwig Wittgenstein’s On Certainty §141\nNice to meet you. I’m Phu Sakulwongtana (ภูร์ สกุลวงศ์ธนา) from Thailand. I’m generally interested in machine learning and mathematics (especially category theory and its application).\nIf you find any mistakes and/or wanted to contact me, please send an email to:\nwithout any separation between first and last name"
+  },
+  {
+    "objectID": "index.html#footnotes",
+    "href": "index.html#footnotes",
+    "title": "Hey!",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nI first heard this quote from The Pittsburgh School of Philosophy↩︎"
   },
   {
     "objectID": "posts/2-kernel-test/index.html",
