@@ -1,7 +1,32 @@
 ---
-title: "Mysite"
+title: "Hey!"
 ---
 
-This is a Quarto website.
+> When we first begin to believe anything, what we believe is not a single proposition, it is a whole system of propositions. (Light dawns gradually over the whole.)
+>
+> —<cite>Ludwig Wittgenstein's <i>On Certainty</i> <span class="loc-quote">§141</span></cite></p>
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Nice to meet you. I'm Phu Sakulwongtana (ภูร์ สกุลวงศ์ธนา) from Thailand. I'm generally interested in machine learning and mathematics (especially category theory and its application).
+
+:::: {.columns}
+
+::: {.column width="35%"}
+![](assets/images/face.jpg){width=250}
+:::
+
+::: {.column width="65%"}
+This website contains what I have learnt over the year. I decided to split my contents to be in 3 types:
+
+- [Technical Writing](writings.qmd): mainly about math (especially category theory) and machine learning
+- [Collection of my larger works](works.qmd): including my <a href="https://phutoast.github.io/thai-translation-ctfp" target="_blank">WIP thai translation</a> of the book *Category theory for Programmers* by Bartosz Milewski, and other longer form writing.
+- [Notes](miscellaneous.qmd) on subjects that I am quite new into, for example: philosophy and other related fields (might be abit of chemistry and neuroscience mixed in). These are mostly expository/summary notes from the book that I have read.
+
+:::
+
+::::
+If you find any mistakes and/or wanted to contact me, please send an email to: 
+
+> (first name)(last name)@gmail.com
+
+without any separation between first and last name
+

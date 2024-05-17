@@ -1,9 +1,6 @@
 ---
 title: "Yoneda Lemma: An Exploration (WIP)"
 description: "Explain what Yoneda Lemma and why it is important (and interesting), as compacted as possible. We will focus on the intuition and usage, but will still provides the full proof at the end."
-author:
-  - name: author-name-here
-    url: https://samanthacsik.github.io/
 date: 05/16/2024
 categories: [Category Theory]
 draft: false

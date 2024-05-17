@@ -1,9 +1,6 @@
 ---
 title: "Kernel Statistical Test"
 description: "A cheat overview of the use of kernel method to perform high dimensional statistical test."
-author:
-  - name: author-name-here
-    url: https://samanthacsik.github.io/
 date: 11/28/2023
 categories: [Machine Learning]
 draft: false

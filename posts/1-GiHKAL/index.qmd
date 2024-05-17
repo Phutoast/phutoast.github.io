@@ -1,9 +1,6 @@
 ---
 title: "Gaussian That I Have Known and Loved"
 description: "A cheat sheet/overview of the applications and useful tricks in relation to Gaussian distribution within a field of machine learning."
-author:
-  - name: author-name-here
-    url: https://samanthacsik.github.io/
 date: 11/27/2022
 categories: [Machine Learning]
 draft: false

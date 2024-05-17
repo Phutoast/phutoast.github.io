@@ -2,8 +2,8 @@
 title: "Introduction to Plato"
 description: "They all come together under Plato !! This is an notes that gives an overview of Plato's corpus and how the expert classify his work"
 author:
-  - name: author-name-here
-    url: https://samanthacsik.github.io/
+  - name: Phu Sakulwongtana
+    url: phutoast.github.io
 date: 8/2/2022
 categories: [philosophers]
 draft: false
