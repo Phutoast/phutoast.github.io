@@ -69,6 +69,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -153,6 +182,17 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#probing-action" id="toc-probing-action" class="nav-link active" data-scroll-target="#probing-action">Probing Action</a></li>
+  <li><a href="#categorical-construction" id="toc-categorical-construction" class="nav-link" data-scroll-target="#categorical-construction">Categorical Construction</a>
+  <ul class="collapse">
+  <li><a href="#terminal-object" id="toc-terminal-object" class="nav-link" data-scroll-target="#terminal-object">Terminal Object</a></li>
+  <li><a href="#product" id="toc-product" class="nav-link" data-scroll-target="#product">Product</a></li>
+  <li><a href="#results-on-products" id="toc-results-on-products" class="nav-link" data-scroll-target="#results-on-products">Results on Products</a></li>
+  </ul></li>
+  <li><a href="#yoneda-lemma" id="toc-yoneda-lemma" class="nav-link" data-scroll-target="#yoneda-lemma">Yoneda Lemma…</a>
+  <ul class="collapse">
+  <li><a href="#hom-functor" id="toc-hom-functor" class="nav-link" data-scroll-target="#hom-functor">Hom-Functor</a></li>
+  <li><a href="#the-lemma" id="toc-the-lemma" class="nav-link" data-scroll-target="#the-lemma">The Lemma</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -164,13 +204,734 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p><strong>Required Knowledge:</strong> some conformation with what category is, for the latter section, you would need to understand the notion of functor and natural transformation.</p>
+<p>The notes are adapted from <a href="https://github.com/BartoszMilewski/Publications/blob/master/TheDaoOfFP/DaoFP.pdf"><em>The Dao of Functional Programming</em></a> by Bartosz Milewski and <a href="https://arxiv.org/abs/1912.10642"><em>Notes on Category Theory with examples from basic mathematics</em></a> by Paolo Perrone</p>
 <section id="probing-action" class="level1">
 <h1>Probing Action</h1>
+<p>We shall start with the general “relational” aspect of category theory, being the main strength of category theory. It is quite clear that category <em>prohibits</em> the viewing of the inside of the object, that is we can only compare/inspect objects using an arrow. Let’s start with the simplest example.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-probing-init-obj-set" class="proof remark">
+<p><span class="proof-title"><em>Remark 4</em>. </span>Given the category of sets <span class="math inline">\(\textbf{Set}\)</span>, where its object are all the sets (we will ignore the issue of Russell’s paradox for now) and the morphisms between sets are relation between sets. To see the elements of a set <span class="math inline">\(A\)</span>, one can observe the following: <span class="math display">\[A\cong\operatorname{Hom}_\textbf{Set}(1, A)\]</span></p>
+<p>where <span class="math inline">\(1\)</span> is a singleton set i.e set with only one element. With this, one can “represent” the elements of the set based on the set of morphism from singleton set. Or, in other words, we have used the singleton set <span class="math inline">\(1\)</span> to ``probe’’ into the set.</p>
+</div>
+</div>
+</div>
+<p>Let’s consider this probing action in a more generalized manner.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-prob-action-nat-cond" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1</strong></span> <strong>(Probing Actions/Neutrality Condition)</strong> Let’s consider the following diagram, where on the LHS, we consider the action of “changing target”, while the RHS got to do with the “changing the source” (from <span class="math inline">\(X\)</span> to <span class="math inline">\(Y\)</span> in both cases), highlighted in red:</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%5C%5B%0A%20%20%20%20%5Cbegin%7Btikzcd%7D%0A%20%20%20%20%09%26%20x%20%26%26%26%20x%20%26%26%20y%20%5C%5C%0A%20%20%20%20%09a%20%26%26%20b%20%26%26%26%20a%0A%20%20%20%20%09%5Carrow%5B%22f%22'%2C%20from%3D2-1%2C%20to%3D2-3%5D%0A%20%20%20%20%09%5Carrow%5B%22%22%7Bname%3D0%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22h%22'%2C%20from%3D1-2%2C%20to%3D2-1%5D%0A%20%20%20%20%09%5Carrow%5B%22%22%7Bname%3D1%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22%7Bh%5Ccirc%20g%7D%22%2C%20from%3D1-2%2C%20to%3D2-3%5D%0A%20%20%20%20%09%5Carrow%5B%22%22%7Bname%3D2%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22%7Bk%5Ccirc%20g%7D%22%2C%20from%3D1-7%2C%20to%3D2-6%5D%0A%20%20%20%20%09%5Carrow%5B%22%22%7Bname%3D3%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22k%22'%2C%20from%3D1-5%2C%20to%3D2-6%5D%0A%20%20%20%20%09%5Carrow%5B%22g%22'%2C%20from%3D1-7%2C%20to%3D1-5%5D%0A%20%20%20%20%09%5Carrow%5B%22%7B(f%5Ccirc%20-)%7D%22'%2C%20color%3D%7Brgb%2C255%3Ared%2C214%3Bgreen%2C92%3Bblue%2C92%7D%2C%20shorten%20%3C%3D6pt%2C%20shorten%20%3E%3D6pt%2C%20dashed%2C%20from%3D0%2C%20to%3D1%5D%0A%20%20%20%20%09%5Carrow%5B%22%7B(-%5Ccirc%20g)%7D%22%2C%20color%3D%7Brgb%2C255%3Ared%2C214%3Bgreen%2C92%3Bblue%2C92%7D%2C%20shorten%20%3C%3D6pt%2C%20shorten%20%3E%3D6pt%2C%20dashed%2C%20from%3D3%2C%20to%3D2%5D%0A%20%20%20%20%5Cend%7Btikzcd%7D%0A%5C%5D%0A" alt=" \[ \begin{tikzcd} &amp; x &amp;&amp;&amp; x &amp;&amp; y \\ a &amp;&amp; b &amp;&amp;&amp; a \arrow[&quot;f&quot;', from=2-1, to=2-3] \arrow[&quot;&quot;{name=0, anchor=center, inner sep=0}, &quot;h&quot;', from=1-2, to=2-1] \arrow[&quot;&quot;{name=1, anchor=center, inner sep=0}, &quot;{h\circ g}&quot;, from=1-2, to=2-3] \arrow[&quot;&quot;{name=2, anchor=center, inner sep=0}, &quot;{k\circ g}&quot;, from=1-7, to=2-6] \arrow[&quot;&quot;{name=3, anchor=center, inner sep=0}, &quot;k&quot;', from=1-5, to=2-6] \arrow[&quot;g&quot;', from=1-7, to=1-5] \arrow[&quot;{(f\circ -)}&quot;', color={rgb,255:red,214;green,92;blue,92}, shorten <=6pt, shorten >=6pt, dashed, from=0, to=1] \arrow[&quot;{(-\circ g)}&quot;, color={rgb,255:red,214;green,92;blue,92}, shorten <=6pt, shorten >=6pt, dashed, from=3, to=2] \end{tikzcd} \] ">
+</p>
+<p>Please be aware that these two diagram are independent of each other. We can see, here, that to change the target of viewing, we can perform the post-composition of the morphism between 2 targets to the probe. Similarly, the pre-composition is used to change the source.</p>
+<p><em>Naturality Condition:</em> It wouldn’t make sense if we are were to change the target and the source (LHS diagram below), and get different result from when we change the source and then target (RHS diagram below):</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%5C%5B%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsOCxbMCwxLCJBIl0sWzMsMSwiQiJdLFswLDAsIlgiXSxbNSwwLCJYIl0sWzgsMCwiWSJdLFs1LDEsIkEiXSxbMywwLCJZIl0sWzgsMSwiQiJdLFswLDEsImYiLDJdLFsyLDAsImgiLDJdLFsyLDEsImhcXGNpcmMgZiIsMV0sWzMsNSwiayIsMl0sWzQsNSwia1xcY2lyYyBnIiwxXSxbNiwxXSxbNCwzLCJnIiwyXSxbNiwyLCJnIiwyXSxbNSw3LCJmIiwyXSxbNCw3XSxbOSwxMCwiKGZcXGNpcmMgLSkiLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX0sWzAsNjAsNjAsMV1dLFsxMCwxMywiKC1cXGNpcmMgZykiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX0sWzAsNjAsNjAsMV1dLFsxMiwxMSwiKC1cXGNpcmMgZykiLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7InRhaWwiOnsibmFtZSI6ImFycm93aGVhZCJ9LCJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX0sWzAsNjAsNjAsMV1dLFsxMiwxNywiKGZcXGNpcmMtKSIsMix7InNob3J0ZW4iOnsic291cmNlIjoyMCwidGFyZ2V0IjoyMH0sImxldmVsIjoxLCJjb2xvdXIiOlswLDYwLDYwXSwic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fSxbMCw2MCw2MCwxXV1d%0A%5Cbegin%7Btikzcd%7D%0A%09X%20%26%26%26%20Y%20%26%26%20X%20%26%26%26%20Y%20%5C%5C%0A%09A%20%26%26%26%20B%20%26%26%20A%20%26%26%26%20B%0A%09%5Carrow%5B%22f%22'%2C%20from%3D2-1%2C%20to%3D2-4%5D%0A%09%5Carrow%5B%22%22%7Bname%3D0%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22h%22'%2C%20from%3D1-1%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22%22%7Bname%3D1%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22%7Bh%5Ccirc%20f%7D%22%7Bdescription%7D%2C%20from%3D1-1%2C%20to%3D2-4%5D%0A%09%5Carrow%5B%22%22%7Bname%3D2%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22k%22'%2C%20from%3D1-6%2C%20to%3D2-6%5D%0A%09%5Carrow%5B%22%22%7Bname%3D3%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22%7Bk%5Ccirc%20g%7D%22%7Bdescription%7D%2C%20from%3D1-9%2C%20to%3D2-6%5D%0A%09%5Carrow%5B%22%22%7Bname%3D4%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20from%3D1-4%2C%20to%3D2-4%5D%0A%09%5Carrow%5B%22g%22'%2C%20from%3D1-9%2C%20to%3D1-6%5D%0A%09%5Carrow%5B%22g%22'%2C%20from%3D1-4%2C%20to%3D1-1%5D%0A%09%5Carrow%5B%22f%22'%2C%20from%3D2-6%2C%20to%3D2-9%5D%0A%09%5Carrow%5B%22%22%7Bname%3D5%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20from%3D1-9%2C%20to%3D2-9%5D%0A%09%5Carrow%5B%22%7B(f%5Ccirc%20-)%7D%22'%2C%20color%3D%7Brgb%2C255%3Ared%2C214%3Bgreen%2C92%3Bblue%2C92%7D%2C%20shorten%20%3C%3D10pt%2C%20shorten%20%3E%3D10pt%2C%20dashed%2C%20from%3D0%2C%20to%3D1%5D%0A%09%5Carrow%5B%22%7B(-%5Ccirc%20g)%7D%22%2C%20color%3D%7Brgb%2C255%3Ared%2C214%3Bgreen%2C92%3Bblue%2C92%7D%2C%20shorten%20%3C%3D10pt%2C%20shorten%20%3E%3D10pt%2C%20dashed%2C%20from%3D1%2C%20to%3D4%5D%0A%09%5Carrow%5B%22%7B(-%5Ccirc%20g)%7D%22'%2C%20color%3D%7Brgb%2C255%3Ared%2C214%3Bgreen%2C92%3Bblue%2C92%7D%2C%20shorten%20%3C%3D10pt%2C%20shorten%20%3E%3D10pt%2C%20dashed%2C%20tail%20reversed%2C%20no%20head%2C%20from%3D3%2C%20to%3D2%5D%0A%09%5Carrow%5B%22%7B(f%5Ccirc-)%7D%22'%2C%20color%3D%7Brgb%2C255%3Ared%2C214%3Bgreen%2C92%3Bblue%2C92%7D%2C%20shorten%20%3C%3D10pt%2C%20shorten%20%3E%3D10pt%2C%20dashed%2C%20from%3D3%2C%20to%3D5%5D%0A%5Cend%7Btikzcd%7D%5C%5D%0A" alt=" \[ % https://q.uiver.app/#q=WzAsOCxbMCwxLCJBIl0sWzMsMSwiQiJdLFswLDAsIlgiXSxbNSwwLCJYIl0sWzgsMCwiWSJdLFs1LDEsIkEiXSxbMywwLCJZIl0sWzgsMSwiQiJdLFswLDEsImYiLDJdLFsyLDAsImgiLDJdLFsyLDEsImhcXGNpcmMgZiIsMV0sWzMsNSwiayIsMl0sWzQsNSwia1xcY2lyYyBnIiwxXSxbNiwxXSxbNCwzLCJnIiwyXSxbNiwyLCJnIiwyXSxbNSw3LCJmIiwyXSxbNCw3XSxbOSwxMCwiKGZcXGNpcmMgLSkiLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX0sWzAsNjAsNjAsMV1dLFsxMCwxMywiKC1cXGNpcmMgZykiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX0sWzAsNjAsNjAsMV1dLFsxMiwxMSwiKC1cXGNpcmMgZykiLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7InRhaWwiOnsibmFtZSI6ImFycm93aGVhZCJ9LCJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX0sWzAsNjAsNjAsMV1dLFsxMiwxNywiKGZcXGNpcmMtKSIsMix7InNob3J0ZW4iOnsic291cmNlIjoyMCwidGFyZ2V0IjoyMH0sImxldmVsIjoxLCJjb2xvdXIiOlswLDYwLDYwXSwic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fSxbMCw2MCw2MCwxXV1d \begin{tikzcd} X &amp;&amp;&amp; Y &amp;&amp; X &amp;&amp;&amp; Y \\ A &amp;&amp;&amp; B &amp;&amp; A &amp;&amp;&amp; B \arrow[&quot;f&quot;', from=2-1, to=2-4] \arrow[&quot;&quot;{name=0, anchor=center, inner sep=0}, &quot;h&quot;', from=1-1, to=2-1] \arrow[&quot;&quot;{name=1, anchor=center, inner sep=0}, &quot;{h\circ f}&quot;{description}, from=1-1, to=2-4] \arrow[&quot;&quot;{name=2, anchor=center, inner sep=0}, &quot;k&quot;', from=1-6, to=2-6] \arrow[&quot;&quot;{name=3, anchor=center, inner sep=0}, &quot;{k\circ g}&quot;{description}, from=1-9, to=2-6] \arrow[&quot;&quot;{name=4, anchor=center, inner sep=0}, from=1-4, to=2-4] \arrow[&quot;g&quot;', from=1-9, to=1-6] \arrow[&quot;g&quot;', from=1-4, to=1-1] \arrow[&quot;f&quot;', from=2-6, to=2-9] \arrow[&quot;&quot;{name=5, anchor=center, inner sep=0}, from=1-9, to=2-9] \arrow[&quot;{(f\circ -)}&quot;', color={rgb,255:red,214;green,92;blue,92}, shorten <=10pt, shorten >=10pt, dashed, from=0, to=1] \arrow[&quot;{(-\circ g)}&quot;, color={rgb,255:red,214;green,92;blue,92}, shorten <=10pt, shorten >=10pt, dashed, from=1, to=4] \arrow[&quot;{(-\circ g)}&quot;', color={rgb,255:red,214;green,92;blue,92}, shorten <=10pt, shorten >=10pt, dashed, tail reversed, no head, from=3, to=2] \arrow[&quot;{(f\circ-)}&quot;', color={rgb,255:red,214;green,92;blue,92}, shorten <=10pt, shorten >=10pt, dashed, from=3, to=5] \end{tikzcd}\] ">
+</p>
+<p>Therefore, we enforce the neutrality condition onto the probing action (the naming does make sense, as it is “natural” to be this way): <span class="math display">\[
+(-\circ g)\circ(f\circ-) = (f\circ-)\circ(-\circ g)
+\]</span></p>
+</div>
+</div>
+</div>
+<p>Given this alone, we can state the special case of Yoneda lemma, where the gist of it is that the object can be characterized based on the arrow coming in. If 2 objects has the same relation to all other objects, then they are strong resemble (isomorphic) each others.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-iso-obj-in" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 1</strong></span> <strong>:</strong> Within category <span class="math inline">\(\textbf{C}\)</span>, given a pair objects <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> and with any object <span class="math inline">\(X\)</span>, we have an <strong>naturally</strong> isomorphic <span class="math inline">\(\operatorname{Hom}_\textbf{C}(X, A)\cong\operatorname{Hom}_\textbf{C}(X, B)\)</span> iff <span class="math inline">\(A\cong B\)</span>. That is, if the arrow coming to both <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are indistinguishable, then <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are isomorphic.</p>
+</div>
+</div>
+</div>
+<details>
+<p><span class="math inline">\((\boldsymbol{\implies}):\)</span> Let’s call the map between <span class="math inline">\(\operatorname{Hom}_\textbf{C}(X, A)\)</span> and <span class="math inline">\(\operatorname{Hom}_\textbf{C}(X, B)\)</span> to be called <span class="math inline">\(\alpha_X\)</span>. Let’s explain what it means for <span class="math inline">\(\alpha\)</span> to be natural. We have that both change of source and target should be the same:</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%5C%5B%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsOCxbMCwwLCJYIl0sWzMsMCwiWSJdLFswLDEsIkEiXSxbMywxLCJCIl0sWzUsMCwiWCJdLFs4LDAsIlkiXSxbNSwxLCJBIl0sWzgsMSwiQiJdLFswLDIsImgiLDJdLFswLDMsIlxcYWxwaGFfWChoKSIsMV0sWzEsMCwiZyIsMl0sWzQsNiwiaCIsMl0sWzUsNiwiaFxcY2lyYyBnIiwxXSxbNSw0LCJnIiwyXSxbNSw3XSxbMSwzXSxbOCw5LCJcXGFscGhhX1giLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX0sWzAsNjAsNjAsMV1dLFsxMSwxMiwiKC1cXGNpcmMgZykiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX0sWzAsNjAsNjAsMV1dLFsxMiwxNCwiXFxhbHBoYV9ZIiwyLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfSwibGV2ZWwiOjEsImNvbG91ciI6WzAsNjAsNjBdLCJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19LFswLDYwLDYwLDFdXSxbOSwxNSwiKC1cXGNpcmMgZykiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX0sWzAsNjAsNjAsMV1dXQ%3D%3D%0A%5Cbegin%7Btikzcd%7D%0A%09X%20%26%26%26%20Y%20%26%26%20X%20%26%26%26%20Y%20%5C%5C%0A%09A%20%26%26%26%20B%20%26%26%20A%20%26%26%26%20B%0A%09%5Carrow%5B%22%22%7Bname%3D0%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22h%22'%2C%20from%3D1-1%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22%22%7Bname%3D1%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22%7B%5Calpha_X(h)%7D%22%7Bdescription%7D%2C%20from%3D1-1%2C%20to%3D2-4%5D%0A%09%5Carrow%5B%22g%22'%2C%20from%3D1-4%2C%20to%3D1-1%5D%0A%09%5Carrow%5B%22%22%7Bname%3D2%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20from%3D1-4%2C%20to%3D2-4%5D%0A%09%5Carrow%5B%22%22%7Bname%3D3%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22h%22'%2C%20from%3D1-6%2C%20to%3D2-6%5D%0A%09%5Carrow%5B%22g%22'%2C%20from%3D1-9%2C%20to%3D1-6%5D%0A%09%5Carrow%5B%22%22%7Bname%3D4%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22%7Bh%5Ccirc%20g%7D%22%7Bdescription%7D%2C%20from%3D1-9%2C%20to%3D2-6%5D%0A%09%5Carrow%5B%22%22%7Bname%3D5%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20from%3D1-9%2C%20to%3D2-9%5D%0A%09%5Carrow%5B%22%7B%5Calpha_X%7D%22'%2C%20color%3D%7Brgb%2C255%3Ared%2C214%3Bgreen%2C92%3Bblue%2C92%7D%2C%20shorten%20%3C%3D10pt%2C%20shorten%20%3E%3D10pt%2C%20dashed%2C%20from%3D0%2C%20to%3D1%5D%0A%09%5Carrow%5B%22%7B(-%5Ccirc%20g)%7D%22%2C%20color%3D%7Brgb%2C255%3Ared%2C214%3Bgreen%2C92%3Bblue%2C92%7D%2C%20shorten%20%3C%3D10pt%2C%20shorten%20%3E%3D10pt%2C%20dashed%2C%20from%3D1%2C%20to%3D2%5D%0A%09%5Carrow%5B%22%7B(-%5Ccirc%20g)%7D%22%2C%20color%3D%7Brgb%2C255%3Ared%2C214%3Bgreen%2C92%3Bblue%2C92%7D%2C%20shorten%20%3C%3D10pt%2C%20shorten%20%3E%3D10pt%2C%20dashed%2C%20from%3D3%2C%20to%3D4%5D%0A%09%5Carrow%5B%22%7B%5Calpha_Y%7D%22'%2C%20color%3D%7Brgb%2C255%3Ared%2C214%3Bgreen%2C92%3Bblue%2C92%7D%2C%20shorten%20%3C%3D10pt%2C%20shorten%20%3E%3D10pt%2C%20dashed%2C%20from%3D4%2C%20to%3D5%5D%0A%5Cend%7Btikzcd%7D%0A%5C%5D%0A" alt=" \[ % https://q.uiver.app/#q=WzAsOCxbMCwwLCJYIl0sWzMsMCwiWSJdLFswLDEsIkEiXSxbMywxLCJCIl0sWzUsMCwiWCJdLFs4LDAsIlkiXSxbNSwxLCJBIl0sWzgsMSwiQiJdLFswLDIsImgiLDJdLFswLDMsIlxcYWxwaGFfWChoKSIsMV0sWzEsMCwiZyIsMl0sWzQsNiwiaCIsMl0sWzUsNiwiaFxcY2lyYyBnIiwxXSxbNSw0LCJnIiwyXSxbNSw3XSxbMSwzXSxbOCw5LCJcXGFscGhhX1giLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX0sWzAsNjAsNjAsMV1dLFsxMSwxMiwiKC1cXGNpcmMgZykiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX0sWzAsNjAsNjAsMV1dLFsxMiwxNCwiXFxhbHBoYV9ZIiwyLHsic2hvcnRlbiI6eyJzb3VyY2UiOjIwLCJ0YXJnZXQiOjIwfSwibGV2ZWwiOjEsImNvbG91ciI6WzAsNjAsNjBdLCJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19LFswLDYwLDYwLDFdXSxbOSwxNSwiKC1cXGNpcmMgZykiLDAseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX0sWzAsNjAsNjAsMV1dXQ== \begin{tikzcd} X &amp;&amp;&amp; Y &amp;&amp; X &amp;&amp;&amp; Y \\ A &amp;&amp;&amp; B &amp;&amp; A &amp;&amp;&amp; B \arrow[&quot;&quot;{name=0, anchor=center, inner sep=0}, &quot;h&quot;', from=1-1, to=2-1] \arrow[&quot;&quot;{name=1, anchor=center, inner sep=0}, &quot;{\alpha_X(h)}&quot;{description}, from=1-1, to=2-4] \arrow[&quot;g&quot;', from=1-4, to=1-1] \arrow[&quot;&quot;{name=2, anchor=center, inner sep=0}, from=1-4, to=2-4] \arrow[&quot;&quot;{name=3, anchor=center, inner sep=0}, &quot;h&quot;', from=1-6, to=2-6] \arrow[&quot;g&quot;', from=1-9, to=1-6] \arrow[&quot;&quot;{name=4, anchor=center, inner sep=0}, &quot;{h\circ g}&quot;{description}, from=1-9, to=2-6] \arrow[&quot;&quot;{name=5, anchor=center, inner sep=0}, from=1-9, to=2-9] \arrow[&quot;{\alpha_X}&quot;', color={rgb,255:red,214;green,92;blue,92}, shorten <=10pt, shorten >=10pt, dashed, from=0, to=1] \arrow[&quot;{(-\circ g)}&quot;, color={rgb,255:red,214;green,92;blue,92}, shorten <=10pt, shorten >=10pt, dashed, from=1, to=2] \arrow[&quot;{(-\circ g)}&quot;, color={rgb,255:red,214;green,92;blue,92}, shorten <=10pt, shorten >=10pt, dashed, from=3, to=4] \arrow[&quot;{\alpha_Y}&quot;', color={rgb,255:red,214;green,92;blue,92}, shorten <=10pt, shorten >=10pt, dashed, from=4, to=5] \end{tikzcd} \] ">
+</p>
+<p>Or <span class="math inline">\(\alpha_X(h)\circ g = \alpha_Y(h\circ g)\)</span>. To show that <span class="math inline">\(A\cong B\)</span>, we will have to find a map between <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> and its reverse. Let’s start with a map <span class="math inline">\(A\to B\)</span>, we can have:</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%5C%5B%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsNixbMCwxLCJBIl0sWzAsMCwiQSJdLFsyLDEsIkIiXSxbNCwxLCJBIl0sWzYsMSwiQiJdLFs2LDAsIkIiXSxbMSwwLCJcXG9wZXJhdG9ybmFtZXtpZH1fQSIsMl0sWzEsMiwiXFxhbHBoYV9BKFxcb3BlcmF0b3JuYW1le2lkfV9BKSJdLFs1LDQsIlxcb3BlcmF0b3JuYW1le2lkfV9CIl0sWzUsMywiXFxhbHBoYV9CXnstMX0oXFxvcGVyYXRvcm5hbWV7aWR9X0IpIiwyXSxbOSw4LCJcXGFscGhhX0IiLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX0sWzAsNjAsNjAsMV1dLFs2LDcsIlxcYWxwaGFfQSIsMix7InNob3J0ZW4iOnsic291cmNlIjoyMCwidGFyZ2V0IjoyMH0sImxldmVsIjoxLCJjb2xvdXIiOlswLDYwLDYwXSwic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fSxbMCw2MCw2MCwxXV1d%0A%5Cbegin%7Btikzcd%7D%0A%09A%20%26%26%26%26%26%26%20B%20%5C%5C%0A%09A%20%26%26%20B%20%26%26%20A%20%26%26%20B%0A%09%5Carrow%5B%22%22%7Bname%3D0%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22%7B%5Coperatorname%7Bid%7D_A%7D%22'%2C%20from%3D1-1%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22%22%7Bname%3D1%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22%7B%5Calpha_A(%5Coperatorname%7Bid%7D_A)%7D%22%2C%20from%3D1-1%2C%20to%3D2-3%5D%0A%09%5Carrow%5B%22%22%7Bname%3D2%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22%7B%5Calpha_B%5E%7B-1%7D(%5Coperatorname%7Bid%7D_B)%7D%22'%2C%20from%3D1-7%2C%20to%3D2-5%5D%0A%09%5Carrow%5B%22%22%7Bname%3D3%2C%20anchor%3Dcenter%2C%20inner%20sep%3D0%7D%2C%20%22%7B%5Coperatorname%7Bid%7D_B%7D%22%2C%20from%3D1-7%2C%20to%3D2-7%5D%0A%09%5Carrow%5B%22%7B%5Calpha_A%7D%22'%2C%20color%3D%7Brgb%2C255%3Ared%2C214%3Bgreen%2C92%3Bblue%2C92%7D%2C%20shorten%20%3C%3D6pt%2C%20shorten%20%3E%3D6pt%2C%20dashed%2C%20from%3D0%2C%20to%3D1%5D%0A%09%5Carrow%5B%22%7B%5Calpha_B%7D%22'%2C%20color%3D%7Brgb%2C255%3Ared%2C214%3Bgreen%2C92%3Bblue%2C92%7D%2C%20shorten%20%3C%3D6pt%2C%20shorten%20%3E%3D6pt%2C%20dashed%2C%20from%3D2%2C%20to%3D3%5D%0A%5Cend%7Btikzcd%7D%5C%5D%0A" alt="
+\[
+% https://q.uiver.app/#q=WzAsNixbMCwxLCJBIl0sWzAsMCwiQSJdLFsyLDEsIkIiXSxbNCwxLCJBIl0sWzYsMSwiQiJdLFs2LDAsIkIiXSxbMSwwLCJcXG9wZXJhdG9ybmFtZXtpZH1fQSIsMl0sWzEsMiwiXFxhbHBoYV9BKFxcb3BlcmF0b3JuYW1le2lkfV9BKSJdLFs1LDQsIlxcb3BlcmF0b3JuYW1le2lkfV9CIl0sWzUsMywiXFxhbHBoYV9CXnstMX0oXFxvcGVyYXRvcm5hbWV7aWR9X0IpIiwyXSxbOSw4LCJcXGFscGhhX0IiLDIseyJzaG9ydGVuIjp7InNvdXJjZSI6MjAsInRhcmdldCI6MjB9LCJsZXZlbCI6MSwiY29sb3VyIjpbMCw2MCw2MF0sInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX0sWzAsNjAsNjAsMV1dLFs2LDcsIlxcYWxwaGFfQSIsMix7InNob3J0ZW4iOnsic291cmNlIjoyMCwidGFyZ2V0IjoyMH0sImxldmVsIjoxLCJjb2xvdXIiOlswLDYwLDYwXSwic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fSxbMCw2MCw2MCwxXV1d
+\begin{tikzcd}
+    A &amp;&amp;&amp;&amp;&amp;&amp; B \\
+    A &amp;&amp; B &amp;&amp; A &amp;&amp; B
+    \arrow[&quot;&quot;{name=0, anchor=center, inner sep=0}, &quot;{\operatorname{id}_A}&quot;', from=1-1, to=2-1]
+    \arrow[&quot;&quot;{name=1, anchor=center, inner sep=0}, &quot;{\alpha_A(\operatorname{id}_A)}&quot;, from=1-1, to=2-3]
+    \arrow[&quot;&quot;{name=2, anchor=center, inner sep=0}, &quot;{\alpha_B^{-1}(\operatorname{id}_B)}&quot;', from=1-7, to=2-5]
+    \arrow[&quot;&quot;{name=3, anchor=center, inner sep=0}, &quot;{\operatorname{id}_B}&quot;, from=1-7, to=2-7]
+    \arrow[&quot;{\alpha_A}&quot;', color={rgb,255:red,214;green,92;blue,92}, shorten <=6pt, shorten >=6pt, dashed, from=0, to=1]
+    \arrow[&quot;{\alpha_B}&quot;', color={rgb,255:red,214;green,92;blue,92}, shorten <=6pt, shorten >=6pt, dashed, from=2, to=3]
+\end{tikzcd}\]
+">
+</p>
+<p>that is <span class="math inline">\(\alpha_A(\operatorname{id}_A):A\to B\)</span>, and its (candidate) inverse is <span class="math inline">\(\alpha^{-1}_B(\operatorname{id}_B):B\to A\)</span>. To show that it is actually an inverse, we need to show that:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\alpha_a(\operatorname{id}_a)\circ\alpha^{-1}_b(\operatorname{id}_b) &amp;= \alpha_b(\operatorname{id}_a\circ\alpha^{-1}_b(\operatorname{id}_b)) \\
+&amp;=  \alpha_b(\alpha^{-1}_b(\operatorname{id}_b)) = \operatorname{id}_b
+\\ \\
+\alpha^{-1}_b(\operatorname{id}_b)\circ\alpha_a(\operatorname{id}_a) &amp;= \alpha_a^{-1}(\operatorname{id}_b\circ\alpha_a(\operatorname{id}_a)) \\
+&amp;=  \alpha_a^{-1}(\alpha_a(\operatorname{id}_a)) = \operatorname{id}_a
+\end{aligned}
+\]</span></p>
+<p>where we have used the neutrality condition for both cases. Thus, we have shown that <span class="math inline">\(A\cong B\)</span></p>
+<p><span class="math inline">\((\boldsymbol{\impliedby}):\)</span> Let’s assume that <span class="math inline">\(A\cong B\)</span> that is there is an isomorphism <span class="math inline">\(f:A\xrightarrow{\cong} B\)</span>, we will have to construct the map <span class="math inline">\(\alpha\)</span>, in which we aim to show that it is actually <span class="math inline">\((f\circ-)\)</span>. There are 2 things we have to check:</p>
+<ul>
+<li><em>Neutrality:</em> It is clear that <span class="math inline">\((f\circ-)\)</span> will satisfies the neutrality condition (which is by definition).</li>
+<li><em>Isomorphism:</em> The inverse of this probing is <span class="math inline">\((f^{-1}\circ-)\)</span>, it is clear that <span class="math display">\[
+\begin{aligned}
+(f^{-1}\circ-)\circ(f\circ-)=(f^{-1}\circ f\circ-)=(\operatorname{id}_A\circ-) \\
+(f\circ-)\circ(f^{-1}\circ-)=(f\circ f^{-1}\circ-)=(\operatorname{id}_B\circ-)
+\end{aligned}
+\]</span></li>
+</ul>
+<p>We can see that this is also consistent with the construction above <span class="math inline">\(\alpha_a(\operatorname{id}_A)=f\circ\operatorname{id}_A=f\)</span>, and <span class="math inline">\(f^{-1}\)</span></p>
+<div style="text-align: right">
+□
+</div>
+<summary>
+Proof
+</summary>
+</details>
+<p>With very similar proof, in the next proposition, object can also be characterized based on arrow going out, and the result on isomorphism can be found as:</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-iso-obj-out" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 2</strong></span> <strong>:</strong> Within category <span class="math inline">\(\textbf{C}\)</span>, given a pair objects <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> and with any object <span class="math inline">\(X\)</span>, we have an <em>naturally</em> isomorphic <span class="math inline">\(\operatorname{Hom}_\textbf{C}(A, X)\cong\operatorname{Hom}_\textbf{C}(B, X)\)</span> iff <span class="math inline">\(A\cong B\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="categorical-construction" class="level1">
+<h1>Categorical Construction</h1>
+<p>We can push our observation further: instead of study object via its relation, shouldn’t we also <em>define</em> an object based on the expected relation with other objects ?</p>
+<section id="terminal-object" class="level2">
+<h2 class="anchored" data-anchor-id="terminal-object">Terminal Object</h2>
+<p>Let’s go back to the <a href="#rem-probing-init-obj-set" class="quarto-xref">Remark&nbsp;4</a>, and generalize the notion of singleton.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-initial-terminal-object" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 2</strong></span> <strong>(Initial and Terminal Objects):</strong> We will consider 2 kinds of objects that have the similar way of defining:</p>
+<ul>
+<li>Initial object, denoted <span class="math inline">\(0\)</span>, is an object that have <strong>unique</strong> morphism from itself to every object (including itself). We see it as an object that expands toward all the other objects</li>
+<li>On the other hand, terminal object, denoted <span class="math inline">\(1\)</span>, is an object that have <strong>unique</strong> morphism from every object to itself (including itself). We can see it as an object that all arrows converges.</li>
+</ul>
+<p>We have the following illustration for this kind of objects:</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%5C%5B%0A%09%5Cbegin%7Btikzcd%7D%0A%09%09%7B%7D%20%26%20%7B%7D%20%26%20%7B%7D%20%26%26%20%7B%7D%20%26%20%7B%7D%20%26%20%7B%7D%20%5C%5C%0A%09%09%7B%7D%20%26%200%20%26%20%7B%7D%20%26%26%20%7B%7D%20%26%201%20%26%20%7B%7D%20%5C%5C%0A%09%09%7B%7D%20%26%20%7B%7D%20%26%20%7B%7D%20%26%26%20%7B%7D%20%26%20%7B%7D%20%26%20%7B%7D%0A%09%09%5Carrow%5Bfrom%3D2-2%2C%20to%3D1-2%5D%0A%09%09%5Carrow%5Bfrom%3D2-2%2C%20to%3D1-3%5D%0A%09%09%5Carrow%5Bfrom%3D2-2%2C%20to%3D2-3%5D%0A%09%09%5Carrow%5Bfrom%3D2-2%2C%20to%3D3-3%5D%0A%09%09%5Carrow%5Bfrom%3D2-2%2C%20to%3D3-2%5D%0A%09%09%5Carrow%5Bfrom%3D2-2%2C%20to%3D3-1%5D%0A%09%09%5Carrow%5Bfrom%3D2-2%2C%20to%3D2-1%5D%0A%09%09%5Carrow%5Bfrom%3D2-2%2C%20to%3D1-1%5D%0A%09%09%5Carrow%5Bfrom%3D1-5%2C%20to%3D2-6%5D%0A%09%09%5Carrow%5Bfrom%3D1-6%2C%20to%3D2-6%5D%0A%09%09%5Carrow%5Bfrom%3D1-7%2C%20to%3D2-6%5D%0A%09%09%5Carrow%5Bfrom%3D2-5%2C%20to%3D2-6%5D%0A%09%09%5Carrow%5Bfrom%3D3-5%2C%20to%3D2-6%5D%0A%09%09%5Carrow%5Bfrom%3D3-6%2C%20to%3D2-6%5D%0A%09%09%5Carrow%5Bfrom%3D3-7%2C%20to%3D2-6%5D%0A%09%09%5Carrow%5Bfrom%3D2-7%2C%20to%3D2-6%5D%0A%09%5Cend%7Btikzcd%7D%5C%5D%0A" alt="
+\[
+    \begin{tikzcd}
+        {} &amp; {} &amp; {} &amp;&amp; {} &amp; {} &amp; {} \\
+        {} &amp; 0 &amp; {} &amp;&amp; {} &amp; 1 &amp; {} \\
+        {} &amp; {} &amp; {} &amp;&amp; {} &amp; {} &amp; {}
+        \arrow[from=2-2, to=1-2]
+        \arrow[from=2-2, to=1-3]
+        \arrow[from=2-2, to=2-3]
+        \arrow[from=2-2, to=3-3]
+        \arrow[from=2-2, to=3-2]
+        \arrow[from=2-2, to=3-1]
+        \arrow[from=2-2, to=2-1]
+        \arrow[from=2-2, to=1-1]
+        \arrow[from=1-5, to=2-6]
+        \arrow[from=1-6, to=2-6]
+        \arrow[from=1-7, to=2-6]
+        \arrow[from=2-5, to=2-6]
+        \arrow[from=3-5, to=2-6]
+        \arrow[from=3-6, to=2-6]
+        \arrow[from=3-7, to=2-6]
+        \arrow[from=2-7, to=2-6]
+    \end{tikzcd}\]
+">
+</p>
+<p>Note that we can still have arrow coming into initial object or arrow coming out of terminal object, but these won’t enjoy the special properties.</p>
+</div>
+</div>
+</div>
+<p>Before we move on, we want to note that the uniqueness of arrow (part of what is called universal property) is of extreme importance, and related directly to the probing action (Yoneda lemma), as we will see. In the case of Set, we have that:</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-set-intial-terminal" class="proof remark">
+<p><span class="proof-title"><em>Remark 2</em>. </span>In <span class="math inline">\(\textbf{Set}\)</span>, an empty set <span class="math inline">\(\emptyset\)</span> is an initial object, and singleton set (which we denote collectively as <span class="math inline">\(1\)</span>) is a terminal object:</p>
+<ul>
+<li>Thus, in general, one can generalize the selection of elements in the object <span class="math inline">\(A\)</span> using the morphism from a terminal object to <span class="math inline">\(A\)</span>. Therefore, with <span class="math inline">\(f:A\to B\)</span>, the notion <span class="math inline">\(f(A)\)</span> is actually a composition with arrow <span class="math inline">\(A:1\to A\)</span> i.e <span class="math inline">\(f\circ A\)</span></li>
+<li>It may be quite clear from now that there can be “multiple” initial and terminal object, for example, in <span class="math inline">\(\textbf{Set}\)</span>, the terminal objects are <span class="math inline">\(\{1\}, \{2\}, \{\blacksquare\},\dots\)</span>. But we can show that it is unique .</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Again, there can be multiple number of intial/terminal objects, but, rest-assure, they are all isomorphic to each other, as we have:</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-init-term-iso" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 3</strong></span> <strong>:</strong> A terminal (initial) object are unique up to isomorphism. In other words, given 2 objects <span class="math inline">\(A\)</span> and <span class="math inline">\(A'\)</span> both having a property of terminal (initial) object, then <span class="math inline">\(A\cong A'\)</span></p>
+</div>
+</div>
+</div>
+<details>
+<p>We will provide the proof for terminal object only, but the proof for initial object is similar. We note that by definition, there is an unique arrow from <span class="math inline">\(f : A\to A'\)</span> and <span class="math inline">\(g: A'\to A\)</span>:</p>
+<ul>
+<li>We see that when both of them are composed i.e <span class="math inline">\(g\circ f:A\to A\)</span> and <span class="math inline">\(f\circ g:A'\to A'\)</span>, they will give rise to identities functions <span class="math inline">\(\operatorname{id}_A\)</span> and <span class="math inline">\(\operatorname{id}_{A'}\)</span></li>
+<li>That is because identity is the <em>only</em> morphism that maps both object to itself by the definition of the terminal objects.</li>
+</ul>
+<p>Thus <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are inverse of each other and <span class="math inline">\(f\)</span> is an isomorphism, as needed.</p>
+<div style="text-align: right">
+□
+</div>
+<summary>
+Proof
+</summary>
+</details>
+</section>
+<section id="product" class="level2">
+<h2 class="anchored" data-anchor-id="product">Product</h2>
+<p>Now, we are ready to start defining the product, so let’s start with the product in <span class="math inline">\(\textbf{Set}\)</span>, first:</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-product" class="proof remark">
+<p><span class="proof-title"><em>Remark 3</em>. </span>If we remember well, given set <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, one can define the cartesian product between them as:</p>
+<p><span class="math display">\[
+X\times Y = \big\{ (x, y) : x\in X \text{ and } y \in Y \big\}
+\]</span></p>
+<p>The interesting part of the cartesian product is that its element, one can recover the element of both sets via the projecton map <span class="math inline">\(\pi_1:X\times Y\to X\)</span> and <span class="math inline">\(\pi_2:X\times Y\to Y\)</span>, where both <span class="math inline">\(p_1((x', y'))=x'\)</span> and <span class="math inline">\(p_2((x',y'))=y'\)</span>. One can view cartesian product as accurate way to mix of elements of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, while we can recover the original information using the projection.</p>
+</div>
+</div>
+</div>
+<p>With this in mind, we can define a product in general as:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-cat-product" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 3</strong></span> <strong>(Categorical Product):</strong> The product between <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> in category <span class="math inline">\(\textbf{C}\)</span> is denoted as <span class="math inline">\(A\times B\)</span> together with morphism <span class="math inline">\(p_1:A\times B\to A\)</span> and <span class="math inline">\(p_2:A\times B\to B\)</span> i.e <span class="math inline">\((A\times B, p_1, p_2)\)</span> such that given any object <span class="math inline">\(X\)</span> with arrow <span class="math inline">\(f_1:X\to A\)</span> and <span class="math inline">\(f_2:X\to B\)</span>, there is unique arrow <span class="math inline">\(h:X\to A\times B\)</span> (and given unique <span class="math inline">\(h\)</span> there is unique pair of arrow) such that the following commutative diagram holds:</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%5C%5B%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsNCxbMSwwLCJYIl0sWzEsMSwiQVxcdGltZXMgQiJdLFswLDEsIkEiXSxbMiwxLCJCIl0sWzEsMiwicF8xIl0sWzEsMywicF8yIiwyXSxbMCwyLCJmXzEiLDJdLFswLDMsImZfMiJdLFswLDEsImgiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0%3D%0A%5Cbegin%7Btikzcd%7D%0A%09%26%20X%20%5C%5C%0A%09A%20%26%20%7BA%5Ctimes%20B%7D%20%26%20B%0A%09%5Carrow%5B%22%7Bf_1%7D%22'%2C%20from%3D1-2%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22h%22%7Bdescription%7D%2C%20dashed%2C%20from%3D1-2%2C%20to%3D2-2%5D%0A%09%5Carrow%5B%22%7Bf_2%7D%22%2C%20from%3D1-2%2C%20to%3D2-3%5D%0A%09%5Carrow%5B%22%7Bp_1%7D%22%2C%20from%3D2-2%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22%7Bp_2%7D%22'%2C%20from%3D2-2%2C%20to%3D2-3%5D%0A%5Cend%7Btikzcd%7D%0A%5C%5D%0A" alt="
+\[
+% https://q.uiver.app/#q=WzAsNCxbMSwwLCJYIl0sWzEsMSwiQVxcdGltZXMgQiJdLFswLDEsIkEiXSxbMiwxLCJCIl0sWzEsMiwicF8xIl0sWzEsMywicF8yIiwyXSxbMCwyLCJmXzEiLDJdLFswLDMsImZfMiJdLFswLDEsImgiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XV0=
+\begin{tikzcd}
+    &amp; X \\
+    A &amp; {A\times B} &amp; B
+    \arrow[&quot;{f_1}&quot;', from=1-2, to=2-1]
+    \arrow[&quot;h&quot;{description}, dashed, from=1-2, to=2-2]
+    \arrow[&quot;{f_2}&quot;, from=1-2, to=2-3]
+    \arrow[&quot;{p_1}&quot;, from=2-2, to=2-1]
+    \arrow[&quot;{p_2}&quot;', from=2-2, to=2-3]
+\end{tikzcd}
+\]
+">
+</p>
+</div>
+</div>
+</div>
+<p>Now, we can recover the cartesian product from the categorical product on <span class="math inline">\(\textbf{Set}\)</span> category.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-init-term-iso" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 4</strong></span> <strong>:</strong> Categortical product between <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> in <span class="math inline">\(\textbf{Set}\)</span> is the Cartesian product <span class="math inline">\(A\times B\)</span>, and Cartesian product <span class="math inline">\(A\times B\)</span> is the categorical product.</p>
+</div>
+</div>
+</div>
+<details>
+<p><strong>(Part 1):</strong> We can set the object <span class="math inline">\(X\)</span> with a terminal object <span class="math inline">\(1\)</span> (see the figure below, which is the singleto set). Recall that map from a terminal object selects an element of the target.</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%5C%5B%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsNCxbMSwwLCJcXGJvbGRzeW1ib2x7MX0iXSxbMSwxLCJBXFx0aW1lcyBCIl0sWzAsMSwiQSJdLFsyLDEsIkIiXSxbMSwyLCJwXzEiXSxbMSwzLCJwXzIiLDJdLFswLDIsImZfMSIsMl0sWzAsMywiZl8yIl0sWzAsMSwiaCIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ%3D%3D%0A%5Cbegin%7Btikzcd%7D%0A%09%26%20%7B%5Cboldsymbol%7B1%7D%7D%20%5C%5C%0A%09A%20%26%20%7BA%5Ctimes%20B%7D%20%26%20B%0A%09%5Carrow%5B%22%7Bf_1%7D%22'%2C%20from%3D1-2%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22h%22%7Bdescription%7D%2C%20dashed%2C%20from%3D1-2%2C%20to%3D2-2%5D%0A%09%5Carrow%5B%22%7Bf_2%7D%22%2C%20from%3D1-2%2C%20to%3D2-3%5D%0A%09%5Carrow%5B%22%7Bp_1%7D%22%2C%20from%3D2-2%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22%7Bp_2%7D%22'%2C%20from%3D2-2%2C%20to%3D2-3%5D%0A%5Cend%7Btikzcd%7D%0A%5C%5D%0A" alt="
+\[
+% https://q.uiver.app/#q=WzAsNCxbMSwwLCJcXGJvbGRzeW1ib2x7MX0iXSxbMSwxLCJBXFx0aW1lcyBCIl0sWzAsMSwiQSJdLFsyLDEsIkIiXSxbMSwyLCJwXzEiXSxbMSwzLCJwXzIiLDJdLFswLDIsImZfMSIsMl0sWzAsMywiZl8yIl0sWzAsMSwiaCIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dXQ==
+\begin{tikzcd}
+    &amp; {\boldsymbol{1}} \\
+    A &amp; {A\times B} &amp; B
+    \arrow[&quot;{f_1}&quot;', from=1-2, to=2-1]
+    \arrow[&quot;h&quot;{description}, dashed, from=1-2, to=2-2]
+    \arrow[&quot;{f_2}&quot;, from=1-2, to=2-3]
+    \arrow[&quot;{p_1}&quot;, from=2-2, to=2-1]
+    \arrow[&quot;{p_2}&quot;', from=2-2, to=2-3]
+\end{tikzcd}
+\]
+">
+</p>
+<p>Then, we can have the <span class="math inline">\(f_1\)</span> selects one object <span class="math inline">\(a\)</span> from <span class="math inline">\(A\)</span> and <span class="math inline">\(f_2\)</span> selects one object <span class="math inline">\(b\)</span> from <span class="math inline">\(B\)</span>, then <span class="math inline">\(h\)</span>, in order to enforce the uniqueness can be set to selecting a pair of <span class="math inline">\((a, b)\)</span>. Finally, by the commutativity, the map <span class="math inline">\(p_1\circ h=p_1((a, b)):1\to A\)</span> should select the same object as <span class="math inline">\(f_1\)</span> which is <span class="math inline">\(a\)</span>. Thus <span class="math inline">\(p_1\)</span> is a projection of first element. The same can be shown with <span class="math inline">\(p_2\)</span>. So, the first part has been proven.</p>
+<p><strong>(Part 2):</strong> To show that cartesian product is a categorical product, we will have to construct <span class="math inline">\(h\)</span> given <span class="math inline">\((f_1,f_2)\)</span> and vice versa with any set <span class="math inline">\(X\)</span>. Let’s consider such construction:</p>
+<ul>
+<li>Given the function <span class="math inline">\(f_1:X\to A\)</span> and <span class="math inline">\(f_2:X\to B\)</span>, then <span class="math inline">\(h:X\to A\times B\)</span> can be set to be <span class="math inline">\(h(x)=(f_1(x), f_2(x))\)</span></li>
+<li>On the other hand, with a function <span class="math inline">\(h\)</span> one can use the commutativity to define both <span class="math inline">\(f_1\)</span> and <span class="math inline">\(f_2\)</span> i.e <span class="math inline">\(f_1 = p_1\circ h\)</span> and <span class="math inline">\(f_2 = p_2\circ h\)</span></li>
+</ul>
+<div style="text-align: right">
+□
+</div>
+<summary>
+Proof
+</summary>
+</details>
+</section>
+<section id="results-on-products" class="level2">
+<h2 class="anchored" data-anchor-id="results-on-products">Results on Products</h2>
+<p>In the next few results, we are also going to proof a simple arthemtics for the product (and to show how the universal construction can be used).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-terminal-prod" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 5</strong></span> <strong>:</strong> Given object <span class="math inline">\(A\)</span> in category <span class="math inline">\(\textbf{C}\)</span> that has terminal object <span class="math inline">\(1\)</span>, we can show that <span class="math inline">\(A\times 1\cong A\)</span></p>
+</div>
+</div>
+</div>
+<details>
+<p>We consider the following diagram:</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%5C%5B%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsNCxbMSwxLCJBXFx0aW1lcyAxIl0sWzAsMSwiQSJdLFsyLDEsIjEiXSxbMSwwLCJBIl0sWzAsMiwicF8yIiwyXSxbMCwxLCJwXzEiXSxbMywxLCJcXG9wZXJhdG9ybmFtZXtpZH1fQSIsMl0sWzMsMiwiIV9BIl0sWzMsMCwiaCIsMV1d%0A%5Cbegin%7Btikzcd%7D%0A%09%26%20A%20%5C%5C%0A%09A%20%26%20%7BA%5Ctimes%201%7D%20%26%201%0A%09%5Carrow%5B%22%7B%5Coperatorname%7Bid%7D_A%7D%22'%2C%20from%3D1-2%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22h%22%7Bdescription%7D%2C%20from%3D1-2%2C%20to%3D2-2%5D%0A%09%5Carrow%5B%22%7B!_A%7D%22%2C%20from%3D1-2%2C%20to%3D2-3%5D%0A%09%5Carrow%5B%22%7Bp_1%7D%22%2C%20from%3D2-2%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22%7Bp_2%7D%22'%2C%20from%3D2-2%2C%20to%3D2-3%5D%0A%5Cend%7Btikzcd%7D%0A%5C%5D%0A" alt="
+\[
+% https://q.uiver.app/#q=WzAsNCxbMSwxLCJBXFx0aW1lcyAxIl0sWzAsMSwiQSJdLFsyLDEsIjEiXSxbMSwwLCJBIl0sWzAsMiwicF8yIiwyXSxbMCwxLCJwXzEiXSxbMywxLCJcXG9wZXJhdG9ybmFtZXtpZH1fQSIsMl0sWzMsMiwiIV9BIl0sWzMsMCwiaCIsMV1d
+\begin{tikzcd}
+    &amp; A \\
+    A &amp; {A\times 1} &amp; 1
+    \arrow[&quot;{\operatorname{id}_A}&quot;', from=1-2, to=2-1]
+    \arrow[&quot;h&quot;{description}, from=1-2, to=2-2]
+    \arrow[&quot;{!_A}&quot;, from=1-2, to=2-3]
+    \arrow[&quot;{p_1}&quot;, from=2-2, to=2-1]
+    \arrow[&quot;{p_2}&quot;', from=2-2, to=2-3]
+\end{tikzcd}
+\]
+">
+</p>
+<p>One can see clearly that <span class="math inline">\(p_1\circ h=\operatorname{id}_A\)</span>, we are left to show that <span class="math inline">\(h\circ p_1=\operatorname{id}_{A\times1}\)</span>. To do this, we have the following comparision diagram (every thing commutes):</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%5C%5B%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsOSxbMSwyLCJhXFx0aW1lcyAxIl0sWzAsMiwiYSJdLFsyLDIsIjEiXSxbMSwxLCJhIl0sWzUsMiwiYVxcdGltZXMgMSJdLFs0LDIsImEiXSxbNiwyLCIxIl0sWzUsMCwiYVxcdGltZXMgMSJdLFsxLDAsImFcXHRpbWVzIDEiXSxbMCwyLCJwXzIiLDJdLFswLDEsInBfMSJdLFszLDEsIlxcb3BlcmF0b3JuYW1le2lkfV9hIiwxLHsiY29sb3VyIjpbMCwwLDc4XX0sWzAsMCw3OCwxXV0sWzMsMiwiIV9hIiwxLHsiY29sb3VyIjpbMCwwLDc4XX0sWzAsMCw3OCwxXV0sWzMsMCwiaCIsMV0sWzQsNSwicF8xIl0sWzQsNiwicF8yIiwyXSxbNyw1LCJwXzEiLDJdLFs3LDQsIlxcb3BlcmF0b3JuYW1le2lkfV97YVxcdGltZXMxfSIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFs3LDYsIiFfe2FcXHRpbWVzMX0iXSxbOCwzLCJwXzEiLDFdLFs4LDEsInBfMSIsMl0sWzgsMiwiIV97YVxcdGltZXMxfSJdXQ%3D%3D%0A%5Cbegin%7Btikzcd%7D%0A%09%26%20%7Ba%5Ctimes%201%7D%20%26%26%26%26%20%7Ba%5Ctimes%201%7D%20%5C%5C%0A%09%26%20a%20%5C%5C%0A%09a%20%26%20%7Ba%5Ctimes%201%7D%20%26%201%20%26%26%20a%20%26%20%7Ba%5Ctimes%201%7D%20%26%201%0A%09%5Carrow%5B%22%7Bp_1%7D%22%7Bdescription%7D%2C%20from%3D1-2%2C%20to%3D2-2%5D%0A%09%5Carrow%5B%22%7Bp_1%7D%22'%2C%20from%3D1-2%2C%20to%3D3-1%5D%0A%09%5Carrow%5B%22%7B!_%7Ba%5Ctimes1%7D%7D%22%2C%20from%3D1-2%2C%20to%3D3-3%5D%0A%09%5Carrow%5B%22%7Bp_1%7D%22'%2C%20from%3D1-6%2C%20to%3D3-5%5D%0A%09%5Carrow%5B%22%7B%5Coperatorname%7Bid%7D_%7Ba%5Ctimes1%7D%7D%22%7Bdescription%7D%2C%20dashed%2C%20from%3D1-6%2C%20to%3D3-6%5D%0A%09%5Carrow%5B%22%7B!_%7Ba%5Ctimes1%7D%7D%22%2C%20from%3D1-6%2C%20to%3D3-7%5D%0A%09%5Carrow%5B%22%7B%5Coperatorname%7Bid%7D_a%7D%22%7Bdescription%7D%2C%20color%3D%7Brgb%2C255%3Ared%2C199%3Bgreen%2C199%3Bblue%2C199%7D%2C%20from%3D2-2%2C%20to%3D3-1%5D%0A%09%5Carrow%5B%22h%22%7Bdescription%7D%2C%20from%3D2-2%2C%20to%3D3-2%5D%0A%09%5Carrow%5B%22%7B!_a%7D%22%7Bdescription%7D%2C%20color%3D%7Brgb%2C255%3Ared%2C199%3Bgreen%2C199%3Bblue%2C199%7D%2C%20from%3D2-2%2C%20to%3D3-3%5D%0A%09%5Carrow%5B%22%7Bp_1%7D%22%2C%20from%3D3-2%2C%20to%3D3-1%5D%0A%09%5Carrow%5B%22%7Bp_2%7D%22'%2C%20from%3D3-2%2C%20to%3D3-3%5D%0A%09%5Carrow%5B%22%7Bp_1%7D%22%2C%20from%3D3-6%2C%20to%3D3-5%5D%0A%09%5Carrow%5B%22%7Bp_2%7D%22'%2C%20from%3D3-6%2C%20to%3D3-7%5D%0A%5Cend%7Btikzcd%7D%0A%5C%5D%0A" alt="
+\[
+% https://q.uiver.app/#q=WzAsOSxbMSwyLCJhXFx0aW1lcyAxIl0sWzAsMiwiYSJdLFsyLDIsIjEiXSxbMSwxLCJhIl0sWzUsMiwiYVxcdGltZXMgMSJdLFs0LDIsImEiXSxbNiwyLCIxIl0sWzUsMCwiYVxcdGltZXMgMSJdLFsxLDAsImFcXHRpbWVzIDEiXSxbMCwyLCJwXzIiLDJdLFswLDEsInBfMSJdLFszLDEsIlxcb3BlcmF0b3JuYW1le2lkfV9hIiwxLHsiY29sb3VyIjpbMCwwLDc4XX0sWzAsMCw3OCwxXV0sWzMsMiwiIV9hIiwxLHsiY29sb3VyIjpbMCwwLDc4XX0sWzAsMCw3OCwxXV0sWzMsMCwiaCIsMV0sWzQsNSwicF8xIl0sWzQsNiwicF8yIiwyXSxbNyw1LCJwXzEiLDJdLFs3LDQsIlxcb3BlcmF0b3JuYW1le2lkfV97YVxcdGltZXMxfSIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFs3LDYsIiFfe2FcXHRpbWVzMX0iXSxbOCwzLCJwXzEiLDFdLFs4LDEsInBfMSIsMl0sWzgsMiwiIV97YVxcdGltZXMxfSJdXQ==
+\begin{tikzcd}
+    &amp; {a\times 1} &amp;&amp;&amp;&amp; {a\times 1} \\
+    &amp; a \\
+    a &amp; {a\times 1} &amp; 1 &amp;&amp; a &amp; {a\times 1} &amp; 1
+    \arrow[&quot;{p_1}&quot;{description}, from=1-2, to=2-2]
+    \arrow[&quot;{p_1}&quot;', from=1-2, to=3-1]
+    \arrow[&quot;{!_{a\times1}}&quot;, from=1-2, to=3-3]
+    \arrow[&quot;{p_1}&quot;', from=1-6, to=3-5]
+    \arrow[&quot;{\operatorname{id}_{a\times1}}&quot;{description}, dashed, from=1-6, to=3-6]
+    \arrow[&quot;{!_{a\times1}}&quot;, from=1-6, to=3-7]
+    \arrow[&quot;{\operatorname{id}_a}&quot;{description}, color={rgb,255:red,199;green,199;blue,199}, from=2-2, to=3-1]
+    \arrow[&quot;h&quot;{description}, from=2-2, to=3-2]
+    \arrow[&quot;{!_a}&quot;{description}, color={rgb,255:red,199;green,199;blue,199}, from=2-2, to=3-3]
+    \arrow[&quot;{p_1}&quot;, from=3-2, to=3-1]
+    \arrow[&quot;{p_2}&quot;', from=3-2, to=3-3]
+    \arrow[&quot;{p_1}&quot;, from=3-6, to=3-5]
+    \arrow[&quot;{p_2}&quot;', from=3-6, to=3-7]
+\end{tikzcd}
+\]
+">
+</p>
+<p>Please note that by definition of terminal object, <span class="math inline">\(p_2=!_{A\times1}\)</span> and it is unique (hence the <span class="math inline">\(A\times1\to1\)</span> on the right edge of LHS diagram is correct). Since the definition of product holds that there is a unique pair of arrows, we can see that <span class="math inline">\(h\circ p_1=\operatorname{id}_{A\times1}\)</span></p>
+<div style="text-align: right">
+□
+</div>
+<summary>
+Proof
+</summary>
+</details>
+<p>and we can also prove the commutativity of a categorical product.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-commutative-prod" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 6</strong></span> <strong>:</strong> Given object <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> in category <span class="math inline">\(\textbf{C}\)</span>, we can show that <span class="math inline">\(A\times B\cong B\times A\)</span></p>
+</div>
+</div>
+</div>
+<details>
+<p>We consider the following diagrams:</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%5C%5B%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsOCxbMSwwLCJCXFx0aW1lcyBBIl0sWzEsMSwiQVxcdGltZXMgQiJdLFswLDEsIkEiXSxbMiwxLCJCIl0sWzUsMCwiQVxcdGltZXMgQiJdLFs1LDEsIkJcXHRpbWVzIEEiXSxbNCwxLCJBIl0sWzYsMSwiQiJdLFsxLDIsInBfMSJdLFsxLDMsInBfMiIsMl0sWzAsMiwicF8yJyIsMl0sWzAsMywicCdfMSJdLFswLDEsImgiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbNSw3LCJwXzEnIiwyXSxbNSw2LCJwXzInIl0sWzQsNSwiaCciLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbNCw2LCJwXzEiLDJdLFs0LDcsInBfMiJdXQ%3D%3D%0A%5Cbegin%7Btikzcd%7D%0A%09%26%20%7BB%5Ctimes%20A%7D%20%26%26%26%26%20%7BA%5Ctimes%20B%7D%20%5C%5C%0A%09A%20%26%20%7BA%5Ctimes%20B%7D%20%26%20B%20%26%26%20A%20%26%20%7BB%5Ctimes%20A%7D%20%26%20B%0A%09%5Carrow%5B%22%7Bp_2'%7D%22'%2C%20from%3D1-2%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22h%22%7Bdescription%7D%2C%20dashed%2C%20from%3D1-2%2C%20to%3D2-2%5D%0A%09%5Carrow%5B%22%7Bp'_1%7D%22%2C%20from%3D1-2%2C%20to%3D2-3%5D%0A%09%5Carrow%5B%22%7Bp_1%7D%22'%2C%20from%3D1-6%2C%20to%3D2-5%5D%0A%09%5Carrow%5B%22%7Bh'%7D%22%7Bdescription%7D%2C%20dashed%2C%20from%3D1-6%2C%20to%3D2-6%5D%0A%09%5Carrow%5B%22%7Bp_2%7D%22%2C%20from%3D1-6%2C%20to%3D2-7%5D%0A%09%5Carrow%5B%22%7Bp_1%7D%22%2C%20from%3D2-2%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22%7Bp_2%7D%22'%2C%20from%3D2-2%2C%20to%3D2-3%5D%0A%09%5Carrow%5B%22%7Bp_2'%7D%22%2C%20from%3D2-6%2C%20to%3D2-5%5D%0A%09%5Carrow%5B%22%7Bp_1'%7D%22'%2C%20from%3D2-6%2C%20to%3D2-7%5D%0A%5Cend%7Btikzcd%7D%0A%5C%5D%0A" alt="
+\[
+% https://q.uiver.app/#q=WzAsOCxbMSwwLCJCXFx0aW1lcyBBIl0sWzEsMSwiQVxcdGltZXMgQiJdLFswLDEsIkEiXSxbMiwxLCJCIl0sWzUsMCwiQVxcdGltZXMgQiJdLFs1LDEsIkJcXHRpbWVzIEEiXSxbNCwxLCJBIl0sWzYsMSwiQiJdLFsxLDIsInBfMSJdLFsxLDMsInBfMiIsMl0sWzAsMiwicF8yJyIsMl0sWzAsMywicCdfMSJdLFswLDEsImgiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbNSw3LCJwXzEnIiwyXSxbNSw2LCJwXzInIl0sWzQsNSwiaCciLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbNCw2LCJwXzEiLDJdLFs0LDcsInBfMiJdXQ==
+\begin{tikzcd}
+    &amp; {B\times A} &amp;&amp;&amp;&amp; {A\times B} \\
+    A &amp; {A\times B} &amp; B &amp;&amp; A &amp; {B\times A} &amp; B
+    \arrow[&quot;{p_2'}&quot;', from=1-2, to=2-1]
+    \arrow[&quot;h&quot;{description}, dashed, from=1-2, to=2-2]
+    \arrow[&quot;{p'_1}&quot;, from=1-2, to=2-3]
+    \arrow[&quot;{p_1}&quot;', from=1-6, to=2-5]
+    \arrow[&quot;{h'}&quot;{description}, dashed, from=1-6, to=2-6]
+    \arrow[&quot;{p_2}&quot;, from=1-6, to=2-7]
+    \arrow[&quot;{p_1}&quot;, from=2-2, to=2-1]
+    \arrow[&quot;{p_2}&quot;', from=2-2, to=2-3]
+    \arrow[&quot;{p_2'}&quot;, from=2-6, to=2-5]
+    \arrow[&quot;{p_1'}&quot;', from=2-6, to=2-7]
+\end{tikzcd}
+\]
+">
+</p>
+<p>We will claim that <span class="math inline">\(h\)</span> and <span class="math inline">\(h'\)</span> are inverse of each other i.e <span class="math inline">\(h'\circ h=\operatorname{id}_{B\times A}\)</span> and <span class="math inline">\(h\circ h'=\operatorname{id}_{A\times B}\)</span>, thus <span class="math inline">\(h\)</span> is isomorphism. To show this, we can stack diagram above up (to get the LHS version and it is clear that it commutes).</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%5C%5B%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsOSxbMiwwLCJCXFx0aW1lcyBBIl0sWzIsMSwiQVxcdGltZXMgQiJdLFswLDIsIkEiXSxbNCwyLCJCIl0sWzIsMiwiQlxcdGltZXMgQSJdLFs3LDIsIkJcXHRpbWVzIEEiXSxbNiwyLCJCIl0sWzgsMiwiQSJdLFs3LDAsIkJcXHRpbWVzIEEiXSxbMSwyLCJwXzEiLDEseyJjb2xvdXIiOlswLDAsNzhdfSxbMCwwLDc4LDFdXSxbMSwzLCJwXzIiLDEseyJjb2xvdXIiOlswLDAsNzhdfSxbMCwwLDc4LDFdXSxbMCwyLCJwXzInIiwxXSxbMCwzLCJwJ18xIiwxXSxbMCwxLCJoIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzQsMiwicF8yJyIsMV0sWzQsMywicF8xJyIsMV0sWzEsNCwiaCciLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbOCw1LCJcXG9wZXJhdG9ybmFtZXtpZH1fe0JcXHRpbWVzIEF9IiwxXSxbOCw2LCJwXzInIiwyXSxbOCw3LCJwXzEnIl0sWzUsNywicF8xJyIsMl0sWzUsNiwicF8yJyJdXQ%3D%3D%0A%5Cbegin%7Btikzcd%7D%0A%09%26%26%20%7BB%5Ctimes%20A%7D%20%26%26%26%26%26%20%7BB%5Ctimes%20A%7D%20%5C%5C%0A%09%26%26%20%7BA%5Ctimes%20B%7D%20%5C%5C%0A%09A%20%26%26%20%7BB%5Ctimes%20A%7D%20%26%26%20B%20%26%26%20B%20%26%20%7BB%5Ctimes%20A%7D%20%26%20A%0A%09%5Carrow%5B%22h%22%7Bdescription%7D%2C%20dashed%2C%20from%3D1-3%2C%20to%3D2-3%5D%0A%09%5Carrow%5B%22%7Bp_2'%7D%22%7Bdescription%7D%2C%20from%3D1-3%2C%20to%3D3-1%5D%0A%09%5Carrow%5B%22%7Bp'_1%7D%22%7Bdescription%7D%2C%20from%3D1-3%2C%20to%3D3-5%5D%0A%09%5Carrow%5B%22%7Bp_2'%7D%22'%2C%20from%3D1-8%2C%20to%3D3-7%5D%0A%09%5Carrow%5B%22%7B%5Coperatorname%7Bid%7D_%7BB%5Ctimes%20A%7D%7D%22%7Bdescription%7D%2C%20from%3D1-8%2C%20to%3D3-8%5D%0A%09%5Carrow%5B%22%7Bp_1'%7D%22%2C%20from%3D1-8%2C%20to%3D3-9%5D%0A%09%5Carrow%5B%22%7Bp_1%7D%22%7Bdescription%7D%2C%20color%3D%7Brgb%2C255%3Ared%2C199%3Bgreen%2C199%3Bblue%2C199%7D%2C%20from%3D2-3%2C%20to%3D3-1%5D%0A%09%5Carrow%5B%22%7Bh'%7D%22%7Bdescription%7D%2C%20dashed%2C%20from%3D2-3%2C%20to%3D3-3%5D%0A%09%5Carrow%5B%22%7Bp_2%7D%22%7Bdescription%7D%2C%20color%3D%7Brgb%2C255%3Ared%2C199%3Bgreen%2C199%3Bblue%2C199%7D%2C%20from%3D2-3%2C%20to%3D3-5%5D%0A%09%5Carrow%5B%22%7Bp_2'%7D%22%7Bdescription%7D%2C%20from%3D3-3%2C%20to%3D3-1%5D%0A%09%5Carrow%5B%22%7Bp_1'%7D%22%7Bdescription%7D%2C%20from%3D3-3%2C%20to%3D3-5%5D%0A%09%5Carrow%5B%22%7Bp_2'%7D%22%2C%20from%3D3-8%2C%20to%3D3-7%5D%0A%09%5Carrow%5B%22%7Bp_1'%7D%22'%2C%20from%3D3-8%2C%20to%3D3-9%5D%0A%5Cend%7Btikzcd%7D%0A%5C%5D%0A" alt="
+\[
+% https://q.uiver.app/#q=WzAsOSxbMiwwLCJCXFx0aW1lcyBBIl0sWzIsMSwiQVxcdGltZXMgQiJdLFswLDIsIkEiXSxbNCwyLCJCIl0sWzIsMiwiQlxcdGltZXMgQSJdLFs3LDIsIkJcXHRpbWVzIEEiXSxbNiwyLCJCIl0sWzgsMiwiQSJdLFs3LDAsIkJcXHRpbWVzIEEiXSxbMSwyLCJwXzEiLDEseyJjb2xvdXIiOlswLDAsNzhdfSxbMCwwLDc4LDFdXSxbMSwzLCJwXzIiLDEseyJjb2xvdXIiOlswLDAsNzhdfSxbMCwwLDc4LDFdXSxbMCwyLCJwXzInIiwxXSxbMCwzLCJwJ18xIiwxXSxbMCwxLCJoIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzQsMiwicF8yJyIsMV0sWzQsMywicF8xJyIsMV0sWzEsNCwiaCciLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJkYXNoZWQifX19XSxbOCw1LCJcXG9wZXJhdG9ybmFtZXtpZH1fe0JcXHRpbWVzIEF9IiwxXSxbOCw2LCJwXzInIiwyXSxbOCw3LCJwXzEnIl0sWzUsNywicF8xJyIsMl0sWzUsNiwicF8yJyJdXQ==
+\begin{tikzcd}
+    &amp;&amp; {B\times A} &amp;&amp;&amp;&amp;&amp; {B\times A} \\
+    &amp;&amp; {A\times B} \\
+    A &amp;&amp; {B\times A} &amp;&amp; B &amp;&amp; B &amp; {B\times A} &amp; A
+    \arrow[&quot;h&quot;{description}, dashed, from=1-3, to=2-3]
+    \arrow[&quot;{p_2'}&quot;{description}, from=1-3, to=3-1]
+    \arrow[&quot;{p'_1}&quot;{description}, from=1-3, to=3-5]
+    \arrow[&quot;{p_2'}&quot;', from=1-8, to=3-7]
+    \arrow[&quot;{\operatorname{id}_{B\times A}}&quot;{description}, from=1-8, to=3-8]
+    \arrow[&quot;{p_1'}&quot;, from=1-8, to=3-9]
+    \arrow[&quot;{p_1}&quot;{description}, color={rgb,255:red,199;green,199;blue,199}, from=2-3, to=3-1]
+    \arrow[&quot;{h'}&quot;{description}, dashed, from=2-3, to=3-3]
+    \arrow[&quot;{p_2}&quot;{description}, color={rgb,255:red,199;green,199;blue,199}, from=2-3, to=3-5]
+    \arrow[&quot;{p_2'}&quot;{description}, from=3-3, to=3-1]
+    \arrow[&quot;{p_1'}&quot;{description}, from=3-3, to=3-5]
+    \arrow[&quot;{p_2'}&quot;, from=3-8, to=3-7]
+    \arrow[&quot;{p_1'}&quot;', from=3-8, to=3-9]
+\end{tikzcd}
+\]
+">
+</p>
+<p>On the RHS, we have the obvious commutative diagram, but please note that by definition of categorical product (the universal construction), given a pair <span class="math inline">\((p_1',p_2')\)</span>, we have the <em>unique</em> correspondance to the map <span class="math inline">\(\operatorname{id}_{B\times A}\)</span>. Thus, <span class="math inline">\(h'\circ h=\operatorname{id}_{B\times A}\)</span> by the uniquenes. The proof that <span class="math inline">\(h\circ h'=\operatorname{id}_{A\times B}\)</span> follows in similar manners.</p>
+<div style="text-align: right">
+□
+</div>
+<summary>
+Proof
+</summary>
+</details>
+<p>Finally, we can consider the <em>functoriality</em> of the product, in which the “lifting of the morphism can be performed. (we will discuss the actual notion of functor in later section).</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-probing-init-obj-set" class="proof remark">
+<p><span class="proof-title"><em>Remark 4</em>. </span>(Parallel Application of Product) Given two morphisms <span class="math inline">\(f:A\to A'\)</span> and <span class="math inline">\(g:B\to B'\)</span>, then we can construct the map <span class="math inline">\(f\times g :A\times B\to A'\times B'\)</span> based on these 2 function as follows:</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%5C%5B%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsNixbMSwwLCJBXFx0aW1lcyBCIl0sWzEsMSwiQSdcXHRpbWVzIEInIl0sWzAsMiwiQSciXSxbMiwyLCJCJyJdLFsyLDEsIkIiXSxbMCwxLCJBIl0sWzAsMSwiZlxcdGltZXMgZyIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFsxLDIsInBfMSciXSxbMSwzLCJwXzInIiwyXSxbNSwyLCJmIiwyXSxbNCwzLCJnIl0sWzAsNSwicF8xIiwyXSxbMCw0LCJwXzIiXV0%3D%0A%5Cbegin%7Btikzcd%7D%0A%09%26%20%7BA%5Ctimes%20B%7D%20%5C%5C%0A%09A%20%26%20%7BA'%5Ctimes%20B'%7D%20%26%20B%20%5C%5C%0A%09%7BA'%7D%20%26%26%20%7BB'%7D%0A%09%5Carrow%5B%22%7Bp_1%7D%22'%2C%20from%3D1-2%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22%7Bf%5Ctimes%20g%7D%22%7Bdescription%7D%2C%20dashed%2C%20from%3D1-2%2C%20to%3D2-2%5D%0A%09%5Carrow%5B%22%7Bp_2%7D%22%2C%20from%3D1-2%2C%20to%3D2-3%5D%0A%09%5Carrow%5B%22f%22'%2C%20from%3D2-1%2C%20to%3D3-1%5D%0A%09%5Carrow%5B%22%7Bp_1'%7D%22%2C%20from%3D2-2%2C%20to%3D3-1%5D%0A%09%5Carrow%5B%22%7Bp_2'%7D%22'%2C%20from%3D2-2%2C%20to%3D3-3%5D%0A%09%5Carrow%5B%22g%22%2C%20from%3D2-3%2C%20to%3D3-3%5D%0A%5Cend%7Btikzcd%7D%0A%5C%5D%0A" alt="
+\[
+% https://q.uiver.app/#q=WzAsNixbMSwwLCJBXFx0aW1lcyBCIl0sWzEsMSwiQSdcXHRpbWVzIEInIl0sWzAsMiwiQSciXSxbMiwyLCJCJyJdLFsyLDEsIkIiXSxbMCwxLCJBIl0sWzAsMSwiZlxcdGltZXMgZyIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9fX1dLFsxLDIsInBfMSciXSxbMSwzLCJwXzInIiwyXSxbNSwyLCJmIiwyXSxbNCwzLCJnIl0sWzAsNSwicF8xIiwyXSxbMCw0LCJwXzIiXV0=
+\begin{tikzcd}
+    &amp; {A\times B} \\
+    A &amp; {A'\times B'} &amp; B \\
+    {A'} &amp;&amp; {B'}
+    \arrow[&quot;{p_1}&quot;', from=1-2, to=2-1]
+    \arrow[&quot;{f\times g}&quot;{description}, dashed, from=1-2, to=2-2]
+    \arrow[&quot;{p_2}&quot;, from=1-2, to=2-3]
+    \arrow[&quot;f&quot;', from=2-1, to=3-1]
+    \arrow[&quot;{p_1'}&quot;, from=2-2, to=3-1]
+    \arrow[&quot;{p_2'}&quot;', from=2-2, to=3-3]
+    \arrow[&quot;g&quot;, from=2-3, to=3-3]
+\end{tikzcd}
+\]
+">
+</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="yoneda-lemma" class="level1">
+<h1>Yoneda Lemma…</h1>
+<p>Let’s recap what is going on when we constructing the product:</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-construction-product" class="proof remark">
+<p><span class="proof-title"><em>Remark 5</em>. </span>We would like to point out the common patterns that is starting to arise, whereby we define the categorical object by assigning a particular patterns (<span class="math inline">\(A\leftarrow X\to B\)</span> in product case) and find the best object that represents it:</p>
+<ul>
+<li>The <em>best</em> one is selected based on (if it exists) the fact that all candidate objects (of a particular pattern) have a unique map to it.</li>
+<li>In the terminal object case, there isn’t a pattern, just a simple object.</li>
+</ul>
+<p>This is called univeral construction. Please note that this can be formalized and we will show that the way it is constructed, every constructed objects will have the same arrow coming in and out, thus all objects that satisfies the construction will be isomorphic with each other.</p>
+</div>
+</div>
+</div>
+<p><font color="#e74c3c"><b>Warning:</b></font> We will now use the tools from category theory: functor, natural transformation, and opposite category.</p>
+<section id="hom-functor" class="level2">
+<h2 class="anchored" data-anchor-id="hom-functor">Hom-Functor</h2>
+<p>From the construction that we have seen so far (and might as well be the central lession of category theory), everything should be defined based on the relationship.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-hom-functor-info" class="proof remark">
+<p><span class="proof-title"><em>Remark 6</em>. </span><em>(Information in Hom-Functor)</em> With this, it is crucial to consider the hom-functor i.e <span class="math inline">\(\operatorname{Hom}_{\textbf{C}}(-, X):\textbf{C}^\text{op}\to\textbf{Set}\)</span> i.e a functor that given the object in <span class="math inline">\(\textbf{C}\)</span> will returns the information about arrows that has <span class="math inline">\(X\)</span> as the target. In other words, the information about arrows into object <span class="math inline">\(X\)</span> can be stored within this functor.</p>
+</div>
+</div>
+</div>
+<p>Let’s define the functor formally:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-hom-functor" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4</strong></span> <strong>(Hom-Functor):</strong> The hom-functor denoted as <span class="math inline">\(\operatorname{Hom}_{\textbf{C}}(-, X):\textbf{C}^\text{op}\to\textbf{Set}\)</span>, where it has the following action on object and morphism:</p>
+<ul>
+<li><em>Object:</em> Given object <span class="math inline">\(Y\)</span> of <span class="math inline">\(\textbf{C}\)</span> (as <span class="math inline">\(\textbf{C}^\text{op}\)</span> have the same object as <span class="math inline">\(\textbf{C}\)</span>), then <span class="math inline">\(\operatorname{Hom}_{\textbf{C}}(Y, X)\)</span> is the set.</li>
+<li><em>Morphism:</em> Given the morphism <span class="math inline">\(f^\text{op}:Y\to Z\)</span> (in <span class="math inline">\(\textbf{C}^\text{op}\)</span>), then we can create (lift) the morphism of <span class="math inline">\(\textbf{C}\)</span> to get a morphism <span class="math inline">\(\textbf{Set}\)</span> as follows: <span class="math display">\[
+\begin{aligned}
+\operatorname{Hom}_{\textbf{C}}(-, X)[f^\text{op}] : \operatorname{Hom}_{\textbf{C}}(Y, X)&amp;\to\operatorname{Hom}_{\textbf{C}}(Z, X) \\
+g&amp;\mapsto g\circ f
+\end{aligned}
+\]</span> Please note that the direction of the lifted map is <span class="math inline">\(Y\to Z\)</span>, as the same as <span class="math inline">\(f^\text{op}\)</span> (and note that <span class="math inline">\(f:Z\to Y\)</span>)</li>
+</ul>
+</div>
+</div>
+</div>
+<p>To push the metaphor further, we can try to do the following</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-usage-hom-functor" class="proof remark">
+<p><span class="proof-title"><em>Remark 7</em>. </span><em>(Usage of Hom-Functor):</em> Given the hom-functor, we can compare the objects based on the arrow into it i.e we can study the <em>natural transformation</em> between 2 hom-functors. For example, if we want to compare between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, then we can consider the following natural transformation <span class="math inline">\(\operatorname{Hom}_{\textbf{C}}(-, X)\Rightarrow\operatorname{Hom}_{\textbf{C}}(-, Y)\)</span>.</p>
+<p>But, of course, we can generalize a general case, in which we consider the natural transformation between hom-functor and an arbitary functor i.e <span class="math inline">\(F:\textbf{C}^\text{op}\to \textbf{Set}\)</span>.</p>
+</div>
+</div>
+</div>
+<p>In the best case, we can get a natural isomorphism between hom-functor and any functor. This leads to the notion of representable functors</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-representable-functor" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 5</strong></span> <strong>(Representable Presheaf):</strong> Given category <span class="math inline">\(\textbf{C}\)</span>, the functor <span class="math inline">\(F:\textbf{C}^\text{op}\rightarrow\textbf{Set}\)</span> with is naturally isomorphic to <span class="math inline">\(\operatorname{Hom}_\textbf{C}(-, X):\textbf{C}\rightarrow \textbf{Set}\)</span>, then we have <em>representable presheaf</em> and <span class="math inline">\(X\)</span> is called representing object.</p>
+</div>
+</div>
+</div>
+<p>With the notion of representable, we are going to stick to the concept of reconstruction<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. That is, with a representable presheaf, we only have to inspect the arrows from <span class="math inline">\(Y\to X\)</span> just to get what <span class="math inline">\(F\)</span> does i.e a single snap shot on <span class="math inline">\(X\)</span> from <span class="math inline">\(Y\)</span> to get what we need.</p>
+<p>In a less ideal case, we would need every angles possibles just to reconstruct the action of functor on one object. This is how Yoneda lemma works.</p>
+</section>
+<section id="the-lemma" class="level2">
+<h2 class="anchored" data-anchor-id="the-lemma">The Lemma</h2>
+<p>Now, we are ready to state the Yoneda lemma.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Theorem
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="thm-yoneda-lemma" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 1</strong></span> <strong>(Yoneda Lemma):</strong> With category <span class="math inline">\(\textbf{C}\)</span>, an its object <span class="math inline">\(X\)</span> and presheaf <span class="math inline">\(F:\textbf{C}^\text{op}\rightarrow\textbf{Set}\)</span>, then the map<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
+<p><span class="math display">\[
+よ:\operatorname{Hom}_{[\textbf{C}^\text{op}, \textbf{Set}]}\Big( \operatorname{Hom}_\textbf{C}(-, X), F \Big) \xrightarrow{\cong} FX
+\]</span></p>
+<p>assigning a natural transformation <span class="math inline">\(\alpha:\operatorname{Hom}_\textbf{C}(-,X)\Rightarrow F\)</span> to an element <span class="math inline">\(\alpha_X(\operatorname{id}_X)\in FX\)</span>. The assignment is bijective and it is natural both in <span class="math inline">\(X\)</span> and <span class="math inline">\(F\)</span>.</p>
+</div>
+</div>
+</div>
+<p>Before, we move on to the proof, there are several observations that we can make here:</p>
+<blockquote class="blockquote">
+<p>We take information about how <span class="math inline">\(FY\)</span> looks like<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, and the information about how <span class="math inline">\(Y\)</span> is related to <span class="math inline">\(X\)</span> to inform ourselves how to use the some aspect of <span class="math inline">\(FY\)</span> to reconstruct an element in <span class="math inline">\(FX\)</span> that is selected via natural transformation <span class="math inline">\(\alpha_X(\operatorname{id}_X)\)</span>.</p>
+</blockquote>
+<p>Furthermore, we see that:</p>
+<ul>
+<li>This natural transformation of identity can be taken as a self-representation of that particular element of <span class="math inline">\(FX\)</span>.</li>
+<li>Observe that <span class="math inline">\(\operatorname{id}_X\)</span> is seen in the proof of <a href="#prp-iso-obj-in" class="quarto-xref">Proposition&nbsp;1</a>.</li>
+</ul>
+<p>Let’s consider things in a more concrete example:</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-yoneda-lemma-illustrated" class="proof remark">
+<p><span class="proof-title"><em>Remark 8</em>. </span>In this example, we are interested in reconstructing the <span class="math inline">\(FX\)</span> based on the information of the others. We have the following diagram:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/yo-pic.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<p>Firstly, we want to point out that the functor <span class="math inline">\(F:\textbf{C}^\text{op}\to\textbf{Set}\)</span> can be seen as “rendering” the objects and morphism to a more human readable format, as we are more familiar working with sets.</p>
+<p><strong>(Meaing of Morphism):</strong> With functor <span class="math inline">\(F\)</span>, the object is rendered as sets of objects with different boarder, color and shape. On the other hand, the morphism is rendered as a relation between objects if they have the same value of the properties<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>:</p>
+<ul>
+<li>Given <span class="math inline">\(F\operatorname{Shape}^\text{op}\)</span> (we need <span class="math inline">\(F\)</span> because we add the meaning to the morphism) between <span class="math inline">\(\Box\mapsto\bigcirc\)</span> (note that the arrow here represent only the direction), we have the result on the LHS, which indicates that we don’t have a relationship between the shapes: <span class="math display">\[
+F\operatorname{Shape}^\text{op}(\Box, \text{Circle})=\texttt{F} \qquad \quad F\operatorname{Shape}^\text{op}(\blacksquare, \text{Square})=\texttt{T}
+\]</span> On the RHS, we consider the relationship between <span class="math inline">\(\blacksquare\mapsto\square\)</span>.</li>
+<li>Furthermore, the composition of the relationship will be true if <em>every</em> components are true. For example, <span class="math inline">\(F\operatorname{Shape}^\text{op}\circ F\operatorname{Color}^\text{op}\)</span> is true with <span class="math inline">\(\bigcirc\mapsto\Box\mapsto\blacksquare\)</span>. Finally, <span class="math inline">\(F\operatorname{id}\)</span> is always true regardless of any relationship, as <span class="math inline">\(\blacksquare\mapsto\blacksquare\)</span> always (self-identity).</li>
+</ul>
+<p><strong>(Meaing of Natural Transformation):</strong> For the natural transformation, with component <span class="math inline">\(\alpha_Y:\operatorname{Hom}_{\textbf{C}}(Y, X)\to FX\)</span>. Since we are working on the relation (rather than function), it relates an <em>fixed</em> element (and only varies when we have different natural transformation i.e <em>aspect</em> of <span class="math inline">\(FY\)</span>), in our case it refers to the top left object at <span class="math inline">\(Y\)</span>, to the relations (morphism), and output the property of tha object. That is we have:</p>
+<p><span class="math display">\[
+\alpha_Y(\operatorname{Color}) = \textcolor{ForestGreen}{\text{Green}} \qquad \quad \alpha(\operatorname{Boarder}) = \text{Solid}
+\]</span></p>
+<p>There are only 2 arrows from <span class="math inline">\(X\)</span> to <span class="math inline">\(Y\)</span>. To see what the natural transformation relates element of <span class="math inline">\(FX\)</span> by taking some aspect of <span class="math inline">\(FY\)</span>, we have to consider the following commutative diagram, representing the naturality of <span class="math inline">\(\alpha\)</span>:</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%5C%5B%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsNCxbMCwwLCJcXG9wZXJhdG9ybmFtZXtIb219X1xcdGV4dGJme0N9KFgsWCkiXSxbMCwxLCJGWCJdLFsyLDAsIlxcb3BlcmF0b3JuYW1le0hvbX1fXFx0ZXh0YmZ7Q30oWSxYKSJdLFsyLDEsIkZZIl0sWzAsMSwiXFxhbHBoYV9YIiwyXSxbMiwzLCJcXGFscGhhX1kiXSxbMSwzLCJGXFxvcGVyYXRvcm5hbWV7Q29sb3J9XlxcdGV4dHtvcH0iLDJdLFswLDIsIigtXFxjaXJjIFxcb3BlcmF0b3JuYW1le0NvbG9yfSkiXV0%3D%0A%5Cbegin%7Btikzcd%7D%0A%09%7B%5Coperatorname%7BHom%7D_%5Ctextbf%7BC%7D(X%2CX)%7D%20%26%26%20%7B%5Coperatorname%7BHom%7D_%5Ctextbf%7BC%7D(Y%2CX)%7D%20%5C%5C%0A%09FX%20%26%26%20FY%0A%09%5Carrow%5B%22%7B(-%5Ccirc%20%5Coperatorname%7BColor%7D)%7D%22%2C%20from%3D1-1%2C%20to%3D1-3%5D%0A%09%5Carrow%5B%22%7B%5Calpha_X%7D%22'%2C%20from%3D1-1%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22%7B%5Calpha_Y%7D%22%2C%20from%3D1-3%2C%20to%3D2-3%5D%0A%09%5Carrow%5B%22%7BF%5Coperatorname%7BColor%7D%5E%5Ctext%7Bop%7D%7D%22'%2C%20from%3D2-1%2C%20to%3D2-3%5D%0A%5Cend%7Btikzcd%7D%0A%5C%5D%0A" alt="
+\[
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXG9wZXJhdG9ybmFtZXtIb219X1xcdGV4dGJme0N9KFgsWCkiXSxbMCwxLCJGWCJdLFsyLDAsIlxcb3BlcmF0b3JuYW1le0hvbX1fXFx0ZXh0YmZ7Q30oWSxYKSJdLFsyLDEsIkZZIl0sWzAsMSwiXFxhbHBoYV9YIiwyXSxbMiwzLCJcXGFscGhhX1kiXSxbMSwzLCJGXFxvcGVyYXRvcm5hbWV7Q29sb3J9XlxcdGV4dHtvcH0iLDJdLFswLDIsIigtXFxjaXJjIFxcb3BlcmF0b3JuYW1le0NvbG9yfSkiXV0=
+\begin{tikzcd}
+    {\operatorname{Hom}_\textbf{C}(X,X)} &amp;&amp; {\operatorname{Hom}_\textbf{C}(Y,X)} \\
+    FX &amp;&amp; FY
+    \arrow[&quot;{(-\circ \operatorname{Color})}&quot;, from=1-1, to=1-3]
+    \arrow[&quot;{\alpha_X}&quot;', from=1-1, to=2-1]
+    \arrow[&quot;{\alpha_Y}&quot;, from=1-3, to=2-3]
+    \arrow[&quot;{F\operatorname{Color}^\text{op}}&quot;', from=2-1, to=2-3]
+\end{tikzcd}
+\]
+">
+</p>
+<p>We can see that, given <span class="math inline">\(F\operatorname{Color}^\text{op}(\alpha_X(\operatorname{id}_X))=\alpha_Y(\operatorname{id}_X\circ\operatorname{Color})\)</span>, or to put in our terms, we have:</p>
+<p><span class="math display">\[
+F\operatorname{Color}^\text{op}\Big( \alpha_X(\operatorname{id}_X), \textcolor{ForestGreen}{\text{Green}} \Big) = \texttt{T}
+\]</span></p>
+<p>What happens is that since the <span class="math inline">\(\alpha_X(\operatorname{id}_X)\)</span> represents the self-identity of the <strong>whole</strong> (due to identity relation) top left (due to natural transformation) element of <span class="math inline">\(FX\)</span>, the naturality condition <strong>forces</strong> its color to be green.</p>
+<ul>
+<li>This can be repeated for other properties such as boarder types and different property i.e shape from <span class="math inline">\(Z\)</span>, and repeated for every element in <span class="math inline">\(FX\)</span> via considering all natural transformation.</li>
+<li>Therefore, We are able to reconstruct <span class="math inline">\(FX\)</span> by inherited the color and boarder (relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>) from the element within the “render” image <span class="math inline">\(FY\)</span> of <span class="math inline">\(Y\)</span>, while inherited the shape from <span class="math inline">\(FZ\)</span>.</li>
+</ul>
+<p>Thus, we arrived at the intuition we have above, which is: we need to know the relations between objects <span class="math inline">\(X\)</span> and the other objects (hom-functor) and how these relations translates to each element of the set (natural transformation between hom-functor and <span class="math inline">\(F\)</span>), in order to reconstruct the element of <span class="math inline">\(FX\)</span>.</p>
+<!-- This might looks abit intimidating (but not as much as the formula above, at least according to me). Let's focusing on the relationship between $Y$ and $Z$ on the LHS first. -->
+</div>
+</div>
+</div>
 
 
 </section>
+</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>This intuition is related to the Tannakian reconstruction (see <a href="https://github.com/BartoszMilewski/Publications/blob/master/TheDaoOfFP/DaoFP.pdf"><em>The Dao of Functional Programming</em></a> chapter 18) for more details.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>よ is read as “yo”, in hiragana (Japanese writing system).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>In the formulation (and symbol) of Ends formulation of ninja Toneda lemma, this metaphors even more clear in which we takes into account all <span class="math inline">\(Y\)</span>: <span class="math display">\[
+\int_{Y:\textbf{C}}\operatorname{Hom}_\textbf{Set}\Big( \operatorname{Hom}_\textbf{C}(Y, X), FY \Big) \cong FX
+\]</span> (Ibid, chapter 17).<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>The notion of morphism doesn’t restricted to only function that takes input and output. Nonetheless, the relation can also be seen as function also.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
