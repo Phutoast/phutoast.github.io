@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="dcterms.date" content="2023-11-28">
 <meta name="description" content="A cheat overview of the use of kernel method to perform high dimensional statistical test.">
 
-<title>Phu’s Website - Kernel Statistical Test</title>
+<title>Kernel Statistical Test – Phu’s Website</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -37,10 +37,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-c37a40b267d3139d93432c283e34c257.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,7 +69,7 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -114,7 +114,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -137,7 +137,7 @@ window.Quarto = {
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -212,42 +212,125 @@ window.Quarto = {
 <section id="quick-introduction-to-rkhs" class="level2">
 <h2 class="anchored" data-anchor-id="quick-introduction-to-rkhs">Quick Introduction to RKHS</h2>
 <p>We recall that the Hilbert space (HS) is a vector space that are equipped with an inner product between vectors and returns a scalar result. Reproducing Kernel HS (RKHS) is the Hilbert spaces that is equipped with the a kernel (that is constructed by the non-unique feature maps). Let’s unpack this, by starting from the definition of kernel</p>
-<blockquote class="blockquote">
-<p><strong>Definition (Kernel):</strong> Given the non-empty set <span class="math inline">\(\mathcal{X}\)</span>, we define a <em>kernel</em> to be <span class="math inline">\(k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}\)</span> such that there is a Hilber space <span class="math inline">\(\mathcal{H}\)</span> and a function (called <em>feature map</em>) <span class="math inline">\(\phi:\mathcal{X}\rightarrow\mathcal{H}\)</span> where: <span class="math display">\[k(x, y) = \langle \phi(x), \phi(y)\rangle_\mathcal{H}\]</span> Noted that vector space <span class="math inline">\(\mathcal{H}\)</span> doesn’t need to be finite dimension (and so it can have infinite dimension i.e a function like object).</p>
-</blockquote>
-<p>The good example of feature maps that doesn’t have to be unique is when:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-kernel" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1</strong></span> <strong>(Kernel):</strong> Given the non-empty set <span class="math inline">\(\mathcal{X}\)</span>, we define a <em>kernel</em> to be <span class="math inline">\(k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}\)</span> such that there is a Hilber space <span class="math inline">\(\mathcal{H}\)</span> and a function (called <em>feature map</em>) <span class="math inline">\(\phi:\mathcal{X}\rightarrow\mathcal{H}\)</span> where:</p>
+<p><span class="math display">\[k(x, y) = \langle \phi(x), \phi(y)\rangle_\mathcal{H}\]</span></p>
+<p>Noted that vector space <span class="math inline">\(\mathcal{H}\)</span> doesn’t need to be finite dimension (and so it can have infinite dimension i.e a function like object).</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-non-unique-feat-map" class="proof remark">
+<p><span class="proof-title"><em>Remark 1</em>. </span><em>(Not Unique Feature Map):</em> The good example of feature maps that doesn’t have to be unique is when:</p>
 <p><span class="math display">\[
 \phi_1(x) = x \qquad \phi_2(x) = \begin{bmatrix}x/\sqrt{2} \\ x/\sqrt{2}\end{bmatrix}
 \]</span></p>
-<p>We have the following way to construct a new kernel from the old one, given the fact that <span class="math inline">\(k_1\)</span> and <span class="math inline">\(k_2\)</span> are kernels, then we can show that, for any <span class="math inline">\(x, y\in\mathcal{X}\)</span>:</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-constructing-kernel" class="proof remark">
+<p><span class="proof-title"><em>Remark 2</em>. </span><em>(Constructing a New Kernel from An Old One):</em> Given the fact that <span class="math inline">\(k_1\)</span> and <span class="math inline">\(k_2\)</span> are kernels, then we can show that, for any <span class="math inline">\(x, y\in\mathcal{X}\)</span>:</p>
 <ul>
 <li><span class="math inline">\(k_1(x, y)+k_2(x, y)\)</span></li>
 <li><span class="math inline">\(k_1(x, y)*k_2(x, y)\)</span></li>
 <li>For <span class="math inline">\(a\in\mathbb{R}\)</span>, such that <span class="math inline">\(ak_1(x,y)\)</span></li>
 <li>For any function <span class="math inline">\(f:\mathcal{X}\rightarrow\mathcal{X}'\)</span> (can be neural network or any kind of functions) and kernel <span class="math inline">\(k':\mathcal{X}'\times\mathcal{X}'\rightarrow\mathbb{R}\)</span>, such that <span class="math inline">\(k'(\phi(x), \phi(y))\)</span></li>
 </ul>
-<p>are all kernel. With this would means that the following function <span class="math inline">\(k(x, x') = (c + \langle x, x'\rangle)^m\)</span> is also a kernel, or if we have a function that admits Taylor series <span class="math inline">\(f\)</span> (with convergences properties etc.), then <span class="math inline">\(f(\langle x, x'\rangle)\)</span> is also a kernel.</p>
-<p>Now, we are ready to define the RKHS, in which it is a special Hilbert space with a special kind of kernel that satisfies additional</p>
-<blockquote class="blockquote">
-<p><strong>Definition (Reproducing Kernel Hilber Space):</strong> Given a Hilbert space <span class="math inline">\(\mathcal{H}\)</span> of <span class="math inline">\(\mathbb{R}\)</span> valued functions on non-empty set <span class="math inline">\(\mathcal{X}\)</span>, the kernel <span class="math inline">\(k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}\)</span> is called <em>reproducing</em> and <span class="math inline">\(\mathcal{H}\)</span> is called RKHS if:</p>
+<p>are all kernel. With this would means that <span class="math inline">\(k(x, x') = (c + \langle x, x'\rangle)^m\)</span> is also a kernel, or any function that admits Taylor series <span class="math inline">\(f\)</span> (with convergences properties etc.), then <span class="math inline">\(f(\langle x, x'\rangle)\)</span> is also a kernel.</p>
+</div>
+</div>
+</div>
+<p>Now, we are ready to define the RKHS, in which it is a special Hilbert space with a special kind of kernel:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-rkhs" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 2</strong></span> <strong>(Reproducing Kernel Hilber Space):</strong> Given a Hilbert space <span class="math inline">\(\mathcal{H}\)</span> of <span class="math inline">\(\mathbb{R}\)</span> valued functions on non-empty set <span class="math inline">\(\mathcal{X}\)</span>, the kernel <span class="math inline">\(k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}\)</span> is called <em>reproducing</em> and <span class="math inline">\(\mathcal{H}\)</span> is called RKHS if:</p>
 <ul>
 <li>For all <span class="math inline">\(x\in\mathcal{X}\)</span>, <span class="math inline">\(k(\cdot, x) \in\mathcal{H}\)</span>, then <span class="math inline">\(k(\cdot, x)\in\mathcal{H}\)</span></li>
 <li>For all <span class="math inline">\(x\in\mathcal{X}\)</span>, <span class="math inline">\(\langle{f(\cdot), k(\cdot,x)\rangle}_\mathcal{H} = f(x)\)</span></li>
 </ul>
-</blockquote>
+</div>
+</div>
+</div>
 <p>Given the defintion, one can see that:</p>
 <p><span class="math display">\[
 \langle k(\cdot, x), k(\cdot, y)\rangle_\mathcal{H} = k(x, y)
 \]</span></p>
-<p>which means that <span class="math inline">\(k(\cdot,x)\)</span> for any <span class="math inline">\(x\in\mathcal{X}\)</span> can be seen as the feature map (recall that it doesn’t have to be unique), we will call this a <em>canonical feature map</em>.</p>
-<p>We also have the follows result that illustrate why RKHS is preferable compared to the normal HS of functions.</p>
-<blockquote class="blockquote">
-<p><strong>Advanced Topics:</strong> Intuitively, we just say that the functions in RKHS acts “smoothly” and “predictably”, in the sense that: - If the distance between functions <span class="math inline">\(\|f-g\|_\mathcal{H}\)</span> is close to each other then its pointwise evaluation <span class="math inline">\(|f(x)-g(x)|\)</span> for any <span class="math inline">\(x\)</span> would also be close to each other. - This can be shown by the fact that the HS <span class="math inline">\(\mathcal{H}\)</span> has reproducing kernel iff the evaluation operator (defined as <span class="math inline">\(\delta_x : \mathcal{H}\rightarrow\mathbb{R}\)</span> where <span class="math inline">\(\delta_x(f)=f(x)\)</span>) is bounded i.e <span class="math inline">\(|\delta_x(f)|\le \lambda_x\|f\|_\mathcal{H}\)</span> for positive constant <span class="math inline">\(\lambda_x\in\mathbb{R}\)</span> (the proof uses the Riesz representation theorem)</p>
-</blockquote>
+<p>which means that <span class="math inline">\(k(\cdot,x)\)</span> for any <span class="math inline">\(x\in\mathcal{X}\)</span> can be seen as the feature map (recall that it doesn’t have to be unique), we will call this a <em>canonical feature map</em>. We also have the follows result that illustrate why RKHS is preferable compared to the normal HS of functions.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-further-obv-rkhs" class="proof remark">
+<p><span class="proof-title"><em>Remark 3</em>. </span><strong>Advanced Topics:</strong> Intuitively, we just say that the functions in RKHS acts “smoothly” and “predictably”, in the sense that:</p>
+<ul>
+<li>If the distance between functions <span class="math inline">\(\|f-g\|_\mathcal{H}\)</span> is close to each other then its pointwise evaluation <span class="math inline">\(|f(x)-g(x)|\)</span> for any <span class="math inline">\(x\)</span> would also be close to each other.</li>
+<li>This can be shown by the fact that the HS <span class="math inline">\(\mathcal{H}\)</span> has reproducing kernel iff the evaluation operator (defined as <span class="math inline">\(\delta_x : \mathcal{H}\rightarrow\mathbb{R}\)</span> where <span class="math inline">\(\delta_x(f)=f(x)\)</span>) is bounded i.e <span class="math inline">\(|\delta_x(f)|\le \lambda_x\|f\|_\mathcal{H}\)</span> for positive constant <span class="math inline">\(\lambda_x\in\mathbb{R}\)</span> (the proof uses the Riesz representation theorem)</li>
+</ul>
+</div>
+</div>
+</div>
 <p>Furthermore, if the kernel satisfies the special property, then there is going to be an RHKS that is equipped with the given kernel as:</p>
-<blockquote class="blockquote">
-<p><strong>Theorem (Moore-Aronszajn):</strong> A symmetric function <span class="math inline">\(k:\mathcal{X}\times\mathcal{X}\rightarrow \mathbb{R}\)</span> is positive definite if: for all <span class="math inline">\(a_1,a_2,\dots,a_n\in \mathbb{R}\)</span> and for all <span class="math inline">\(x_1,x_2,\dots,x_n\in\mathcal{X}\)</span>: <span class="math display">\[\sum^n_{i=1}\sum^n_{j=1}a_ia_jk(x_i, x_j)\ge0\]</span> If the kernel is <em>positive definite</em>, then there is a unique RKHS with the reproducing kernel <span class="math inline">\(k\)</span>.</p>
-</blockquote>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Theorem
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="thm-moore-aronszajn" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 1</strong></span> <strong>(Moore-Aronszajn):</strong> A symmetric function <span class="math inline">\(k:\mathcal{X}\times\mathcal{X}\rightarrow \mathbb{R}\)</span> is positive definite if: for all <span class="math inline">\(a_1,a_2,\dots,a_n\in \mathbb{R}\)</span> and for all <span class="math inline">\(x_1,x_2,\dots, x_n\in\mathcal{X}\)</span>:</p>
+<p><span class="math display">\[\sum^n_{i=1}\sum^n_{j=1}a_ia_jk(x_i, x_j)\ge0\]</span></p>
+<p>If the kernel is <em>positive definite</em>, then there is a unique RKHS with the reproducing kernel <span class="math inline">\(k\)</span>.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="interlude-why-kernel-in-statistical-testing" class="level2">
 <h2 class="anchored" data-anchor-id="interlude-why-kernel-in-statistical-testing">Interlude (Why Kernel in Statistical Testing?)</h2>
@@ -408,18 +491,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -451,7 +523,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/Phutoast\.github\.io\/phutoast\.github\.io\/");
@@ -459,7 +551,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -556,7 +648,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

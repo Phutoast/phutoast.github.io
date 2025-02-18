@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="dcterms.date" content="2024-05-16">
 <meta name="description" content="Explain what Yoneda Lemma and why it is important (and interesting), as compacted as possible. We will focus on the intuition and usage, but will still provides the full proof at the end.">
 
-<title>Phu’s Website - Yoneda Lemma: An Exploration (WIP)</title>
+<title>Yoneda Lemma: An Exploration (WIP) – Phu’s Website</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -37,10 +37,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-c37a40b267d3139d93432c283e34c257.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,7 +69,7 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -114,7 +114,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -137,7 +137,7 @@ window.Quarto = {
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -846,7 +846,7 @@ Theorem
 </div>
 </div>
 </div>
-<p>Before, we move on to the proof, there are several observations that we can make here:</p>
+<p>The proof will be presented in the next section. Before that, there are several observations that we can make here:</p>
 <blockquote class="blockquote">
 <p>We take information about how <span class="math inline">\(FY\)</span> looks like<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, and the information about how <span class="math inline">\(Y\)</span> is related to <span class="math inline">\(X\)</span> to inform ourselves how to use the some aspect of <span class="math inline">\(FY\)</span> to reconstruct an element in <span class="math inline">\(FX\)</span> that is selected via natural transformation <span class="math inline">\(\alpha_X(\operatorname{id}_X)\)</span>.</p>
 </blockquote>
@@ -874,14 +874,14 @@ Remark
 </figure>
 </div>
 <p>Firstly, we want to point out that the functor <span class="math inline">\(F:\textbf{C}^\text{op}\to\textbf{Set}\)</span> can be seen as “rendering” the objects and morphism to a more human readable format, as we are more familiar working with sets.</p>
-<p><strong>(Meaing of Morphism):</strong> With functor <span class="math inline">\(F\)</span>, the object is rendered as sets of objects with different boarder, color and shape. On the other hand, the morphism is rendered as a relation between objects if they have the same value of the properties<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>:</p>
+<p><strong>(Meaning of Morphism):</strong> With functor <span class="math inline">\(F\)</span>, the object is rendered as sets of objects with different boarder, color and shape. On the other hand, the morphism is rendered as a relation between elements of objects if they have the same values of the properties<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>:</p>
 <ul>
-<li>Given <span class="math inline">\(F\operatorname{Shape}^\text{op}\)</span> (we need <span class="math inline">\(F\)</span> because we add the meaning to the morphism) between <span class="math inline">\(\Box\mapsto\bigcirc\)</span> (note that the arrow here represent only the direction), we have the result on the LHS, which indicates that we don’t have a relationship between the shapes: <span class="math display">\[
-F\operatorname{Shape}^\text{op}(\Box, \text{Circle})=\texttt{F} \qquad \quad F\operatorname{Shape}^\text{op}(\blacksquare, \text{Square})=\texttt{T}
-\]</span> On the RHS, we consider the relationship between <span class="math inline">\(\blacksquare\mapsto\square\)</span>.</li>
-<li>Furthermore, the composition of the relationship will be true if <em>every</em> components are true. For example, <span class="math inline">\(F\operatorname{Shape}^\text{op}\circ F\operatorname{Color}^\text{op}\)</span> is true with <span class="math inline">\(\bigcirc\mapsto\Box\mapsto\blacksquare\)</span>. Finally, <span class="math inline">\(F\operatorname{id}\)</span> is always true regardless of any relationship, as <span class="math inline">\(\blacksquare\mapsto\blacksquare\)</span> always (self-identity).</li>
+<li>The morphism <span class="math inline">\(F\operatorname{Shape}^\text{op}\)</span> (<span class="math inline">\(F\)</span> adds meanings to the morphism) acts as follows: the LHS indicates that the shapes don’t match: <span class="math display">\[
+F\operatorname{Shape}^\text{op}(\Box, \bigcirc)=\texttt{F} \qquad \quad F\operatorname{Shape}^\text{op}(\blacksquare, \Box)=\texttt{T}
+\]</span> On the RHS, there is a relationship because the shape maps.</li>
+<li>Furthermore, the composition of the relationship will be true if <em>every</em> components are true. For example, <span class="math inline">\(F\operatorname{Shape}^\text{op}\circ F\operatorname{Color}^\text{op}\)</span> is true with <span class="math inline">\(\bigcirc\mapsto\Box\mapsto\blacksquare\)</span>. Finally, <span class="math inline">\(F\operatorname{id}\)</span> is always true regardless of any relationship, as we have a self-indentity.</li>
 </ul>
-<p><strong>(Meaing of Natural Transformation):</strong> For the natural transformation, with component <span class="math inline">\(\alpha_Y:\operatorname{Hom}_{\textbf{C}}(Y, X)\to FX\)</span>. Since we are working on the relation (rather than function), it relates an <em>fixed</em> element (and only varies when we have different natural transformation i.e <em>aspect</em> of <span class="math inline">\(FY\)</span>), in our case it refers to the top left object at <span class="math inline">\(Y\)</span>, to the relations (morphism), and output the property of tha object. That is we have:</p>
+<p><strong>(Meaing of Natural Transformation):</strong> For the natural transformation, with component <span class="math inline">\(\alpha_Y:\operatorname{Hom}_{\textbf{C}}(Y, X)\to FX\)</span>. Since we are working on the relation (rather than function), it relates an <em>fixed</em> element (and only varies when we have different natural transformation i.e <em>aspect</em> of <span class="math inline">\(FY\)</span>), in our case it refers to the top left object at <span class="math inline">\(Y\)</span> (see how orange arrow selects an object), to the relations (morphism), and output the property of tha object:</p>
 <p><span class="math display">\[
 \alpha_Y(\operatorname{Color}) = \textcolor{ForestGreen}{\text{Green}} \qquad \quad \alpha(\operatorname{Boarder}) = \text{Solid}
 \]</span></p>
@@ -901,17 +901,124 @@ F\operatorname{Shape}^\text{op}(\Box, \text{Circle})=\texttt{F} \qquad \quad F\o
 \]
 ">
 </p>
-<p>We can see that, given <span class="math inline">\(F\operatorname{Color}^\text{op}(\alpha_X(\operatorname{id}_X))=\alpha_Y(\operatorname{id}_X\circ\operatorname{Color})\)</span>, or to put in our terms, we have:</p>
+<p>Then, given <span class="math inline">\(F\operatorname{Color}^\text{op}(\alpha_X(\operatorname{id}_X))=\alpha_Y(\operatorname{id}_X\circ\operatorname{Color})=\alpha_Y(\operatorname{Color})\)</span>, or:</p>
 <p><span class="math display">\[
 F\operatorname{Color}^\text{op}\Big( \alpha_X(\operatorname{id}_X), \textcolor{ForestGreen}{\text{Green}} \Big) = \texttt{T}
 \]</span></p>
-<p>What happens is that since the <span class="math inline">\(\alpha_X(\operatorname{id}_X)\)</span> represents the self-identity of the <strong>whole</strong> (due to identity relation) top left (due to natural transformation) element of <span class="math inline">\(FX\)</span>, the naturality condition <strong>forces</strong> its color to be green.</p>
+<p>Since <span class="math inline">\(\alpha_X(\operatorname{id}_X)\)</span> represents the self-identity of the <strong>whole</strong> selected element of <span class="math inline">\(FX\)</span> (see arrow), the naturality condition <strong>forces</strong> its color to be green.</p>
 <ul>
 <li>This can be repeated for other properties such as boarder types and different property i.e shape from <span class="math inline">\(Z\)</span>, and repeated for every element in <span class="math inline">\(FX\)</span> via considering all natural transformation.</li>
-<li>Therefore, We are able to reconstruct <span class="math inline">\(FX\)</span> by inherited the color and boarder (relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>) from the element within the “render” image <span class="math inline">\(FY\)</span> of <span class="math inline">\(Y\)</span>, while inherited the shape from <span class="math inline">\(FZ\)</span>.</li>
+<li>And this is repeated for other selection of elements as we consider a set of natural transformations.</li>
+<li>Therefore, we can reconstruct elements of <span class="math inline">\(FX\)</span> by inherited the color and boarder (relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>) from the element within the “render” image <span class="math inline">\(FY\)</span> of <span class="math inline">\(Y\)</span>, while inherited the shape from <span class="math inline">\(FZ\)</span> (and so on).</li>
 </ul>
-<p>Thus, we arrived at the intuition we have above, which is: we need to know the relations between objects <span class="math inline">\(X\)</span> and the other objects (hom-functor) and how these relations translates to each element of the set (natural transformation between hom-functor and <span class="math inline">\(F\)</span>), in order to reconstruct the element of <span class="math inline">\(FX\)</span>.</p>
-<!-- This might looks abit intimidating (but not as much as the formula above, at least according to me). Let's focusing on the relationship between $Y$ and $Z$ on the LHS first. -->
+<p>Thus, we arrived at the intuition we have above: we need to know the relations between objects <span class="math inline">\(X\)</span> and the other objects (hom-functor) and how these relations translates to each element of the set (natural transformation between hom-functor and <span class="math inline">\(F\)</span>), in order to reconstruct the element of <span class="math inline">\(FX\)</span>.</p>
+</div>
+</div>
+</div>
+<p>In fact, we can state the intuitive that we have more formally in the following corollaries:</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Corollary
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="coro-yoneda-embedding">
+<p><strong>(Yoneda Embedding):</strong> With category <span class="math inline">\(\textbf{C}\)</span>, and its object <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> there is a bijection between the following sets:</p>
+<p><span class="math display">\[
+\operatorname{Hom}_\textbf{C}(X, Y) \cong \operatorname{Hom}_{[\textbf{C}^\text{op}, \textbf{Set}]}\Big( \operatorname{Hom}_{\textbf{C}}(-, X), \operatorname{Hom}_{\textbf{C}}(-, Y) \Big)
+\]</span></p>
+</div>
+</div>
+</div>
+<details>
+<p>Using Yoneda lemma, we replace presheaf <span class="math inline">\(F\)</span> by <span class="math inline">\(\operatorname{Hom}_\textbf{C}(-, Y)\)</span></p>
+<div style="text-align: right">
+□
+</div>
+<summary>
+Proof
+</summary>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Corollary
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="coro-equiv-obj">
+<p>With category <span class="math inline">\(\textbf{C}\)</span>, and its object <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, then <span class="math inline">\(X\cong Y\)</span> iff hom-functors that they represent are naturally isomorphic.</p>
+</div>
+</div>
+</div>
+<details>
+<p>Given morphism between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> to be <span class="math inline">\(f:X\to Y\)</span>, then by Yoneda embedding there is an associated natural transformation <span class="math inline">\(\alpha:\operatorname{Hom}_\textbf{C}(-, X)\Rightarrow\operatorname{Hom}_\textbf{C}(-, Y)\)</span> such that <span class="math inline">\(\alpha_X(\operatorname{id}_X)=f\)</span>.</p>
+<p><span class="math inline">\(\boldsymbol{(\implies):}\)</span> Since <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are isomorphic, we can let <span class="math inline">\(f\)</span> above be that isomorphism between both objects. By using the natural transformation properties, for any map <span class="math inline">\(g:Z\to X\)</span>, we set <span class="math inline">\(\alpha_Z(g)=f\circ g\)</span> because the following diagram has to commutes:</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsNCxbMCwwLCJcXG9wZXJhdG9ybmFtZXtpZH1fWCJdLFsyLDAsImciXSxbMCwxLCJmIl0sWzIsMSwiZlxcY2lyYyBnPVxcYWxwaGFfWihnKSJdLFswLDEsIi1cXGNpcmMgZyIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMCwyLCJcXGFscGhhX1giLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzEsMywiXFxhbHBoYV9aIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFsyLDMsIi1cXGNpcmMgZyIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0%3D%0A%5C%5B%5Cbegin%7Btikzcd%7D%0A%09%7B%5Coperatorname%7Bid%7D_X%7D%20%26%26%20g%20%5C%5C%0A%09f%20%26%26%20%7Bf%5Ccirc%20g%3D%5Calpha_Z(g)%7D%0A%09%5Carrow%5B%22%7B-%5Ccirc%20g%7D%22%2C%20maps%20to%2C%20from%3D1-1%2C%20to%3D1-3%5D%0A%09%5Carrow%5B%22%7B%5Calpha_X%7D%22'%2C%20maps%20to%2C%20from%3D1-1%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22%7B%5Calpha_Z%7D%22%2C%20maps%20to%2C%20from%3D1-3%2C%20to%3D2-3%5D%0A%09%5Carrow%5B%22%7B-%5Ccirc%20g%7D%22'%2C%20maps%20to%2C%20from%3D2-1%2C%20to%3D2-3%5D%0A%5Cend%7Btikzcd%7D%5C%5D%0A" alt="
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXG9wZXJhdG9ybmFtZXtpZH1fWCJdLFsyLDAsImciXSxbMCwxLCJmIl0sWzIsMSwiZlxcY2lyYyBnPVxcYWxwaGFfWihnKSJdLFswLDEsIi1cXGNpcmMgZyIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMCwyLCJcXGFscGhhX1giLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzEsMywiXFxhbHBoYV9aIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFsyLDMsIi1cXGNpcmMgZyIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=
+\[\begin{tikzcd}
+    {\operatorname{id}_X} &amp;&amp; g \\
+    f &amp;&amp; {f\circ g=\alpha_Z(g)}
+    \arrow[&quot;{-\circ g}&quot;, maps to, from=1-1, to=1-3]
+    \arrow[&quot;{\alpha_X}&quot;', maps to, from=1-1, to=2-1]
+    \arrow[&quot;{\alpha_Z}&quot;, maps to, from=1-3, to=2-3]
+    \arrow[&quot;{-\circ g}&quot;', maps to, from=2-1, to=2-3]
+\end{tikzcd}\]
+">
+</p>
+<p>And, it is clear that each component of the natural transformation is inverse by the virtue of <span class="math inline">\(f\)</span> being isomorphism i.e given <span class="math inline">\(\alpha^{-1}_Z(h)=f^{-1}\circ g\)</span> for <span class="math inline">\(h:Z\to Y\)</span></p>
+<p><span class="math inline">\(\boldsymbol{(\impliedby):}\)</span> We claim that <span class="math inline">\(\alpha_X(\operatorname{id}_X):X\to Y\)</span> is an isomorphism with its inverse being <span class="math inline">\(\alpha_Y^{-1}(\operatorname{id}_Y):Y\to X\)</span>, which exists because <span class="math inline">\(\alpha\)</span> is natural isomorphism. Then by the observation above:</p>
+<p><span class="math display">\[
+\operatorname{id}_Y =\alpha_Y(\alpha_Y^{-1}(\operatorname{id}_Y)) = \alpha_X(\operatorname{id}_X)\circ\alpha_Y^{-1}(\operatorname{id}_Y)
+\]</span></p>
+<p>On the other hand, we consider the following commutative diagram being the natural isomorphism action on <span class="math inline">\(-\circ\alpha_X(\operatorname{id}_X)\)</span> as:</p>
+<p align="center">
+<img align="center" src="https://i.upmath.me/svg/%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsNCxbMCwwLCJcXGFscGhhX1leey0xfShcXG9wZXJhdG9ybmFtZXtpZH1fWSkiXSxbMiwwLCJcXGFscGhhX1leey0xfShcXG9wZXJhdG9ybmFtZXtpZH1fWSlcXGNpcmNcXGFscGhhX1goXFxvcGVyYXRvcm5hbWV7aWR9X1gpIl0sWzAsMSwiXFxvcGVyYXRvcm5hbWV7aWR9X1kiXSxbMiwxLCJcXGFscGhhX1goXFxvcGVyYXRvcm5hbWV7aWR9X1gpIl0sWzAsMSwiLVxcY2lyY1xcYWxwaGFfWChcXG9wZXJhdG9ybmFtZXtpZH1fWCkiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzAsMiwiXFxhbHBoYV9ZIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFsxLDMsIlxcYWxwaGFfWiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMiwzLCItXFxjaXJjXFxhbHBoYV9YKFxcb3BlcmF0b3JuYW1le2lkfV9YKSIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0%3D%0A%5C%5B%5Cbegin%7Btikzcd%7D%0A%09%7B%5Calpha_Y%5E%7B-1%7D(%5Coperatorname%7Bid%7D_Y)%7D%20%26%26%20%7B%5Calpha_Y%5E%7B-1%7D(%5Coperatorname%7Bid%7D_Y)%5Ccirc%5Calpha_X(%5Coperatorname%7Bid%7D_X)%7D%20%5C%5C%0A%09%7B%5Coperatorname%7Bid%7D_Y%7D%20%26%26%20%7B%5Calpha_X(%5Coperatorname%7Bid%7D_X)%7D%0A%09%5Carrow%5B%22%7B-%5Ccirc%5Calpha_X(%5Coperatorname%7Bid%7D_X)%7D%22%2C%20maps%20to%2C%20from%3D1-1%2C%20to%3D1-3%5D%0A%09%5Carrow%5B%22%7B%5Calpha_Y%7D%22'%2C%20maps%20to%2C%20from%3D1-1%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22%7B%5Calpha_Z%7D%22%2C%20maps%20to%2C%20from%3D1-3%2C%20to%3D2-3%5D%0A%09%5Carrow%5B%22%7B-%5Ccirc%5Calpha_X(%5Coperatorname%7Bid%7D_X)%7D%22'%2C%20maps%20to%2C%20from%3D2-1%2C%20to%3D2-3%5D%0A%5Cend%7Btikzcd%7D%5C%5D%0A" alt="
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXGFscGhhX1leey0xfShcXG9wZXJhdG9ybmFtZXtpZH1fWSkiXSxbMiwwLCJcXGFscGhhX1leey0xfShcXG9wZXJhdG9ybmFtZXtpZH1fWSlcXGNpcmNcXGFscGhhX1goXFxvcGVyYXRvcm5hbWV7aWR9X1gpIl0sWzAsMSwiXFxvcGVyYXRvcm5hbWV7aWR9X1kiXSxbMiwxLCJcXGFscGhhX1goXFxvcGVyYXRvcm5hbWV7aWR9X1gpIl0sWzAsMSwiLVxcY2lyY1xcYWxwaGFfWChcXG9wZXJhdG9ybmFtZXtpZH1fWCkiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzAsMiwiXFxhbHBoYV9ZIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFsxLDMsIlxcYWxwaGFfWiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMiwzLCItXFxjaXJjXFxhbHBoYV9YKFxcb3BlcmF0b3JuYW1le2lkfV9YKSIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=
+\[\begin{tikzcd}
+    {\alpha_Y^{-1}(\operatorname{id}_Y)} &amp;&amp; {\alpha_Y^{-1}(\operatorname{id}_Y)\circ\alpha_X(\operatorname{id}_X)} \\
+    {\operatorname{id}_Y} &amp;&amp; {\alpha_X(\operatorname{id}_X)}
+    \arrow[&quot;{-\circ\alpha_X(\operatorname{id}_X)}&quot;, maps to, from=1-1, to=1-3]
+    \arrow[&quot;{\alpha_Y}&quot;', maps to, from=1-1, to=2-1]
+    \arrow[&quot;{\alpha_Z}&quot;, maps to, from=1-3, to=2-3]
+    \arrow[&quot;{-\circ\alpha_X(\operatorname{id}_X)}&quot;', maps to, from=2-1, to=2-3]
+\end{tikzcd}\]
+">
+</p>
+<p>And because <span class="math inline">\(\alpha_Z\)</span> is isomorphism, we have that:</p>
+<p><span class="math display">\[
+\alpha_Y^{-1}(\operatorname{id}_Y)\circ\alpha_X(\operatorname{id}_X) = \operatorname{id}_X
+\]</span></p>
+<div style="text-align: right">
+□
+</div>
+<summary>
+Proof
+</summary>
+</details>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-inter-last-coro" class="proof remark">
+<p><span class="proof-title"><em>Remark 9</em>. </span><em>(Interpretation of Result)</em> When looking at the component of natural isomorphism, with any object <span class="math inline">\(S\)</span> of <span class="math inline">\(\textbf{C}\)</span>, and <span class="math inline">\(X\cong Y\)</span>, we have:</p>
+<p><span class="math display">\[
+\operatorname{Hom}_\textbf{C}(S, X)\cong\operatorname{Hom}_\textbf{C}(S, Y)
+\]</span> That is, if <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are indistinguishable by <span class="math inline">\(S\)</span>, for every <span class="math inline">\(S\)</span> in <span class="math inline">\(\textbf{C}\)</span>. This also applied to <span class="math inline">\(\operatorname{Hom}_\textbf{C}(X, S)\cong\operatorname{Hom}_\textbf{C}(Y, S)\)</span>, where we would consider the dual case of Yoneda lemma.</p>
 </div>
 </div>
 </div>
@@ -925,11 +1032,11 @@ F\operatorname{Color}^\text{op}\Big( \alpha_X(\operatorname{id}_X), \textcolor{F
 
 <ol>
 <li id="fn1"><p>This intuition is related to the Tannakian reconstruction (see <a href="https://github.com/BartoszMilewski/Publications/blob/master/TheDaoOfFP/DaoFP.pdf"><em>The Dao of Functional Programming</em></a> chapter 18) for more details.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>よ is read as “yo”, in hiragana (Japanese writing system).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>In the formulation (and symbol) of Ends formulation of ninja Toneda lemma, this metaphors even more clear in which we takes into account all <span class="math inline">\(Y\)</span>: <span class="math display">\[
+<li id="fn2"><p>よ is read as “yo”, in Hiragana (Japanese writing system).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>In the formulation (and symbol) of Ends formulation of ninja Yoneda lemma, this metaphors even more clear in which we takes into account all <span class="math inline">\(Y\)</span>: <span class="math display">\[
 \int_{Y:\textbf{C}}\operatorname{Hom}_\textbf{Set}\Big( \operatorname{Hom}_\textbf{C}(Y, X), FY \Big) \cong FX
 \]</span> (Ibid, chapter 17).<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>The notion of morphism doesn’t restricted to only function that takes input and output. Nonetheless, the relation can also be seen as function also.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>The notion of morphism doesn’t restricted to only function that takes input and output. Nonetheless, the relation can also be seen as function.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -967,18 +1074,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1010,7 +1106,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/Phutoast\.github\.io\/phutoast\.github\.io\/");
@@ -1018,7 +1134,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1115,7 +1231,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
