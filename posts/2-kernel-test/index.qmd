@@ -14,31 +14,63 @@ In this document, I would like to explain how the MMD and HSIC are derived (roug
 
 We recall that the Hilbert space (HS) is a vector space that are equipped with an inner product between vectors and returns a scalar result. Reproducing Kernel HS (RKHS) is the Hilbert spaces that is equipped with the a kernel (that is constructed by the non-unique feature maps). Let's unpack this, by starting from the definition of kernel
 
-> **Definition (Kernel):** Given the non-empty set $\mathcal{X}$, we define a *kernel* to be $k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}$ such that there is a Hilber space $\mathcal{H}$ and a function (called *feature map*) $\phi:\mathcal{X}\rightarrow\mathcal{H}$ where:
-> $$k(x, y) = \langle \phi(x), \phi(y)\rangle_\mathcal{H}$$
-> Noted that vector space $\mathcal{H}$ doesn't need to be finite dimension (and so it can have infinite dimension i.e a function like object).
+::: {.callout-note}
+## Definition 
+:::{#def-kernel}
 
-The good example of feature maps that doesn't have to be unique is when:
+**(Kernel):**  Given the non-empty set $\mathcal{X}$, we define a *kernel* to be $k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}$ such that there is a Hilber space $\mathcal{H}$ and a function (called *feature map*) $\phi:\mathcal{X}\rightarrow\mathcal{H}$ where:
+
+$$k(x, y) = \langle \phi(x), \phi(y)\rangle_\mathcal{H}$$
+
+Noted that vector space $\mathcal{H}$ doesn't need to be finite dimension (and so it can have infinite dimension i.e a function like object).
+
+:::
+:::
+
+::: {.callout-warning}
+## Remark
+:::{#rem-non-unique-feat-map}
+
+*(Not Unique Feature Map):* The good example of feature maps that doesn't have to be unique is when:
 
 $$
 \phi_1(x) = x \qquad \phi_2(x) = \begin{bmatrix}x/\sqrt{2} \\ x/\sqrt{2}\end{bmatrix}
 $$
 
-We have the following way to construct a new kernel from the old one, given the fact that $k_1$ and $k_2$ are kernels, then we can show that, for any $x, y\in\mathcal{X}$:
+:::
+:::
+
+
+::: {.callout-warning}
+## Remark
+:::{#rem-constructing-kernel}
+
+*(Constructing a New Kernel from An Old One):* Given the fact that $k_1$ and $k_2$ are kernels, then we can show that, for any $x, y\in\mathcal{X}$:
 
 - $k_1(x, y)+k_2(x, y)$
 - $k_1(x, y)*k_2(x, y)$
 - For $a\in\mathbb{R}$, such that $ak_1(x,y)$
 - For any function $f:\mathcal{X}\rightarrow\mathcal{X}'$ (can be neural network or any kind of functions) and kernel $k':\mathcal{X}'\times\mathcal{X}'\rightarrow\mathbb{R}$, such that $k'(\phi(x), \phi(y))$
 
-are all kernel. With this would means that the following function $k(x, x') = (c + \langle x, x'\rangle)^m$ is also a kernel, or if we have a function that admits Taylor series $f$ (with convergences properties etc.), then $f(\langle x, x'\rangle)$ is also a kernel.
+are all kernel. With this would means that $k(x, x') = (c + \langle x, x'\rangle)^m$ is also a kernel, or any function that admits Taylor series $f$ (with convergences properties etc.), then $f(\langle x, x'\rangle)$ is also a kernel.
 
-Now, we are ready to define the RKHS, in which it is a special Hilbert space with a special kind of kernel that satisfies additional 
+:::
+:::
 
-> **Definition (Reproducing Kernel Hilber Space):** Given a Hilbert space $\mathcal{H}$ of $\mathbb{R}$ valued functions on non-empty set $\mathcal{X}$, the kernel $k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}$ is called *reproducing* and $\mathcal{H}$ is called RKHS if:
->
-> - For all $x\in\mathcal{X}$, $k(\cdot, x) \in\mathcal{H}$, then $k(\cdot, x)\in\mathcal{H}$
-> - For all $x\in\mathcal{X}$, $\langle{f(\cdot), k(\cdot,x)\rangle}_\mathcal{H} = f(x)$
+Now, we are ready to define the RKHS, in which it is a special Hilbert space with a special kind of kernel: 
+
+::: {.callout-note}
+## Definition 
+:::{#def-rkhs}
+
+**(Reproducing Kernel Hilber Space):** Given a Hilbert space $\mathcal{H}$ of $\mathbb{R}$ valued functions on non-empty set $\mathcal{X}$, the kernel $k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}$ is called *reproducing* and $\mathcal{H}$ is called RKHS if:
+
+- For all $x\in\mathcal{X}$, $k(\cdot, x) \in\mathcal{H}$, then $k(\cdot, x)\in\mathcal{H}$
+- For all $x\in\mathcal{X}$, $\langle{f(\cdot), k(\cdot,x)\rangle}_\mathcal{H} = f(x)$
+
+:::
+:::
+
 
 Given the defintion, one can see that:
 
@@ -46,18 +78,34 @@ $$
 \langle k(\cdot, x), k(\cdot, y)\rangle_\mathcal{H} = k(x, y)
 $$
 
-which means that $k(\cdot,x)$ for any $x\in\mathcal{X}$ can be seen as the feature map (recall that it doesn't have to be unique), we will call this a *canonical feature map*. 
+which means that $k(\cdot,x)$ for any $x\in\mathcal{X}$ can be seen as the feature map (recall that it doesn't have to be unique), we will call this a *canonical feature map*. We also have the follows result that illustrate why RKHS is preferable compared to the normal HS of functions. 
 
-We also have the follows result that illustrate why RKHS is preferable compared to the normal HS of functions. 
+::: {.callout-warning}
+## Remark
+:::{#rem-further-obv-rkhs}
 
-> **Advanced Topics:**  Intuitively, we just say that the functions in RKHS acts "smoothly" and "predictably", in the sense that:
-> - If the distance between functions $\|f-g\|_\mathcal{H}$ is close to each other then its pointwise evaluation $|f(x)-g(x)|$ for any $x$ would also be close to each other.
-> - This can be shown by the fact that the HS $\mathcal{H}$ has reproducing kernel iff the evaluation operator (defined as $\delta_x : \mathcal{H}\rightarrow\mathbb{R}$ where $\delta_x(f)=f(x)$) is bounded i.e  $|\delta_x(f)|\le \lambda_x\|f\|_\mathcal{H}$ for positive constant $\lambda_x\in\mathbb{R}$ (the proof uses the Riesz representation theorem)
+**Advanced Topics:**  Intuitively, we just say that the functions in RKHS acts "smoothly" and "predictably", in the sense that:
+
+- If the distance between functions $\|f-g\|_\mathcal{H}$ is close to each other then its pointwise evaluation $|f(x)-g(x)|$ for any $x$ would also be close to each other.
+- This can be shown by the fact that the HS $\mathcal{H}$ has reproducing kernel iff the evaluation operator (defined as $\delta_x : \mathcal{H}\rightarrow\mathbb{R}$ where $\delta_x(f)=f(x)$) is bounded i.e  $|\delta_x(f)|\le \lambda_x\|f\|_\mathcal{H}$ for positive constant $\lambda_x\in\mathbb{R}$ (the proof uses the Riesz representation theorem)
+
+:::
+:::
+
 
 Furthermore, if the kernel satisfies the special property, then there is going to be an RHKS that is equipped with the given kernel as:
 
-> **Theorem (Moore-Aronszajn):** A symmetric function $k:\mathcal{X}\times\mathcal{X}\rightarrow \mathbb{R}$ is positive definite if: for all $a_1,a_2,\dots,a_n\in \mathbb{R}$ and for all $x_1,x_2,\dots,x_n\in\mathcal{X}$: $$\sum^n_{i=1}\sum^n_{j=1}a_ia_jk(x_i, x_j)\ge0$$
-> If the kernel is *positive definite*, then there is a unique RKHS with the reproducing kernel $k$. 
+::: {.callout-tip}
+## Theorem 
+:::{#thm-moore-aronszajn}
+
+**(Moore-Aronszajn):** A symmetric function $k:\mathcal{X}\times\mathcal{X}\rightarrow \mathbb{R}$ is positive definite if: for all $a_1,a_2,\dots,a_n\in \mathbb{R}$ and for all $x_1,x_2,\dots, x_n\in\mathcal{X}$: 
+
+$$\sum^n_{i=1}\sum^n_{j=1}a_ia_jk(x_i, x_j)\ge0$$
+
+If the kernel is *positive definite*, then there is a unique RKHS with the reproducing kernel $k$. 
+:::
+:::
 
 ## Interlude (Why Kernel in Statistical Testing?)
 

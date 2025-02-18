@@ -564,7 +564,7 @@ assigning a natural transformation $\alpha:\operatorname{Hom}_\textbf{C}(-,X)\Ri
 :::
 :::
 
-Before, we move on to the proof, there are several observations that we can make here:
+The proof will be presented in the next section. Before that, there are several observations that we can make here:
 
 > We take information about how $FY$ looks like[^3], and the information about how $Y$ is related to $X$ to inform ourselves how to use the some aspect of $FY$ to reconstruct an element in $FX$ that is selected via natural transformation $\alpha_X(\operatorname{id}_X)$. 
 
@@ -586,16 +586,16 @@ In this example, we are interested in reconstructing the $FX$ based on the infor
 
 Firstly, we want to point out that the functor $F:\textbf{C}^\text{op}\to\textbf{Set}$ can be seen as "rendering" the objects and morphism to a more human readable format, as we are more familiar working with sets.  
 
-**(Meaing of Morphism):** With functor $F$, the object is rendered as sets of objects with different boarder, color and shape. On the other hand, the morphism is rendered as a relation between objects if they have the same value of the properties[^4]:
+**(Meaning of Morphism):** With functor $F$, the object is rendered as sets of objects with different boarder, color and shape. On the other hand, the morphism is rendered as a relation between elements of objects if they have the same values of the properties[^4]:
 
-- Given $F\operatorname{Shape}^\text{op}$ (we need $F$ because we add the meaning to the morphism) between $\Box\mapsto\bigcirc$ (note that the arrow here represent only the direction), we have the result on the LHS, which indicates that we don't have a relationship between the shapes:
+- The morphism $F\operatorname{Shape}^\text{op}$ ($F$ adds meanings to the morphism) acts as follows: the LHS indicates that the shapes don't match:
 $$
-F\operatorname{Shape}^\text{op}(\Box, \text{Circle})=\texttt{F} \qquad \quad F\operatorname{Shape}^\text{op}(\blacksquare, \text{Square})=\texttt{T}
+F\operatorname{Shape}^\text{op}(\Box, \bigcirc)=\texttt{F} \qquad \quad F\operatorname{Shape}^\text{op}(\blacksquare, \Box)=\texttt{T}
 $$
-On the RHS, we consider the relationship between $\blacksquare\mapsto\square$.
-- Furthermore, the composition of the relationship will be true if *every* components are true. For example, $F\operatorname{Shape}^\text{op}\circ F\operatorname{Color}^\text{op}$ is true with $\bigcirc\mapsto\Box\mapsto\blacksquare$. Finally, $F\operatorname{id}$ is always true regardless of any relationship, as $\blacksquare\mapsto\blacksquare$ always (self-identity).
+On the RHS, there is a relationship because the shape maps. 
+- Furthermore, the composition of the relationship will be true if *every* components are true. For example, $F\operatorname{Shape}^\text{op}\circ F\operatorname{Color}^\text{op}$ is true with $\bigcirc\mapsto\Box\mapsto\blacksquare$. Finally, $F\operatorname{id}$ is always true regardless of any relationship, as we have a self-indentity.
 
-**(Meaing of Natural Transformation):** For the natural transformation, with component $\alpha_Y:\operatorname{Hom}_{\textbf{C}}(Y, X)\to FX$. Since we are working on the relation (rather than function), it relates an *fixed* element (and only varies when we have different natural transformation i.e *aspect* of $FY$), in our case it refers to the top left object at $Y$, to the relations (morphism), and output the property of tha object. That is we have:
+**(Meaing of Natural Transformation):** For the natural transformation, with component $\alpha_Y:\operatorname{Hom}_{\textbf{C}}(Y, X)\to FX$. Since we are working on the relation (rather than function), it relates an *fixed* element (and only varies when we have different natural transformation i.e *aspect* of $FY$), in our case it refers to the top left object at $Y$ (see how orange arrow selects an object), to the relations (morphism), and output the property of tha object:
 
 $$
 \alpha_Y(\operatorname{Color}) = \textcolor{ForestGreen}{\text{Green}} \qquad \quad \alpha(\operatorname{Boarder}) = \text{Solid}
@@ -617,36 +617,130 @@ There are only 2 arrows from $X$ to $Y$. To see what the natural transformation 
 \]
 " /></p>
 
-We can see that, given $F\operatorname{Color}^\text{op}(\alpha_X(\operatorname{id}_X))=\alpha_Y(\operatorname{id}_X\circ\operatorname{Color})$, or to put in our terms, we have: 
+Then, given $F\operatorname{Color}^\text{op}(\alpha_X(\operatorname{id}_X))=\alpha_Y(\operatorname{id}_X\circ\operatorname{Color})=\alpha_Y(\operatorname{Color})$, or:
 
 $$
 F\operatorname{Color}^\text{op}\Big( \alpha_X(\operatorname{id}_X), \textcolor{ForestGreen}{\text{Green}} \Big) = \texttt{T}
 $$
 
-What happens is that since the $\alpha_X(\operatorname{id}_X)$ represents the self-identity of the **whole** (due to identity relation) top left (due to natural transformation) element of $FX$, the naturality condition **forces** its color to be green.
+Since $\alpha_X(\operatorname{id}_X)$ represents the self-identity of the **whole** selected element of $FX$ (see arrow), the naturality condition **forces** its color to be green.
 
 - This can be repeated for other properties such as boarder types and different property i.e shape from $Z$, and repeated for every element in $FX$ via considering all natural transformation.
-- Therefore, We are able to reconstruct $FX$ by inherited the color and boarder (relationship between $X$ and $Y$) from the element within the "render" image $FY$ of $Y$, while inherited the shape from $FZ$. 
+- And this is repeated for other selection of elements as we consider a set of natural transformations. 
+- Therefore, we can reconstruct elements of $FX$ by inherited the color and boarder (relationship between $X$ and $Y$) from the element within the "render" image $FY$ of $Y$, while inherited the shape from $FZ$ (and so on).
 
 
-Thus, we arrived at the intuition we have above, which is: we need to know the relations between objects $X$ and the other objects (hom-functor) and how these relations translates to each element of the set (natural transformation between hom-functor and $F$), in order to reconstruct the element of $FX$.
-
-
-<!-- This might looks abit intimidating (but not as much as the formula above, at least according to me). Let's focusing on the relationship between $Y$ and $Z$ on the LHS first. -->
-
+Thus, we arrived at the intuition we have above: we need to know the relations between objects $X$ and the other objects (hom-functor) and how these relations translates to each element of the set (natural transformation between hom-functor and $F$), in order to reconstruct the element of $FX$.
 
 
 :::
 :::
 
+In fact, we can state the intuitive that we have more formally in the following corollaries:
+
+::: {.callout-tip}
+## Corollary 
+:::{#coro-yoneda-embedding}
+
+**(Yoneda Embedding):** With category $\textbf{C}$, and its object $X$ and $Y$ there is a bijection between the following sets:
+
+$$
+\operatorname{Hom}_\textbf{C}(X, Y) \cong \operatorname{Hom}_{[\textbf{C}^\text{op}, \textbf{Set}]}\Big( \operatorname{Hom}_{\textbf{C}}(-, X), \operatorname{Hom}_{\textbf{C}}(-, Y) \Big)
+$$
+
+:::
+:::
+
+<details>
+
+Using Yoneda lemma, we replace presheaf $F$ by $\operatorname{Hom}_\textbf{C}(-, Y)$
+
+<div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
+
+::: {.callout-tip}
+## Corollary 
+:::{#coro-equiv-obj}
+
+With category $\textbf{C}$, and its object $X$ and $Y$, then $X\cong Y$ iff hom-functors that they represent are naturally isomorphic.
+
+:::
+:::
+
+<details>
+
+Given morphism between $X$ and $Y$ to be $f:X\to Y$, then by Yoneda embedding there is an associated natural transformation $\alpha:\operatorname{Hom}_\textbf{C}(-, X)\Rightarrow\operatorname{Hom}_\textbf{C}(-, Y)$ such that $\alpha_X(\operatorname{id}_X)=f$.
+
+$\boldsymbol{(\implies):}$ Since $X$ and $Y$ are isomorphic, we can let $f$ above be that isomorphism between both objects. By using the natural transformation properties, for any map $g:Z\to X$, we set $\alpha_Z(g)=f\circ g$ because the following diagram has to commutes:
+
+<p align="center"><img align="center" src="https://i.upmath.me/svg/%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsNCxbMCwwLCJcXG9wZXJhdG9ybmFtZXtpZH1fWCJdLFsyLDAsImciXSxbMCwxLCJmIl0sWzIsMSwiZlxcY2lyYyBnPVxcYWxwaGFfWihnKSJdLFswLDEsIi1cXGNpcmMgZyIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMCwyLCJcXGFscGhhX1giLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzEsMywiXFxhbHBoYV9aIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFsyLDMsIi1cXGNpcmMgZyIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0%3D%0A%5C%5B%5Cbegin%7Btikzcd%7D%0A%09%7B%5Coperatorname%7Bid%7D_X%7D%20%26%26%20g%20%5C%5C%0A%09f%20%26%26%20%7Bf%5Ccirc%20g%3D%5Calpha_Z(g)%7D%0A%09%5Carrow%5B%22%7B-%5Ccirc%20g%7D%22%2C%20maps%20to%2C%20from%3D1-1%2C%20to%3D1-3%5D%0A%09%5Carrow%5B%22%7B%5Calpha_X%7D%22'%2C%20maps%20to%2C%20from%3D1-1%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22%7B%5Calpha_Z%7D%22%2C%20maps%20to%2C%20from%3D1-3%2C%20to%3D2-3%5D%0A%09%5Carrow%5B%22%7B-%5Ccirc%20g%7D%22'%2C%20maps%20to%2C%20from%3D2-1%2C%20to%3D2-3%5D%0A%5Cend%7Btikzcd%7D%5C%5D%0A" alt="
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXG9wZXJhdG9ybmFtZXtpZH1fWCJdLFsyLDAsImciXSxbMCwxLCJmIl0sWzIsMSwiZlxcY2lyYyBnPVxcYWxwaGFfWihnKSJdLFswLDEsIi1cXGNpcmMgZyIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMCwyLCJcXGFscGhhX1giLDIseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzEsMywiXFxhbHBoYV9aIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFsyLDMsIi1cXGNpcmMgZyIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=
+\[\begin{tikzcd}
+	{\operatorname{id}_X} &amp;&amp; g \\
+	f &amp;&amp; {f\circ g=\alpha_Z(g)}
+	\arrow[&quot;{-\circ g}&quot;, maps to, from=1-1, to=1-3]
+	\arrow[&quot;{\alpha_X}&quot;', maps to, from=1-1, to=2-1]
+	\arrow[&quot;{\alpha_Z}&quot;, maps to, from=1-3, to=2-3]
+	\arrow[&quot;{-\circ g}&quot;', maps to, from=2-1, to=2-3]
+\end{tikzcd}\]
+" /></p>
+
+And, it is clear that each component of the natural transformation is inverse by the virtue of $f$ being isomorphism i.e given $\alpha^{-1}_Z(h)=f^{-1}\circ g$ for $h:Z\to Y$
+
+$\boldsymbol{(\impliedby):}$ We claim that $\alpha_X(\operatorname{id}_X):X\to Y$ is an isomorphism with its inverse being $\alpha_Y^{-1}(\operatorname{id}_Y):Y\to X$, which exists because $\alpha$ is natural isomorphism. Then by the observation above:
+
+$$
+\operatorname{id}_Y =\alpha_Y(\alpha_Y^{-1}(\operatorname{id}_Y)) = \alpha_X(\operatorname{id}_X)\circ\alpha_Y^{-1}(\operatorname{id}_Y)
+$$
+
+On the other hand, we consider the following commutative diagram being the natural isomorphism action on $-\circ\alpha_X(\operatorname{id}_X)$ as:
+
+<p align="center"><img align="center" src="https://i.upmath.me/svg/%0A%25%20https%3A%2F%2Fq.uiver.app%2F%23q%3DWzAsNCxbMCwwLCJcXGFscGhhX1leey0xfShcXG9wZXJhdG9ybmFtZXtpZH1fWSkiXSxbMiwwLCJcXGFscGhhX1leey0xfShcXG9wZXJhdG9ybmFtZXtpZH1fWSlcXGNpcmNcXGFscGhhX1goXFxvcGVyYXRvcm5hbWV7aWR9X1gpIl0sWzAsMSwiXFxvcGVyYXRvcm5hbWV7aWR9X1kiXSxbMiwxLCJcXGFscGhhX1goXFxvcGVyYXRvcm5hbWV7aWR9X1gpIl0sWzAsMSwiLVxcY2lyY1xcYWxwaGFfWChcXG9wZXJhdG9ybmFtZXtpZH1fWCkiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzAsMiwiXFxhbHBoYV9ZIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFsxLDMsIlxcYWxwaGFfWiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMiwzLCItXFxjaXJjXFxhbHBoYV9YKFxcb3BlcmF0b3JuYW1le2lkfV9YKSIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0%3D%0A%5C%5B%5Cbegin%7Btikzcd%7D%0A%09%7B%5Calpha_Y%5E%7B-1%7D(%5Coperatorname%7Bid%7D_Y)%7D%20%26%26%20%7B%5Calpha_Y%5E%7B-1%7D(%5Coperatorname%7Bid%7D_Y)%5Ccirc%5Calpha_X(%5Coperatorname%7Bid%7D_X)%7D%20%5C%5C%0A%09%7B%5Coperatorname%7Bid%7D_Y%7D%20%26%26%20%7B%5Calpha_X(%5Coperatorname%7Bid%7D_X)%7D%0A%09%5Carrow%5B%22%7B-%5Ccirc%5Calpha_X(%5Coperatorname%7Bid%7D_X)%7D%22%2C%20maps%20to%2C%20from%3D1-1%2C%20to%3D1-3%5D%0A%09%5Carrow%5B%22%7B%5Calpha_Y%7D%22'%2C%20maps%20to%2C%20from%3D1-1%2C%20to%3D2-1%5D%0A%09%5Carrow%5B%22%7B%5Calpha_Z%7D%22%2C%20maps%20to%2C%20from%3D1-3%2C%20to%3D2-3%5D%0A%09%5Carrow%5B%22%7B-%5Ccirc%5Calpha_X(%5Coperatorname%7Bid%7D_X)%7D%22'%2C%20maps%20to%2C%20from%3D2-1%2C%20to%3D2-3%5D%0A%5Cend%7Btikzcd%7D%5C%5D%0A" alt="
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXGFscGhhX1leey0xfShcXG9wZXJhdG9ybmFtZXtpZH1fWSkiXSxbMiwwLCJcXGFscGhhX1leey0xfShcXG9wZXJhdG9ybmFtZXtpZH1fWSlcXGNpcmNcXGFscGhhX1goXFxvcGVyYXRvcm5hbWV7aWR9X1gpIl0sWzAsMSwiXFxvcGVyYXRvcm5hbWV7aWR9X1kiXSxbMiwxLCJcXGFscGhhX1goXFxvcGVyYXRvcm5hbWV7aWR9X1gpIl0sWzAsMSwiLVxcY2lyY1xcYWxwaGFfWChcXG9wZXJhdG9ybmFtZXtpZH1fWCkiLDAseyJzdHlsZSI6eyJ0YWlsIjp7Im5hbWUiOiJtYXBzIHRvIn19fV0sWzAsMiwiXFxhbHBoYV9ZIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoibWFwcyB0byJ9fX1dLFsxLDMsIlxcYWxwaGFfWiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XSxbMiwzLCItXFxjaXJjXFxhbHBoYV9YKFxcb3BlcmF0b3JuYW1le2lkfV9YKSIsMix7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6Im1hcHMgdG8ifX19XV0=
+\[\begin{tikzcd}
+	{\alpha_Y^{-1}(\operatorname{id}_Y)} &amp;&amp; {\alpha_Y^{-1}(\operatorname{id}_Y)\circ\alpha_X(\operatorname{id}_X)} \\
+	{\operatorname{id}_Y} &amp;&amp; {\alpha_X(\operatorname{id}_X)}
+	\arrow[&quot;{-\circ\alpha_X(\operatorname{id}_X)}&quot;, maps to, from=1-1, to=1-3]
+	\arrow[&quot;{\alpha_Y}&quot;', maps to, from=1-1, to=2-1]
+	\arrow[&quot;{\alpha_Z}&quot;, maps to, from=1-3, to=2-3]
+	\arrow[&quot;{-\circ\alpha_X(\operatorname{id}_X)}&quot;', maps to, from=2-1, to=2-3]
+\end{tikzcd}\]
+" /></p>
+
+And because $\alpha_Z$ is isomorphism, we have that:
+
+$$
+\alpha_Y^{-1}(\operatorname{id}_Y)\circ\alpha_X(\operatorname{id}_X) = \operatorname{id}_X
+$$
+	 
+
+<div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
+
+
+::: {.callout-warning}
+## Remark
+:::{#rem-inter-last-coro}
+
+*(Interpretation of Result)* When looking at the component of natural isomorphism, with any object $S$ of $\textbf{C}$, and $X\cong Y$, we have:
+
+$$
+\operatorname{Hom}_\textbf{C}(S, X)\cong\operatorname{Hom}_\textbf{C}(S, Y)
+$$
+That is, if $X$ and $Y$ are indistinguishable by $S$, for every $S$ in $\textbf{C}$. This also applied to $\operatorname{Hom}_\textbf{C}(X, S)\cong\operatorname{Hom}_\textbf{C}(Y, S)$, where we would consider the dual case of Yoneda lemma.
+
+:::
+:::
 
 
 [^1]: This intuition is related to the Tannakian reconstruction (see  [*The Dao of Functional Programming*](https://github.com/BartoszMilewski/Publications/blob/master/TheDaoOfFP/DaoFP.pdf) chapter 18) for more details.
-[^2]: よ is read as "yo", in hiragana (Japanese writing system).
-[^3]: In the formulation (and symbol) of Ends formulation of ninja Toneda lemma, this metaphors even more clear in which we takes into account all $Y$:
+[^2]: よ is read as "yo", in Hiragana (Japanese writing system).
+[^3]: In the formulation (and symbol) of Ends formulation of ninja Yoneda lemma, this metaphors even more clear in which we takes into account all $Y$:
 $$
 \int_{Y:\textbf{C}}\operatorname{Hom}_\textbf{Set}\Big( \operatorname{Hom}_\textbf{C}(Y, X), FY \Big) \cong FX
 $$
 (Ibid, chapter 17).
 
-[^4]: The notion of morphism doesn't restricted to only function that takes input and output. Nonetheless, the relation can also be seen as function also.
+[^4]: The notion of morphism doesn't restricted to only function that takes input and output. Nonetheless, the relation can also be seen as function.
