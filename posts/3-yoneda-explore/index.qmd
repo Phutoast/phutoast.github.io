@@ -640,7 +640,7 @@ In fact, we can state the intuitive that we have more formally in the following 
 
 ::: {.callout-tip}
 ## Corollary 
-:::{#coro-yoneda-embedding}
+:::{#cor-yoneda-embedding}
 
 **(Yoneda Embedding):** With category $\textbf{C}$, and its object $X$ and $Y$ there is a bijection between the following sets:
 
@@ -661,7 +661,7 @@ Using Yoneda lemma, we replace presheaf $F$ by $\operatorname{Hom}_\textbf{C}(-,
 
 ::: {.callout-tip}
 ## Corollary 
-:::{#coro-equiv-obj}
+:::{#cor-equiv-obj}
 
 With category $\textbf{C}$, and its object $X$ and $Y$, then $X\cong Y$ iff hom-functors that they represent are naturally isomorphic.
 

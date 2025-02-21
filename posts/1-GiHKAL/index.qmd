@@ -1,28 +1,42 @@
 ---
-title: "Gaussian That I Have Known and Loved"
+title: "Gaussian That I Have Known and Loved (1)"
 description: "A cheat sheet/overview of the applications and useful tricks in relation to Gaussian distribution within a field of machine learning."
 date: 11/27/2022
 categories: [Machine Learning]
+bibliography: references.bib
 draft: false
 ---
 
-This write is based from the book: Pattern Recognition and Machine Learning, partly from <a href="http://cs229.stanford.edu/section/gaussians.pdf" target="_blank">CS229 notes on Guassian</a>, and The Principles of Deep Learning Theory: An Effective Theory Approach to Understanding Neural Networks
- (especially on the chapter on Wick's theorem, in which in this written we have provided the exposition on the proof too), where we aim to give and expands most proofs and interesting results regarding Gaussian distributions, together with some results that makes the complete picture. 
+This writing is based from: Bishop's *Pattern Recognition and Machine Learning* (@bishop2006pattern), and partly from <a href="http://cs229.stanford.edu/section/gaussians.pdf" target="_blank">CS229 notes on Guassian</a>
 
 ## Gaussian Definition and Fundamental Integral
 
-**Definition (Single Variable Gaussian Distribution)**: The Gaussian distribution is defined as 
+::: {.callout-note}
+## Definition 
+:::{#def-sing-var-gaussian}
+
+**(Single Variable Gaussian Distribution)**: The Gaussian distribution is defined as 
 
 <div>
 \begin{equation*}
-\newcommand{\dby}{\ \mathrm{d}}\newcommand{\argmax}[1]{\underset{#1}{\arg\max \ }}\newcommand{\argmin}[1]{\underset{#1}{\arg\min \ }}\newcommand{\const}{\text{const.}}\newcommand{\bracka}[1]{\left( #1 \right)}\newcommand{\brackb}[1]{\left[ #1 \right]}\newcommand{\brackc}[1]{\left\{ #1 \right\}}\newcommand{\brackd}[1]{\left\langle #1 \right\rangle}\newcommand{\correctquote}[1]{``#1''}\newcommand{\norm}[1]{\left\lVert#1\right\rVert}\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\dby}{\ \mathrm{d}}\newcommand{\bracka}[1]{\left( #1 \right)}\newcommand{\brackb}[1]{\left[ #1 \right]}\newcommand{\brackc}[1]{\left\{ #1 \right\}}\newcommand{\abs}[1]{\left|#1\right|}
     p(x) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left\{ -\frac{1}{2\sigma^2}(x-\mu)^2\right\}
 \end{equation*}
 </div>
 
-where $\mu$ is a parameter called mean, while $\sigma$ is a parameter called standard derivation. However, we also define $\sigma^2$ as variance. Finally, the standard normal distribution is Gaussian distribution with mean $0$ and variance $1$. 
+where $\mu$ is a parameter called mean, while $\sigma$ is a parameter called standard derivation, and we call $\sigma^2$ as variance. 
 
-**Proposition (Gaussian integral)**: The integration of $\exp(-x^2)$ is equal to
+Finally, the standard normal distribution is Gaussian distribution with mean $0$ and variance $1$. 
+
+:::
+:::
+
+To find the normalizing factor of Gaussian distribution, we use the following integral:
+
+::: {.callout-tip}
+## Propositions 
+:::{#prp-gauss-int}
+**(Gaussian integral)**: The integration of $\exp(-x^2)$ is equal to
 
 <div>
 \begin{equation*}
@@ -30,9 +44,11 @@ where $\mu$ is a parameter called mean, while $\sigma$ is a parameter called sta
 \end{equation*}
 </div>
 
-We can use this identity to find the normalizing factor of Gaussian distribution.
+:::
+:::
 
-_Proof_: We will transform the problem into $2$D polar coordinate system, which make the integration easier. 
+<details>
+We will transform the problem into $2$D polar coordinate system, which make the integration easier. 
 
 <div>
 \begin{equation*}
@@ -47,15 +63,26 @@ _Proof_: We will transform the problem into $2$D polar coordinate system, which 
 
 Please note that we use $u$-substution with $-r^2$, in the last step. 
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
-<span class="anchor" id="corollary-1"></span>**Corollary (Normalization of Gaussian Distribution)**: We consider the integration
+::: {.callout-tip}
+## Corollary
+:::{#cor-normalize-fact-gauss}
+
+**(Normalization of Gaussian Distribution)**: We consider the integration
+
 <div>
 \begin{equation*}
     \int^\infty_{-\infty}\exp\left\{ -\frac{(x-\mu)^2}{2\sigma^2}\right\} \dby x = \sqrt{2\pi\sigma^2}
 \end{equation*}
 </div>
 
-*Proof*: Starting by setting $z=x-\mu$, which we have:
+:::
+:::
+
+<details>
+Starting by setting $z=x-\mu$, which we have:
 <div>
 \begin{equation*}
 \begin{aligned}
@@ -64,19 +91,37 @@ Please note that we use $u$-substution with $-r^2$, in the last step.
 \end{aligned}
 \end{equation*}
 </div>
-where we have $y = z/(\sqrt{2}\sigma)$, and we finishes the proof. 
+where we have $y = z/(\sqrt{2}\sigma)$.
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
 ## Statistics of Single Variable Gaussian Distribution
 
-**Definition (Odd Function)**: The function $f(x)$ is an odd function iff $f(-x) = -x$
+::: {.callout-note}
+## Definition 
+:::{#def-odd-funct}
 
-<span class="anchor" id="lemma-1"></span>**Lemma (Odd Function Integration):** The integral over $[-a, a]$, where $a\in\mathbb{R}^+$ of an odd function $f(x)$ is $0$ i.e
+**(Odd Function)**: The function $f(x)$ is an odd function iff $f(-x) = -x$
+
+:::
+:::
+
+::: {.callout-tip}
+## Lemma
+:::{#lem-odd-funct-int}
+
+**(Odd Function Integration):** The integral over $[-a, a]$, where $a\in\mathbb{R}^+$ of an odd function $f(x)$ is $0$ i.e
+
 <div>
 \begin{equation*}\int^a_{-a}f(x)\dby x = 0\end{equation*}
 </div>
+:::
+:::
 
-_Proof_: We can see that:
+<details>
+
+We can see that:
 <div>
 \begin{equation*}
 \begin{aligned}
@@ -87,12 +132,21 @@ _Proof_: We can see that:
 \end{equation*}
 </div>
 
-Thus complete the proof 
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
-**Proposition (Mean of Gaussian)**: The expectation $\mathbb{E}_{x}[x]$ of nornally distributed Gaussian is $\mu$
 
-_Proof_: Let's consider the following integral 
+::: {.callout-tip}
+## Propositions 
+:::{#prp-mean-gaussian}
+**(Mean of Gaussian)**: The expectation $\mathbb{E}_{x}[x]$ of nornally distributed Gaussian is $\mu$
+
+:::
+:::
+
+<details>
+Let's consider the following integral 
 <div>
 \begin{equation*}
 \begin{aligned}
@@ -115,7 +169,7 @@ Let's consider $I_1$, where it is clear that
     g(x) = \exp\bracka{-\frac{z^2}{2\sigma^2}}z = -\bracka{-\exp\bracka{-\frac{(-z)^2}{2\sigma^2}}z} = -g(-x)
 \end{equation*}
 </div>
-Thus the function $g(x)$ is and odd function. Therefore, making the integration $I_1$ vanishes to $0$. Please see the <a href="#lemma-1">Lemma</a> above for the proof. Now, for the second integration, we can simply recall the <a href="#corollary-1">normalization result</a> of the Gaussian, where
+Thus the function $g(x)$ is and odd function. Therefore, making the integration $I_1$ vanishes to $0$ (@lem-odd-funct-int). Now, for the second integration, we use @cor-normalize-fact-gauss of the Gaussian, where
 <div>
 \begin{equation*}
     \int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}\mu\dby z = \mu\int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}\dby z = \mu\sqrt{2\pi\sigma^2}
@@ -131,10 +185,22 @@ Finally, we have
 </div>
 Thus complete the proof. 
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
-**Lemma**: The variance $\operatorname{var}(x) = \mathbb{E}[(x - \mu)^2]$ is equal to $\mathbb{E}[x^2] - \mathbb{E}[x]^2$
+::: {.callout-tip}
+## Lemma
+:::{#lem-var-snd-moment}
 
-_Proof_: This is an application of expanding the definition
+**:** The variance $\operatorname{var}(x) = \mathbb{E}[(x - \mu)^2]$ is equal to $\mathbb{E}[x^2] - \mathbb{E}[x]^2$
+
+:::
+:::
+
+
+<details>
+This is an application of expanding the definition
+
 <div>
 \begin{equation*}
 \begin{aligned}
@@ -147,14 +213,26 @@ _Proof_: This is an application of expanding the definition
 </div>
 
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
-**Proposition**: The variance of normal distribution is $\sigma^2$
+::: {.callout-tip}
+## Propositions 
+:::{#prp-var-gauss}
 
-_Proof_: Let's consider the following equation, where we set $z = x-\mu$:
+**:** The variance of normal distribution is $\sigma^2$
+
+:::
+:::
+
+<details>
+
+Let's consider the following equation, where we set $z = x-\mu$:
 <div>
 \begin{equation*}
 \begin{aligned}
-    \frac{1}{\sqrt{2\pi\sigma^2}}& \int^\infty_{-\infty} \exp\bracka{-\frac{(x-\mu)^2}{2\sigma^2}}x^2\dby x  = \frac{1}{\sqrt{2\pi\sigma^2}} \int^\infty_{-\infty} \exp\bracka{-\frac{z^2}{2\sigma^2}}(z+\mu)^2\dby z \\
+    \frac{1}{\sqrt{2\pi\sigma^2}}& \int^\infty_{-\infty} \exp\bracka{-\frac{(x-\mu)^2}{2\sigma^2}}x^2\dby x  \\
+    &= \frac{1}{\sqrt{2\pi\sigma^2}} \int^\infty_{-\infty} \exp\bracka{-\frac{z^2}{2\sigma^2}}(z+\mu)^2\dby z \\
     &=\frac{1}{\sqrt{2\pi\sigma^2}}\brackb{\int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}z^2\dby z + \int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}2\mu z\dby z + \int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}\mu^2\dby z } \\
     &=\frac{1}{\sqrt{2\pi\sigma^2}}\brackb{\int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}z^2\dby z + 0 + \mu^2\sqrt{2\pi\sigma^2} \dby z }
 \end{aligned}
@@ -194,8 +272,10 @@ The first equality comes from L'Hospital's rule. Combinding the results:
 \end{aligned}
 \end{equation*}
 </div>
-Thus complete the proof. 
+
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
 This second part is to introduce some of the mathematical basics such as linear algebra. Further results of linear Gaussian models and others will be presented in the next part. 
 
@@ -203,47 +283,77 @@ This second part is to introduce some of the mathematical basics such as linear 
 
 ### Covariance and Covariance Matrix
 
-**Definition (Covariance)**: Given 2 random variables $X$ and $Y$, the covariance is defined as:
+::: {.callout-note}
+## Definition 
+:::{#def-covar}
+
+**(Covariance)**: Given 2 random variables $X$ and $Y$, the covariance is defined as:
+
 <div>
 \begin{equation*}
-\newcommand{\dby}{\ \mathrm{d}}\newcommand{\argmax}[1]{\underset{#1}{\arg\max \ }}\newcommand{\argmin}[1]{\underset{#1}{\arg\min \ }}\newcommand{\const}{\text{const.}}\newcommand{\bracka}[1]{\left( #1 \right)}\newcommand{\brackb}[1]{\left[ #1 \right]}\newcommand{\brackc}[1]{\left\{ #1 \right\}}\newcommand{\brackd}[1]{\left\langle #1 \right\rangle}\newcommand{\correctquote}[1]{``#1''}\newcommand{\norm}[1]{\left\lVert#1\right\rVert}\newcommand{\abs}[1]{\left|#1\right|}
 \operatorname{cov}(X, Y) = \mathbb{E}\Big[ (X - \mathbb{E}[X])(Y - \mathbb{E}[Y]) \Big]
 \end{equation*}
 </div>
-It is clear that $\operatorname{cov}(X, Y) = \operatorname{cov}(Y, X) $
+It is clear that $\operatorname{cov}(X, Y) = \operatorname{cov}(Y, X)$
 
-**Definition (Covariance Matrix)**: Now, if we have the collection of random variables in the random vector $\boldsymbol x$ (of size $n$), then the collection of covariance between its elements are collected in covariance matrix
+:::
+:::
+
+::: {.callout-note}
+## Definition 
+:::{#def-covar-matrix}
+
+**(Covariance Matrix)**: Now, if we have the collection of random variables in the random vector $\boldsymbol x$ (of size $n$), then the collection of covariance between its elements are collected in covariance matrix
+
 <div>
 \begin{equation*}
-\operatorname{cov}(\boldsymbol x) = 
+\begin{aligned}
+\operatorname{cov}(\boldsymbol x) &= 
 \begin{bmatrix}
     \operatorname{cov}(x_1, x_1) & \operatorname{cov}(x_1, x_2) & \cdots & \operatorname{cov}(x_1, x_n)  \\
     \operatorname{cov}(x_2, x_1) & \operatorname{cov}(x_2, x_2) & \cdots & \operatorname{cov}(x_2, x_n)  \\
     \vdots & \vdots & \ddots & \vdots \\
     \operatorname{cov}(x_n, x_1) & \operatorname{cov}(x_n, x_2) & \cdots & \operatorname{cov}(x_n, x_n)  \\
-\end{bmatrix} = \mathbb{E}\Big[ (\boldsymbol x - \mathbb{E}[\boldsymbol x])(\boldsymbol x - \mathbb{E}[\boldsymbol x])^T \Big]
+\end{bmatrix} \\
+&= \mathbb{E}\Big[ (\boldsymbol x - \mathbb{E}[\boldsymbol x])(\boldsymbol x - \mathbb{E}[\boldsymbol x])^\top  \Big]
+\end{aligned}
 \end{equation*}
 </div>
 The equivalent is clear when we perform the matrix multiplication over this. 
 
-**Remark (Property of Covariance Matrix)**: It is clear that the covariance matrix is (from its defintion):
+:::
+:::
+
+::: {.callout-warning}
+## Remark
+:::{#rem-prop-cov-matrx}
+
+*(Property of Covariance Matrix)*: It is clear that the covariance matrix is (from its defintion):
 
 - _Symmetric_, as $\operatorname{cov}(x_a, x_b) = \operatorname{cov}(x_b, x_a)$
 - _Positive semidefinite_, if we consider arbitary constant vector $\boldsymbol a \in \mathbb{R}^n$, then by the linearity of expectation, we have:
 <div>
 \begin{equation*}
 \begin{aligned}
-\boldsymbol a^T \operatorname{cov}(\boldsymbol x)\boldsymbol a 
-&= \boldsymbol a^T \mathbb{E}\Big[ (\boldsymbol x - \mathbb{E}[\boldsymbol x])(\boldsymbol x - \mathbb{E}[\boldsymbol x])^T \Big]\boldsymbol a  \\
-&= \mathbb{E}\Big[ \boldsymbol a^T (\boldsymbol x - \mathbb{E}[\boldsymbol x])(\boldsymbol x - \mathbb{E}[\boldsymbol x])^T\boldsymbol a \Big]  \\
-&= \mathbb{E}\Big[ \big(\boldsymbol a^T (\boldsymbol x - \mathbb{E}[\boldsymbol x])\big)^2 \Big] > 0 \\
+\boldsymbol a^\top  \operatorname{cov}(\boldsymbol x)\boldsymbol a 
+&= \boldsymbol a^\top  \mathbb{E}\Big[ (\boldsymbol x - \mathbb{E}[\boldsymbol x])(\boldsymbol x - \mathbb{E}[\boldsymbol x])^\top  \Big]\boldsymbol a  \\
+&= \mathbb{E}\Big[ \boldsymbol a^\top  (\boldsymbol x - \mathbb{E}[\boldsymbol x])(\boldsymbol x - \mathbb{E}[\boldsymbol x])^\top \boldsymbol a \Big]  \\
+&= \mathbb{E}\Big[ \big(\boldsymbol a^\top  (\boldsymbol x - \mathbb{E}[\boldsymbol x])\big)^2 \Big] > 0 \\
 \end{aligned}
 \end{equation*}
 </div>
 
+:::
+:::
+
 ### Linear Algebra
 
-**Definition (Eigenvalues and Eigenvectors)**: Given the matrix $\boldsymbol X \in \mathbb{C}^{n\times n}$, then the pair of vector $\boldsymbol v \in \mathbb{C}^n$ and number $\lambda \in \mathbb{C}$ are called eigenvector and eigenvalue iff
+::: {.callout-note}
+## Definition 
+:::{#def-eigen-val-eigen-vec}
+
+**(Eigenvalues and Eigenvectors)**: Given the matrix $\boldsymbol X \in \mathbb{C}^{n\times n}$, then the pair of vector $\boldsymbol v \in \mathbb{C}^n$ and number $\lambda \in \mathbb{C}$ are called eigenvector and eigenvalue if
+
 <div>
 \begin{equation*}
 \begin{aligned}
@@ -252,39 +362,70 @@ The equivalent is clear when we perform the matrix multiplication over this.
 \end{equation*}
 </div>
 
-**Proposition (Eigenvalue of Symmetric Matrix)**: One can show that the eigenvalue of symmetric (real) matrix is always real. 
+:::
+:::
 
-*Proof (From <a href="http://pi.math.cornell.edu/~jerison/math2940/real-eigenvalues.pdf" target="_blank">here</a>)*: Let's consider the pairs of eigenvalues/eigenvectors $\boldsymbol v \in \mathbb{C}^n$ and $\lambda \in \mathbb{C}$ of symmetric (real) matrix $\boldsymbol A$ i.e $\boldsymbol A\boldsymbol v = \lambda\boldsymbol v$. Please note that $(x+yi)(x-yi) = x^2 + y^2 \ge 0$, this means that $\bar{\boldsymbol v}^T\boldsymbol v \ge 0$ ($\bar{\boldsymbol v}$ is vector that contains conjugate element of $\boldsymbol v$). Now, see that:
+::: {.callout-tip}
+## Propositions 
+:::{#prp-eigen-symmetr-matrix}
+
+**(Eigenvalue of Symmetric Matrix)**: One can show that the eigenvalue of symmetric (real) matrix is always real. 
+
+:::
+:::
+
+<details>
+
+Let's consider the pairs of eigenvalues/eigenvectors $\boldsymbol v \in \mathbb{C}^n$ and $\lambda \in \mathbb{C}$ of symmetric (real) matrix $\boldsymbol A$ i.e $\boldsymbol A\boldsymbol v = \lambda\boldsymbol v$. Please note that $(x+yi)(x-yi) = x^2 + y^2 > 0$ (assume non-zero eigenvalue), this means that $\bar{\boldsymbol v}^\top \boldsymbol v > 0$ ($\bar{\boldsymbol v}$ is vector that contains conjugate element of $\boldsymbol v$). Now, see that:
+
 <div>
 \begin{equation*}
 \begin{aligned}
-\bar{\boldsymbol v}^T\boldsymbol A\boldsymbol v 
-&= \bar{\boldsymbol v}^T(\boldsymbol A\boldsymbol v) = \lambda\bar{\boldsymbol v}^T\boldsymbol v  \\
-&= (\bar{\boldsymbol v}^T\boldsymbol A^T)\boldsymbol v = \bar{\lambda}\bar{\boldsymbol v}^T\boldsymbol v  \\
+\bar{\boldsymbol v}^\top \boldsymbol A\boldsymbol v 
+&= \bar{\boldsymbol v}^\top (\boldsymbol A\boldsymbol v) = \lambda\bar{\boldsymbol v}^\top \boldsymbol v  \\
+&= (\bar{\boldsymbol v}^\top \boldsymbol A^\top )\boldsymbol v = \bar{\lambda}\bar{\boldsymbol v}^\top \boldsymbol v  \\
 \end{aligned}
 \end{equation*}
 </div>
+
 Note that $\overline{\boldsymbol A\boldsymbol v} = \bar{\lambda}\bar{\boldsymbol v}$
-Since $\bar{\boldsymbol v}^T\boldsymbol v > 0$ we see that $\bar{\lambda} = \lambda$, which implies that $\bar{\lambda}$ is real. 
+Since $\bar{\boldsymbol v}^\top \boldsymbol v > 0$ we see that $\bar{\lambda} = \lambda$, which implies that $\bar{\lambda}$ is real. 
 
 <div style="text-align: right">□</div>
+<summary>Proof (Following from <a href="http://pi.math.cornell.edu/~jerison/math2940/real-eigenvalues.pdf" target="_blank">here</a>)</summary>
+</details>
 
+::: {.callout-tip}
+## Propositions 
+:::{#prp-pd-matrix}
 
-**Proposition (Eigenvalue of Positive Definite Matrix)**: One can show that the eigenvalue of positive definite matrix is non-negative. 
+**(Eigenvalue of Positive Definite Matrix)**: One can show that the eigenvalue of positive definite matrix is non-negative. 
 
-*Proof*: We consider the following equations:
+:::
+:::
+
+<details>
+
+We consider the following equations:
 <div>
 \begin{equation*}
 \begin{aligned}
-\boldsymbol v^T\boldsymbol A\boldsymbol v = \lambda\boldsymbol v^T\boldsymbol v > 0
+\boldsymbol v^\top \boldsymbol A\boldsymbol v = \lambda\boldsymbol v^\top \boldsymbol v > 0
 \end{aligned}
 \end{equation*}
 </div>
 And so the eigenvector must be $\lambda > 0$.
 
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
-**Definition (Linear Transformation)**: Given the function $A: V \rightarrow W$, where $V$ and $W$ are vector spaces. Then, for $\boldsymbol v \in V, \boldsymbol w \in W$ and $a, b \in \mathbb{R}$
+::: {.callout-note}
+## Definition 
+:::{#def-lin-transform}
+
+**(Linear Transformation)**: Given the function $A: V \rightarrow W$, where $V$ and $W$ are vector spaces. Then, for $\boldsymbol v \in V, \boldsymbol w \in W$ and $a, b \in \mathbb{R}$
+
 <div>
 \begin{equation*}
 \begin{aligned}
@@ -293,7 +434,16 @@ A(a\boldsymbol v + b\boldsymbol w) = aA(\boldsymbol v) + bA(\boldsymbol w)
 \end{equation*}
 </div>
 
-**Remark (Matrix Multipliacation and Linear Transformation)**: We can represent the linear transformation $L : V \rightarrow W$ in terms of matrix. Let's consider the vector $\boldsymbol v \in V$ (of dimension $n$) together with basis vectors $\brackc{\boldsymbol b_1,\dots,\boldsymbol b_n}$ of $V$ and basis vectors $\brackc{\boldsymbol c_1, \dots, \boldsymbol c_m}$ of $W$. Then we can represen the vector $\boldsymbol v$ as:
+:::
+:::
+
+
+::: {.callout-warning}
+## Remark
+:::{#rem-matrix-mult-lin-trans}
+
+*(Matrix Multipliacation and Linear Transformation):* We can represent the linear transformation $L : V \rightarrow W$ in terms of matrix. Let's consider the vector $\boldsymbol v \in V$ (of dimension $n$) together with basis vectors $\brackc{\boldsymbol b_1,\dots,\boldsymbol b_n}$ of $V$ and basis vectors $\brackc{\boldsymbol c_1, \dots, \boldsymbol c_m}$ of $W$. Then we can represen the vector $\boldsymbol v$ as:
+
 <div>
 \begin{equation*}
 \begin{aligned}
@@ -301,7 +451,7 @@ A(a\boldsymbol v + b\boldsymbol w) = aA(\boldsymbol v) + bA(\boldsymbol w)
 \end{aligned}
 \end{equation*}
 </div>
-This means that we can represent the vector $\boldsymbol v$ as: $(\boldsymbol v_1, \boldsymbol v_2, \dots, \boldsymbol v_n)^T$
+This means that we can represent the vector $\boldsymbol v$ as: $(\boldsymbol v_1, \boldsymbol v_2, \dots, \boldsymbol v_n)^\top $
 Furthermore, we can characterized the transformation of the basis vector:
 <div>
 \begin{equation*}
@@ -336,23 +486,38 @@ for $i=1,\dots,n$. Then we can see that the definition of linear transformation 
 </div>
 and so we have show that the linear transformation can be represented as matrix multiplication (in finite space).
 
+:::
+:::
 
-**Theorem (Spectral Theorem)** (follows from <a href="https://mast.queensu.ca/~br66/419/spectraltheoremproof.pdf" target="_blank">here</a>): Let $n \le N$ and $W$ be an n-dimensional subspace of $\mathbb{R}^n$. Given a linear transformation $A:W\rightarrow W$ that is symmetric. There are eigenvectors $\boldsymbol v_1,\dots,\boldsymbol v_n\in W$ of $A$ such that $\brackc{\boldsymbol v_1,\dots,\boldsymbol v_n}$ is an orthonormal basis for $W$. For normal matrix, we let $n=N$ and $W=\mathbb{R}^n$. 
 
-**Remark (Eigendecomposition)**: Let's consider the matrix of eigenvectors $\boldsymbol v_1,\boldsymbol v_2\dots,\boldsymbol v_n \in \mathbb{R}^n$ of symmetric matrix $\boldsymbol A \in \mathbb{R}^{n\times n}$ together with eigenvalues $\lambda_1,\lambda_2,\dots,\lambda_n$, then we have :
+::: {.callout-tip}
+## Theorem 
+:::{#thm-spec}
+
+**(Spectral Theorem, from <a href="https://mast.queensu.ca/~br66/419/spectraltheoremproof.pdf" target="_blank">here</a>)**: Let $n \le N$ and $W$ be an n-dimensional subspace of $\mathbb{R}^n$. Given a linear transformation $A:W\rightarrow W$ that is symmetric. There are eigenvectors $\boldsymbol v_1,\dots,\boldsymbol v_n\in W$ of $A$ such that $\brackc{\boldsymbol v_1,\dots,\boldsymbol v_n}$ is an orthonormal basis for $W$. For normal matrix, we let $n=N$ and $W=\mathbb{R}^n$. 
+
+:::
+:::
+
+::: {.callout-warning}
+## Remark
+:::{#rem-eigen-decom}
+
+*(Eigendecomposition)*: Let's consider the matrix of eigenvectors $\boldsymbol v_1,\boldsymbol v_2\dots,\boldsymbol v_n \in \mathbb{R}^n$ of symmetric matrix $\boldsymbol A \in \mathbb{R}^{n\times n}$ together with eigenvalues $\lambda_1,\lambda_2,\dots,\lambda_n$, then we have :
+
 <div>
 \begin{equation*}
 \begin{aligned}
     \boldsymbol A
     \begin{bmatrix}
-        \kern.6em\vline & \kern.2em\vline\kern.2em & & \vline\kern.6em \\
+        \kern.6em |  & \kern.2em | \kern.2em & &  | \kern.6em \\
         \kern.6em\boldsymbol v_1 & \kern.2em\boldsymbol v_2\kern.2em & \kern.2em\cdots\kern.2em &  \boldsymbol v_n\kern.6em  \\
-        \kern.6em\vline & \kern.2em\vline\kern.2em & & \vline\kern.6em \\ 
+        \kern.6em |  & \kern.2em | \kern.2em & &  | \kern.6em \\ 
     \end{bmatrix} &= 
     \begin{bmatrix}
-        \kern.6em\vline & \kern.2em\vline\kern.2em & & \vline\kern.6em \\
+        \kern.6em |  & \kern.2em | \kern.2em & &  | \kern.6em \\
         \kern.6em\boldsymbol v_1 & \kern.2em\boldsymbol v_2\kern.2em & \kern.2em\cdots\kern.2em &  \boldsymbol v_n\kern.6em  \\
-        \kern.6em\vline & \kern.2em\vline\kern.2em & & \vline\kern.6em \\
+        \kern.6em |  & \kern.2em | \kern.2em & &  | \kern.6em \\
     \end{bmatrix}\begin{bmatrix}
         \lambda_1 & 0 & \cdots & 0 \\
         0 & \lambda_2 & \cdots & 0 \\
@@ -362,28 +527,44 @@ and so we have show that the linear transformation can be represented as matrix 
 \end{aligned}
 \end{equation*}
 </div>
-This is equivalent to $\boldsymbol A\boldsymbol Q = \boldsymbol Q\boldsymbol \Lambda$, which mean that if we right multiply by $\boldsymbol Q^T$ (as we have *orthogonal* eigenvectors), then we have (or in vectorized format):
+This is equivalent to $\boldsymbol A\boldsymbol Q = \boldsymbol Q\boldsymbol \Lambda$, which mean that if we right multiply by ${\boldsymbol Q}^\top$ (as we have *orthogonal* eigenvectors), then we have (or in vectorized format):
 <div>
 \begin{equation*}
-\boldsymbol A = \boldsymbol Q\boldsymbol \Lambda\boldsymbol Q^T = \sum^n_{i=1}\lambda_i\boldsymbol v_i\boldsymbol v_i^T
+\boldsymbol A = \boldsymbol Q\boldsymbol \Lambda\boldsymbol Q^\top  = \sum^n_{i=1}\lambda_i\boldsymbol v_i\boldsymbol v_i^\top 
 \end{equation*}
 </div>
 Please note that $\boldsymbol A^{-1}$ can be represented as:
 <div>
 \begin{equation*}
-\boldsymbol A^{-1} = \boldsymbol Q\boldsymbol \Lambda^{-1}\boldsymbol Q^T = \sum^n_{i=1}\frac{1}{\lambda_i}\boldsymbol v_i\boldsymbol v_i^T
+\boldsymbol A^{-1} = \boldsymbol Q\boldsymbol \Lambda^{-1}\boldsymbol Q^\top  = \sum^n_{i=1}\frac{1}{\lambda_i}\boldsymbol v_i\boldsymbol v_i^\top 
 \end{equation*}
 </div>
-as it is clear that $\boldsymbol A\boldsymbol A^{-1} = \boldsymbol Q\boldsymbol \Lambda\boldsymbol Q^T\boldsymbol Q\boldsymbol \Lambda^{-1}\boldsymbol Q^T = \boldsymbol I$. 
+as it is clear that $\boldsymbol A\boldsymbol A^{-1} = \boldsymbol Q\boldsymbol \Lambda\boldsymbol Q^\top \boldsymbol Q\boldsymbol \Lambda^{-1}\boldsymbol Q^\top  = \boldsymbol I$. 
 
-**Proposition (Determinant and Eigenvalues)**: Give matrix $\boldsymbol A$ together with eigenvalues of $\lambda_1,\lambda_2,\dots,\lambda_n$, then we can show that
+:::
+:::
+
+::: {.callout-tip}
+## Propositions 
+:::{#prp-det-eigen-val}
+
+**(Determinant and Eigenvalues)**: Give matrix $\boldsymbol A$ together with eigenvalues of $\lambda_1,\lambda_2,\dots,\lambda_n$, then we can show that
+
 <div>
 \begin{equation*}
     \abs{\boldsymbol A} = \prod^n_{i=1}\lambda_i
 \end{equation*}
 </div>
 
-*Proof (Diagonalizable Matrix)*: We consider the eigendecomposition of $\boldsymbol A$ (if it exists, which is most of the cases here. For more general proof, see linear algebra notes), as we have:
+We will only consider the case where $\boldsymbol A$ is diagonalizable.
+
+:::
+:::
+
+<details>
+
+We consider the eigendecomposition of $\boldsymbol A$, as we have:
+
 <div>
 \begin{equation*}
     \abs{\boldsymbol A} = \abs{\boldsymbol Q\boldsymbol \Lambda\boldsymbol Q^{-1}} = \abs{\boldsymbol Q}\abs{\boldsymbol \Lambda}\abs{\boldsymbol Q^{-1}} = \frac{\abs{\boldsymbol Q}}{\abs{\boldsymbol Q}}\abs{\boldsymbol \Lambda} =  \prod^n_{i=1}\lambda_i
@@ -391,26 +572,48 @@ as it is clear that $\boldsymbol A\boldsymbol A^{-1} = \boldsymbol Q\boldsymbol 
 </div>
 
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
-**Proposition (Trace and Eigenvalues)**: Given a matrix $\boldsymbol A$ together with eigenvalues of $\lambda_1,\lambda_2,\dots,\lambda_n$, then we can show that:
+::: {.callout-tip}
+## Propositions 
+:::{#prptrace-eigen-val}
+
+**(Trace and Eigenvalues)**: Given a matrix $\boldsymbol A$ together with eigenvalues of $\lambda_1,\lambda_2,\dots,\lambda_n$, then we can show that:
+
 <div>
 \begin{equation*}
     \operatorname{Tr}(\boldsymbol A) = \sum^n_{i=1}\lambda_i
 \end{equation*}
 </div>
-*Proof (Diagonalizable Matrix)*: We consider the eigendecomposition of $\boldsymbol A$. Consider the trace over it, as we have:
+
+We will only consider the case where $\boldsymbol A$ is diagonalizable.
+
+:::
+:::
+
+<details>
+
+We consider the eigendecomposition of $\boldsymbol A$. Consider the trace over it, as we have:
 <div>
 \begin{equation*}
     \operatorname{Tr}(\boldsymbol A) = \operatorname{Tr}(\boldsymbol Q\boldsymbol \Lambda\boldsymbol Q^{-1}) = \operatorname{Tr}(\boldsymbol \Lambda\boldsymbol Q\boldsymbol Q^{-1}) = \operatorname{Tr}(\boldsymbol \Lambda) = \sum^n_{i=1}\lambda_i
 \end{equation*}
 </div>
 
-
+<div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
 
 ### Miscellaneous
 
-**Proposition (Change of Variable)**: If we consider the transformation of the variables where $T : \mathbb{R}^k \supset X \rightarrow \mathbb{R}^k$. Then we can show that:
+::: {.callout-tip}
+## Propositions 
+:::{#prp-change-of-var}
+
+**(Change of Variable)**: If we consider the transformation of the variables where $T : \mathbb{R}^k \supset X \rightarrow \mathbb{R}^k$. Then we can show that:
+
 <div>
 \begin{equation*}
 \int_{\mathbb{R}^k} f(\boldsymbol y)\dby \boldsymbol y = \int_{\mathbb{R}^k} f(\boldsymbol T(\boldsymbol x))\abs{\boldsymbol J_T(\boldsymbol x)}\dby \boldsymbol x
@@ -428,6 +631,9 @@ where $\boldsymbol J_T(\boldsymbol x)$ is the Jacobian of the transformation $T(
 \end{equation*}
 </div>
 
+:::
+:::
+
 
 <!-- *Proof*: Let's consider the induction:
 
@@ -436,19 +642,19 @@ where $\boldsymbol J_T(\boldsymbol x)$ is the Jacobian of the transformation $T(
 <div>
 \begin{equation*}
 \begin{aligned}
-  \max & \quad (\boldsymbol A\boldsymbol w)^T\boldsymbol w \\
-  \text{ subject to } & \quad \boldsymbol w^T\boldsymbol w = 1
+  \max & \quad (\boldsymbol A\boldsymbol w)^\top \boldsymbol w \\
+  \text{ subject to } & \quad \boldsymbol w^\top \boldsymbol w = 1
 \end{aligned}
 \end{equation*}
 </div>
-Note that $(\boldsymbol A\boldsymbol w)^T\boldsymbol w = \boldsymbol w^T(\boldsymbol A\boldsymbol w)$
+Note that $(\boldsymbol A\boldsymbol w)^\top \boldsymbol w = \boldsymbol w^\top (\boldsymbol A\boldsymbol w)$
 Let's try to solve this constraint problem, as we have the Lagragian (together with its derivative with respected to $\boldsymbol w$) to be:
 <div>
 \begin{equation*}
 \begin{aligned}
-&\mathcal{L}(\boldsymbol w, \lambda) = \boldsymbol w^T\boldsymbol A\boldsymbol w - \lambda\Big(  \boldsymbol w^T\boldsymbol w -1 \Big) \\
+&\mathcal{L}(\boldsymbol w, \lambda) = \boldsymbol w^\top \boldsymbol A\boldsymbol w - \lambda\Big(  \boldsymbol w^\top \boldsymbol w -1 \Big) \\
 \iff&\begin{aligned}[t]
-    \frac{\partial}{\partial \boldsymbol w}\mathcal{L}(\boldsymbol w, \lambda) &= \frac{\partial}{\partial \boldsymbol w} \boldsymbol w^T\boldsymbol A\boldsymbol w - \lambda\Big(  \boldsymbol w^T\boldsymbol w -1 \Big) \\
+    \frac{\partial}{\partial \boldsymbol w}\mathcal{L}(\boldsymbol w, \lambda) &= \frac{\partial}{\partial \boldsymbol w} \boldsymbol w^\top \boldsymbol A\boldsymbol w - \lambda\Big(  \boldsymbol w^\top \boldsymbol w -1 \Big) \\
     &= 2\boldsymbol A\boldsymbol w - 2\lambda \boldsymbol w
 \end{aligned}
 \end{aligned}
@@ -457,7 +663,7 @@ Let's try to solve this constraint problem, as we have the Lagragian (together w
 This means that: $\boldsymbol A\boldsymbol w^* = \lambda\boldsymbol w^*$ meaing that $\boldsymbol w^*$ is the eigenvector of $\boldsymbol A$ with real eigenvalue $\lambda$. If we consider the orthogonal complement of $\boldsymbol w^*$ i.e $W' = \operatorname{span}(\boldsymbol w^*)^{\perp}$. Then, we see that for a vector $\boldsymbol w' \in W'$, we have
 <div>
 \begin{equation*}
-    0 = (\boldsymbol w')^T (\lambda\boldsymbol w^*) = (\boldsymbol w')^T (\boldsymbol A\boldsymbol w^*) = (\boldsymbol A\boldsymbol w')^T\boldsymbol w^*
+    0 = (\boldsymbol w')^\top  (\lambda\boldsymbol w^*) = (\boldsymbol w')^\top  (\boldsymbol A\boldsymbol w^*) = (\boldsymbol A\boldsymbol w')^\top \boldsymbol w^*
 \end{equation*}
 </div>
 Note that we use the matrix form here. This means that $\boldsymbol A\boldsymbol w' \in W'$ (for $A : W' \rightarrow W'$). Using induction hypothesis ($n-1$ subspace has the eigenbasis to be $\brackc{\boldsymbol u_1,\dots,\boldsymbol u_{n-1}}$), we have $\brackc{\boldsymbol u_1,\dots,\boldsymbol u_{n-1}, \boldsymbol u_n}$ to be an orthogonal basis of $W$, where we note that $\operatorname{span}(\boldsymbol w^*)^{\perp} \oplus \operatorname{span}(\boldsymbol w^*)= W$ -->
@@ -465,15 +671,28 @@ Note that we use the matrix form here. This means that $\boldsymbol A\boldsymbol
 
 ## Multivariate Guassian Distribution: Introduction
 
-**Definition (Multivariate Gaussian)**: It is defined as:
+::: {.callout-note}
+## Definition 
+:::{#def-lin-transform}
+
+**(Multivariate Gaussian)**: It is defined as:
+
 <div>
 \begin{equation*}
-\mathcal{N}(\boldsymbol x | \boldsymbol \mu, \boldsymbol \Sigma) = \frac{1}{\sqrt{\abs{2\pi\boldsymbol \Sigma}}}\exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\}
+\mathcal{N}(\boldsymbol x | \boldsymbol \mu, \boldsymbol \Sigma) = \frac{1}{\sqrt{\abs{2\pi\boldsymbol \Sigma}}}\exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\}
 \end{equation*}
 </div>
 where we call $\boldsymbol \mu \in \mathbb{R}^n$ a mean and $\boldsymbol \Sigma \in \mathbb{R}^{n\times n}$ covariance, which should be symmetric and positive semidefinite (since the covariance is always positive semidefinite and symmetric). 
 
-**Remark (2D Independent Gaussian)**: Now, let's consider, multivariate Gaussian but in the case that both variables are independent to each other with difference variances, as we define the parameters to be:
+:::
+:::
+
+::: {.callout-warning}
+## Remark
+:::{#rem-2d-ind-gaussian}
+
+*(2D Independent Gaussian)*: Now, let's consider, multivariate Gaussian but in the case that both variables are independent to each other with difference variances, as we define the parameters to be:
+
 <div>
 \begin{equation*}
 \boldsymbol \mu = \begin{bmatrix}
@@ -489,11 +708,11 @@ Now, let's expand the multivariate Guassian, please note that $\abs{\boldsymbol 
 <div>
 \begin{equation*}
 \begin{aligned}
-\mathcal{N}(\boldsymbol x | \boldsymbol \mu, \boldsymbol \Sigma) &= \frac{1}{\sqrt{\abs{2\pi\boldsymbol \Sigma}}}\exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\} \\
-&= \frac{1}{4\pi^2\sigma_1^2\sigma_2^2} \exp\brackc{-\frac{1}{2} \begin{bmatrix} x_1-\mu_1 \\ x_2-\mu_2 \end{bmatrix}^T
+\mathcal{N}(\boldsymbol x | \boldsymbol \mu, \boldsymbol \Sigma) &= \frac{1}{\sqrt{\abs{2\pi\boldsymbol \Sigma}}}\exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\} \\
+&= \frac{1}{4\pi^2\sigma_1^2\sigma_2^2} \exp\brackc{-\frac{1}{2} \begin{bmatrix} x_1-\mu_1 \\ x_2-\mu_2 \end{bmatrix}^\top 
 \begin{bmatrix}
-    \sigma_1^2 & 0 \\
-    0 & \sigma_2^2 \\
+    \sigma_1^{-2} & 0 \\
+    0 & \sigma_2^{-2} \\
 \end{bmatrix}
 \begin{bmatrix} x_1-\mu_1 \\ x_2-\mu_2 \end{bmatrix}} \\
 &= \frac{1}{4\pi^2\sigma_1^2\sigma_2^2} \exp\brackc{-\frac{1}{2} \brackb{ \bracka{\frac{x_1-\mu_1}{\sigma_1}}^2 + \bracka{\frac{x_2-\mu_2}{\sigma_2}}^2 }}\\
@@ -503,11 +722,19 @@ Now, let's expand the multivariate Guassian, please note that $\abs{\boldsymbol 
 \end{equation*}
 </div>
 
-**Remark (Shape of Gaussian)**: Let's consider the eigendecomposition of the inverse covariance matrix (which is positive semidefinite and symmetric), as we have
+:::
+:::
+
+::: {.callout-warning}
+## Remark
+:::{#rem-shape-gauss}
+
+*(Shape of Gaussian)*: Let's consider the eigendecomposition of the inverse covariance matrix (which is positive semidefinite and symmetric), as we have
+
 <div>
 \begin{equation*}
 \begin{aligned}
-\boldsymbol \Sigma^{-1} = \sum^n_{i=1}\frac{1}{\lambda_i}\boldsymbol u_i\boldsymbol u_i^T
+\boldsymbol \Sigma^{-1} = \sum^n_{i=1}\frac{1}{\lambda_i}\boldsymbol u_i\boldsymbol u_i^\top 
 \end{aligned}
 \end{equation*}
 </div>
@@ -515,27 +742,42 @@ where $\lambda_1,\dots,\lambda_n$ and $\boldsymbol u_1,\dots,\boldsymbol u_n$ ar
 <div>
 \begin{equation*}
 \begin{aligned}
-(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x - \boldsymbol \mu) 
-= \sum^n_{i=1}\frac{(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol u_i\boldsymbol u_i^T(\boldsymbol x - \boldsymbol \mu)}{\lambda_i}
+(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x - \boldsymbol \mu) 
+= \sum^n_{i=1}\frac{(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol u_i\boldsymbol u_i^\top (\boldsymbol x - \boldsymbol \mu)}{\lambda_i}
 = \sum^n_{i=1}\frac{y_i^2}{\lambda_i}
 \end{aligned}
 \end{equation*}
 </div>
-where we have $y_i = (\boldsymbol x - \boldsymbol \mu)^T\boldsymbol u_i$. Consider the vector to be $\boldsymbol y = (y_1,y_2,\dots,y_n)^T = \boldsymbol U(\boldsymbol x - \boldsymbol \mu)$. This gives us the linear transformation over $\boldsymbol x$, which implies the following shape of Gaussian:
+where we have $y_i = (\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol u_i$. Consider the vector to be $\boldsymbol y = (y_1,y_2,\dots,y_n)^\top  = \boldsymbol U(\boldsymbol x - \boldsymbol \mu)$. This gives us the linear transformation over $\boldsymbol x$, which implies the following shape of Gaussian:
+
 - Ellipsoids with the center $\boldsymbol \mu$
 - Axis is in the direction of eigenvector $\boldsymbol u_i$
 - Scaling of each direction is the eigenvector $\lambda_i$ associated with $\boldsymbol u_i$
 
-**Proposition (Normalization of Gaussian)**: We can show that:
+:::
+:::
+
+::: {.callout-tip}
+## Propositions 
+:::{#prp-norm-multi-gauss}
+
+**(Normalization of Multivariate Gaussian)**: We can show that:
+
 <div>
 \begin{equation*}
 \begin{aligned}
-\int \exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\} \dby \boldsymbol x = \sqrt{\abs{2\pi\boldsymbol \Sigma}}
+\int \exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\} \dby \boldsymbol x = \sqrt{\abs{2\pi\boldsymbol \Sigma}}
 \end{aligned}
 \end{equation*}
 </div>
 
-*Proof*: Let's consider the change of variable, in which we will change the variable from $x_i$ to $y_i$ where $\boldsymbol y = \boldsymbol U(\boldsymbol x - \boldsymbol \mu)$. To do this we have the find the Jacobian of the transformation, which is:
+:::
+:::
+
+<details>
+
+Let's consider the change of variable, in which we will change the variable from $x_i$ to $y_i$ where $\boldsymbol y = \boldsymbol U(\boldsymbol x - \boldsymbol \mu)$. To do this we have the find the Jacobian of the transformation, which is:
+
 <div>
 \begin{equation*}
 \begin{aligned}
@@ -543,11 +785,11 @@ J_{ij} = \frac{\partial x_i}{\partial y_j} = U_{ji}
 \end{aligned}
 \end{equation*}
 </div>
-Consider its determinant, as we have: $\abs{\boldsymbol J}^2 = \abs{\boldsymbol U^T}^2 = \abs{\boldsymbol U^T}\abs{\boldsymbol U} = \abs{\boldsymbol U^T\boldsymbol U} = \abs{I} = 1$. Consider the integration as we have (and use the Gaussian integrations):
+Consider its determinant, as we have: $\abs{\boldsymbol J}^2 = \abs{\boldsymbol U^\top }^2 = \abs{\boldsymbol U^\top }\abs{\boldsymbol U} = \abs{\boldsymbol U^\top \boldsymbol U} = \abs{I} = 1$. Consider the integration as we have (and use the Gaussian integrations):
 <div>
 \begin{equation*}
 \begin{aligned}
-\int \exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\} \dby \boldsymbol x 
+\int \exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\} \dby \boldsymbol x 
 &= \int \exp\brackc{\sum^n_{i=1}-\frac{y_i^2}{2\lambda_i}} |\boldsymbol J| \dby \boldsymbol y \\
 &= \int \prod^n_{i=1}\exp\brackc{-\frac{y_i^2}{2\lambda_i}} \dby \boldsymbol y \\
 &= \prod^n_{i=1}\int \exp\brackc{-\frac{y_i^2}{2\lambda_i}} \dby y_i \\
@@ -558,14 +800,20 @@ Consider its determinant, as we have: $\abs{\boldsymbol J}^2 = \abs{\boldsymbol 
 Note that we have shown that the determinant is the product of eigenvalues. Thus the prove is completed. 
 
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
-## Useful Backgrounds
+## More Useful Backgrounds
 
-<span class="anchor" id="prop-1"></span>**Proposition (Inverse of Partition Matrix)**: The block matrix can be inversed as:
+::: {.callout-tip}
+## Propositions 
+:::{#prp-block-inv}
+
+**(Inverse of Partition Matrix)**: The block matrix can be inversed as:
+
 <div>
 \begin{equation*}
 \require{color}
-\newcommand{\dby}{\ \mathrm{d}}\newcommand{\argmax}[1]{\underset{#1}{\arg\max \ }}\newcommand{\argmin}[1]{\underset{#1}{\arg\min \ }}\newcommand{\const}{\text{const.}}\newcommand{\bracka}[1]{\left( #1 \right)}\newcommand{\brackb}[1]{\left[ #1 \right]}\newcommand{\brackc}[1]{\left\{ #1 \right\}}\newcommand{\brackd}[1]{\left\langle #1 \right\rangle}\newcommand{\correctquote}[1]{``#1''}\newcommand{\norm}[1]{\left\lVert#1\right\rVert}\newcommand{\abs}[1]{\left|#1\right|}
 \definecolor{red}{RGB}{244, 67, 54}
 \definecolor{pink}{RGB}{233, 30, 99}
 \definecolor{purple}{RGB}{103, 58, 183}
@@ -585,36 +833,64 @@ Note that we have shown that the determinant is the product of eigenvalues. Thus
 </div>
 where we set $\boldsymbol M = (\boldsymbol A-\boldsymbol B\boldsymbol D^{-1}\boldsymbol C)^{-1}$
 
-<span class="anchor" id="prop-4"></span>**Proposition (Inverse Matrix Identity)**: We can show that
+:::
+:::
+
+::: {.callout-tip}
+## Propositions 
+:::{#prp-inv-id}
+
+**(Inverse Matrix Identity)**: We can show that
+
 <div>
 \begin{equation*}
-    (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1} = \boldsymbol P\boldsymbol B^T(\boldsymbol B\boldsymbol P\boldsymbol B^T + \boldsymbol R)^{-1}
+    (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1} = \boldsymbol P\boldsymbol B^\top (\boldsymbol B\boldsymbol P\boldsymbol B^\top  + \boldsymbol R)^{-1}
 \end{equation*}
 </div>
 
-*Proof*: The can be proven by right multiply the inverse on the right hand-side:
+:::
+:::
+
+<details>
+
+The can be proven by right multiply the inverse on the right hand-side:
+
 <div>
 \begin{equation*}
 \begin{aligned}
-    (\boldsymbol P^{-1} + &\boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}(\boldsymbol B\boldsymbol P\boldsymbol B^T + \boldsymbol R) \\
-    &= (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}\boldsymbol B\boldsymbol P\boldsymbol B^T + (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}\boldsymbol R \\
-    &= (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}\boldsymbol B\boldsymbol P\boldsymbol B^T + (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B \\
-    &= (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\Big[\boldsymbol B\boldsymbol R^{-1}\boldsymbol B\boldsymbol P + \boldsymbol P^{-1} \boldsymbol P\Big]\boldsymbol B^T\\
-    &= (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\Big[\boldsymbol B\boldsymbol R^{-1}\boldsymbol B+ \boldsymbol P^{-1} \Big]\boldsymbol P\boldsymbol B^T \\
-    &= \boldsymbol P\boldsymbol B^T \\
+    (\boldsymbol P^{-1} + &\boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}(\boldsymbol B\boldsymbol P\boldsymbol B^\top  + \boldsymbol R) \\
+    &= (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}\boldsymbol B\boldsymbol P\boldsymbol B^\top  + (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}\boldsymbol R \\
+    &= (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}\boldsymbol B\boldsymbol P\boldsymbol B^\top  + (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B \\
+    &= (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\Big[\boldsymbol B\boldsymbol R^{-1}\boldsymbol B\boldsymbol P + \boldsymbol P^{-1} \boldsymbol P\Big]\boldsymbol B^\top \\
+    &= (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\Big[\boldsymbol B\boldsymbol R^{-1}\boldsymbol B+ \boldsymbol P^{-1} \Big]\boldsymbol P\boldsymbol B^\top  \\
+    &= \boldsymbol P\boldsymbol B^\top  \\
 \end{aligned}
 \end{equation*}
 </div>
 
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
-<span class="anchor" id="prop-5"></span>**Proposition (Woodbury Identity)**: We can show that
+::: {.callout-tip}
+## Propositions 
+:::{#prp-woodbury}
+
+**(Woodbury Identity)**: We can show that
+
 <div>
 \begin{equation*}
     (\boldsymbol A + \boldsymbol B\boldsymbol D^{-1}\boldsymbol C)^{-1} = \boldsymbol A^{-1} - \boldsymbol A^{-1}\boldsymbol B(\boldsymbol D + \boldsymbol C\boldsymbol A^{-1}\boldsymbol B)^{-1}\boldsymbol C\boldsymbol A^{-1}
 \end{equation*}
 </div>
-*Proof*: The can be proven by right multiply the inverse on the right hand-side:
+
+:::
+:::
+
+<details>
+
+The can be proven by right multiply the inverse on the right hand-side:
+
 <div>
 \begin{equation*}
 \begin{aligned}
@@ -642,10 +918,16 @@ where we set $\boldsymbol M = (\boldsymbol A-\boldsymbol B\boldsymbol D^{-1}\bol
 </div>
 
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
 ## Conditional & Marginalisation
 
-**Remark (Settings)**: We consider the setting where we consider the partition of random variables:
+::: {.callout-warning}
+## Remark
+:::{#rem-setting-cond-margin}
+
+*(Settings)*: We consider the setting where we consider the partition of random variables:
 
 <div>
 \begin{equation*}
@@ -661,7 +943,7 @@ where we set $\boldsymbol M = (\boldsymbol A-\boldsymbol B\boldsymbol D^{-1}\bol
 \end{bmatrix}}
 \end{equation*}
 </div>
-Due to the symmetric of covariance, we have $\boldsymbol \Sigma_{ab} = \boldsymbol \Sigma_{ba}^T$. Furthermore, we denote 
+Due to the symmetric of covariance, we have $\boldsymbol \Sigma_{ab} = \boldsymbol \Sigma_{ba}^\top $. Furthermore, we denote 
 <div>
 \begin{equation*}
 \boldsymbol \Sigma^{-1} = \begin{bmatrix}
@@ -676,40 +958,57 @@ Due to the symmetric of covariance, we have $\boldsymbol \Sigma_{ab} = \boldsymb
 </div>
 where $\boldsymbol \Lambda$ is called precision matrix. One can consider the inverse of partition matrix to find such a value of $\boldsymbol \Lambda$ (will be useful afterward), thus we note that $\boldsymbol \Sigma_{aa} \ne \boldsymbol \Lambda^{-1}_{aa}$, and so on.
 
-**Remark (Complete the Square)**: To find the conditional and marginalision (together with other kinds of Gaussian manipulation), we relies on a method called completing the square. Let's consider the quadratic form expansion:
+:::
+:::
+
+::: {.callout-warning}
+## Remark
+:::{#rem-complete-tech}
+
+*(Complete the Square)*: To find the conditional and marginalision (together with other kinds of Gaussian manipulation), we relies on a method called completing the square. Let's consider the quadratic form expansion:
+
 <div>
 \begin{equation*}
 \begin{aligned}
-    -\frac{1}{2}&(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu) \\
-    &= {\color{blue}{-\frac{1}{2}\boldsymbol x^T\boldsymbol \Sigma^{-1}\boldsymbol x + \boldsymbol \mu^T\boldsymbol \Sigma^{-1}\boldsymbol x}} -\frac{1}{2} \boldsymbol \mu^T\boldsymbol \Sigma^{-1}\boldsymbol \mu \\
+    -\frac{1}{2}&(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu) \\
+    &= {\color{blue}{-\frac{1}{2}\boldsymbol x^\top \boldsymbol \Sigma^{-1}\boldsymbol x + \boldsymbol \mu^\top \boldsymbol \Sigma^{-1}\boldsymbol x}} -\frac{1}{2} \boldsymbol \mu^\top \boldsymbol \Sigma^{-1}\boldsymbol \mu \\
 \end{aligned}
 \end{equation*}
 </div>
 Note that the <font color="#2196f3">blue term</font> are the term that depends on $x$. This means that to find the Gaussian, we will have to find the first and second order of $\boldsymbol x$ only. Or, we can consider each individual elements of partitioned random variable:
 <div>
-\begin{equation*}
+$$
 \begin{aligned}
-    -\frac{1}{2}&(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu) \\
+    -\frac{1}{2}&(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu) \\
     &= \begin{aligned}[t]
-        {\color{green}{-\frac{1}{2}(\boldsymbol x_a - \boldsymbol \mu_a)^T\boldsymbol \Lambda_{aa}(\boldsymbol x_a - \boldsymbol \mu_a)}}{\color{yellow}{ - \frac{1}{2}(\boldsymbol x_a - \boldsymbol \mu_a)^T\boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b)}} \\
-        {\color{purple}{-\frac{1}{2}(\boldsymbol x_b - \boldsymbol \mu_b)^T\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)}}{\color{grey}{ - \frac{1}{2}(\boldsymbol x_b - \boldsymbol \mu_b)^T\boldsymbol \Lambda_{bb}(\boldsymbol x_b - \boldsymbol \mu_b)}} \\
+        {\color{green}{-\frac{1}{2}(\boldsymbol x_a - \boldsymbol \mu_a)^\top \boldsymbol \Lambda_{aa}(\boldsymbol x_a - \boldsymbol \mu_a)}}{\color{yellow}{ - \frac{1}{2}(\boldsymbol x_a - \boldsymbol \mu_a)^\top \boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b)}} \\
+        {\color{purple}{-\frac{1}{2}(\boldsymbol x_b - \boldsymbol \mu_b)^\top \boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)}}{\color{grey}{ - \frac{1}{2}(\boldsymbol x_b - \boldsymbol \mu_b)^\top \boldsymbol \Lambda_{bb}(\boldsymbol x_b - \boldsymbol \mu_b)}} \\
     \end{aligned} \\
     &= \begin{aligned}[t]
-        &{\color{green} -\frac{1}{2}\boldsymbol x^T_a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} -\frac{1}{2} \boldsymbol \mu^T\boldsymbol \Lambda_{aa}\boldsymbol \mu {\color{yellow} -\frac{1}{2}\boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol x_b + \frac{1}{2} \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b} \\ 
-        &{\color{yellow}+\frac{1}{2}\boldsymbol \mu_a^T\boldsymbol \Lambda_{ab}\boldsymbol x_b} - \frac{1}{2}\boldsymbol \mu_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b {\color{purple} -\frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{ba} \boldsymbol \mu_a}  \\
-        &- \frac{1}{2}\boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}\boldsymbol \mu_a {\color{grey} -\frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b + \boldsymbol \mu_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b} -\frac{1}{2}\boldsymbol \mu_b^T\boldsymbol \Lambda_{bb}\boldsymbol \mu_b
+        &{\color{green} -\frac{1}{2}\boldsymbol x^\top _a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} -\frac{1}{2} \boldsymbol \mu^\top \boldsymbol \Lambda_{aa}\boldsymbol \mu {\color{yellow} -\frac{1}{2}\boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol x_b + \frac{1}{2} \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b} \\ 
+        &{\color{yellow}+\frac{1}{2}\boldsymbol \mu_a^\top \boldsymbol \Lambda_{ab}\boldsymbol x_b} - \frac{1}{2}\boldsymbol \mu_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b {\color{purple} -\frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{ba} \boldsymbol \mu_a}  \\
+        &- \frac{1}{2}\boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}\boldsymbol \mu_a {\color{grey} -\frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b + \boldsymbol \mu_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b} -\frac{1}{2}\boldsymbol \mu_b^\top \boldsymbol \Lambda_{bb}\boldsymbol \mu_b
     \end{aligned} \\
 \end{aligned}
-\label{eqn:1}\tag{1}
-\end{equation*}
+$$ {#eq-complete-square}
 </div>
+
 Completing the square is to match this pattern into our formula in order to get new Gaussian distribution. There are $2$ ways to complete the squre that depends on the scenario:
+
 - When we want to find the Gaussian in difference form (but still being Gaussian) i.e conditional
 - When we want to marginalise some variables out *or* when we have to find the true for of the distribution without relying on knowing the final form (or when we are not really sure about the final form) i.e marginalisation, posterior
 
+:::
+:::
+
 Let's just show how it works with examples. 
 
-<span class="anchor" id="prop-3"></span>**Proposition (Conditional)**: Consider the following Gaussian 
+::: {.callout-tip}
+## Propositions 
+:::{#prp-cond-gauss}
+
+**(Conditional)**: Consider the following Gaussian 
+
 <div>
 \begin{equation*}
 \begin{bmatrix}
@@ -725,44 +1024,55 @@ Let's just show how it works with examples.
 \end{equation*}
 </div>
 We can show that: $p(\boldsymbol x_a | \boldsymbol x_b) = \mathcal{N}(\boldsymbol x | \boldsymbol \mu_{a|b}, \boldsymbol \Lambda^{-1}_{aa})$, where we have
+
 - $\boldsymbol \mu_{a\lvert b} = \boldsymbol \mu_a - \boldsymbol \Lambda_{aa}^{-1}\boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b)$
 - Or, we can set $\boldsymbol K = \boldsymbol \Sigma_{ab}\boldsymbol \Sigma_{bb}^{-1}$, where we have
+
 <div>
 \begin{equation*}
 \begin{aligned}
     &\boldsymbol \mu_{a|b} = \boldsymbol \mu_a + \boldsymbol K(\boldsymbol x_b - \boldsymbol \mu_b)  \qquad \begin{aligned}[t]
-        \boldsymbol \Sigma_{a|b} &= \boldsymbol \Sigma_{aa} - \boldsymbol K\boldsymbol \Sigma_{bb}\boldsymbol K^T \\
+        \boldsymbol \Sigma_{a|b} &= \boldsymbol \Sigma_{aa} - \boldsymbol K\boldsymbol \Sigma_{bb}\boldsymbol K^\top  \\
         &= \boldsymbol \Sigma_{aa} - \boldsymbol \Sigma_{ab}\boldsymbol \Sigma_{bb}^{-1}\boldsymbol \Sigma_{ba} \\
     \end{aligned}
 \end{aligned}
 \end{equation*}
 </div>
-Please note that this follows from <a href="#prop-1">block-matrix inverse result</a> (you can try plugging the results in).
 
-*Proof*: We consider the expansion of the conditional distribution, as we have:
+Follows from @prp-block-inv (you can try plugging the results in).
+
+:::
+:::
+
+<details>
+
+*Proof*: We consider the expansion of the conditional distribution, as we only gather all the terms with $\boldsymbol x_a$
+
 <div>
 \begin{equation*}
 \begin{aligned}
-    -\frac{1}{2}(\boldsymbol x_a - \boldsymbol \mu_{a|b})^T\boldsymbol \Sigma_{a|b}^{-1}(\boldsymbol x_a - \boldsymbol \mu_{a|b}) = {\color{red}-\frac{1}{2}\boldsymbol x_a^T\boldsymbol \Sigma_{a|b}^{-1}\boldsymbol x_a} + {\color{blue}\boldsymbol x_a^T\boldsymbol \Sigma_{a|b}^{-1}\boldsymbol \mu_{a|b}} + \text{const}
+    -\frac{1}{2}(\boldsymbol x_a - \boldsymbol \mu_{a|b})^\top \boldsymbol \Sigma_{a|b}^{-1}(\boldsymbol x_a - \boldsymbol \mu_{a|b}) = {\color{red}-\frac{1}{2}\boldsymbol x_a^\top \boldsymbol \Sigma_{a|b}^{-1}\boldsymbol x_a} + {\color{blue}\boldsymbol x_a^\top \boldsymbol \Sigma_{a|b}^{-1}\boldsymbol \mu_{a|b}} + \text{const}
 \end{aligned}
 \end{equation*}
 </div>
-Let's consider the values, which should be equal to equation $\eqref{eqn:1}$, as we can see that:
-- The <font color="#f44336">red term</font>: we set $\boldsymbol \Sigma_{a\lvert b}^{-1} = \boldsymbol \Lambda_{aa}$ (consider the first <font color="#009688">green term</font> of the equation $\eqref{eqn:1}$)
-- The <font color="#2196f3">blue term</font>., we will have to consider $(\dots)^T\boldsymbol x_a$. We have:
+Let's consider the values, which should be equal to equation @eq-complete-square, as we can see that:
+
+- The <font color="#f44336">red term</font>: we set $\boldsymbol \Sigma_{a\lvert b}^{-1} = \boldsymbol \Lambda_{aa}$ (consider the first <font color="#009688">green term</font> of the equation @eq-complete-square)
+- The <font color="#2196f3">blue term</font>, we will have to consider $(\dots)^\top \boldsymbol x_a$. We have:
+
 <div>
 \begin{equation*}
 \begin{aligned}
-{\color{green} \boldsymbol \mu_{a}^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} &{\color{yellow} - \frac{1}{2}\boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol x_b + \frac{1}{2} \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b} {\color{purple} - \frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a} \\
-&= \boldsymbol x_a^T\Big[ \boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{ab}\boldsymbol x_b + \boldsymbol \Lambda_{ab}\boldsymbol \mu_b \Big] = \boldsymbol x_a^T\Big[ \boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b) \Big] \\
+{\color{green} \boldsymbol \mu_{a}^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} &{\color{yellow} - \frac{1}{2}\boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol x_b + \frac{1}{2} \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b} {\color{purple} - \frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a} \\
+&= \boldsymbol x_a^\top \Big[ \boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{ab}\boldsymbol x_b + \boldsymbol \Lambda_{ab}\boldsymbol \mu_b \Big] = \boldsymbol x_a^\top \Big[ \boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b) \Big] \\
 \end{aligned}
 \end{equation*}
 </div>
-Please note that $\boldsymbol \Lambda_{ab}^T = \boldsymbol \Lambda_{ba}$. Now, let's do "pattern" matching, as we have:
+Please note that $\boldsymbol \Lambda_{ab}^\top  = \boldsymbol \Lambda_{ba}$. Now, let's do "pattern" matching, as we have:
 <div>
 \begin{equation*}
 \begin{aligned}
-\boldsymbol x_a^T&\boldsymbol \Lambda_{aa}\boldsymbol \mu_{a|b} = \boldsymbol x_a^T\Big[ \boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b) \Big] \\
+\boldsymbol x_a^\top &\boldsymbol \Lambda_{aa}\boldsymbol \mu_{a|b} = \boldsymbol x_a^\top \Big[ \boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b) \Big] \\
 \implies&\boldsymbol \mu_{a|b} \begin{aligned}[t]
     &= \boldsymbol \Lambda_{aa}^{-1}\boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{aa}^{-1}\boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b) \\
     &= \boldsymbol \mu_a - \boldsymbol \Lambda_{aa}^{-1}\boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b) \\
@@ -773,9 +1083,16 @@ Please note that $\boldsymbol \Lambda_{ab}^T = \boldsymbol \Lambda_{ba}$. Now, l
 Thus the proof is complete. 
 
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
 
-<span class="anchor" id="prop-2"></span>**Proposition (Marginalisation)**: Consider the following Gaussian 
+::: {.callout-tip}
+## Propositions 
+:::{#prp-margin-gauss}
+
+**(Marginalisation)**: Consider the following Gaussian 
+
 <div>
 \begin{equation*}
 \begin{bmatrix}
@@ -792,96 +1109,120 @@ Thus the proof is complete.
 </div>
 We can show that: $p(\boldsymbol x_a) = \mathcal{N}(\boldsymbol x | \boldsymbol \mu_{a}, \boldsymbol \Sigma_{aa})$
 
+:::
+:::
 
-*Proof*: We collect the terms that contains $\boldsymbol x_b$ so that we can integrate it out, as we have:
+<details>
+
+We collect the terms that contains $\boldsymbol x_b$ so that we can integrate it out, as we have:
+
 <div>
 \begin{equation*}
 \begin{aligned}
-{\color{grey} -\frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b} &{\color{grey} +} {\color{grey}\boldsymbol \mu_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b}
-{\color{purple} -\frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{ba} \boldsymbol \mu_a} 
-{\color{yellow} -\frac{1}{2}\boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol x_b+\frac{1}{2}\boldsymbol \mu_a^T\boldsymbol \Lambda_{ab}\boldsymbol x_b} \\
-&=  -\frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b + \boldsymbol \mu_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b -\boldsymbol x_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a + \boldsymbol x_b^T\boldsymbol \Lambda_{ba} \boldsymbol \mu_a \\
-&=  -\frac{1}{2}\Big[\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b - 2\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol \Lambda_{bb}^{-1}\underbrace{\Big(\boldsymbol \Lambda_{bb}\boldsymbol \mu_b -\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)\Big)}_{\boldsymbol m}\Big] \\
-&=  -\frac{1}{2}\Big[\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b - 2\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m + (\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^T\boldsymbol \Lambda_{bb}(\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m) \Big] + \frac{1}{2}(\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^T\boldsymbol \Lambda_{bb}(\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)  \\
-&=  -\frac{1}{2}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^T\boldsymbol \Lambda_{bb}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m) + {\color{blue}\frac{1}{2}\boldsymbol m^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m}  \\
+{\color{grey} -\frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b} &{\color{grey} +} {\color{grey}\boldsymbol \mu_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b}
+{\color{purple} -\frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{ba} \boldsymbol \mu_a} 
+{\color{yellow} -\frac{1}{2}\boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol x_b+\frac{1}{2}\boldsymbol \mu_a^\top \boldsymbol \Lambda_{ab}\boldsymbol x_b} \\
+&=  -\frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b + \boldsymbol \mu_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b -\boldsymbol x_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a + \boldsymbol x_b^\top \boldsymbol \Lambda_{ba} \boldsymbol \mu_a \\
+&=  -\frac{1}{2}\Big[\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b - 2\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol \Lambda_{bb}^{-1}\underbrace{\Big(\boldsymbol \Lambda_{bb}\boldsymbol \mu_b -\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)\Big)}_{\boldsymbol m}\Big] \\
+&=  -\frac{1}{2}\Big[\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b - 2\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m + (\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^\top \boldsymbol \Lambda_{bb}(\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m) \Big] + \frac{1}{2}(\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^\top \boldsymbol \Lambda_{bb}(\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)  \\
+&=  -\frac{1}{2}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^\top \boldsymbol \Lambda_{bb}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m) + {\color{blue}\frac{1}{2}\boldsymbol m^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m}  \\
 \end{aligned}
 \end{equation*}
 </div>
-If we integrate our the quantity, to be:
+
+So we integrate out the quantity by Gaussian integration (if we want)
 <div>
 \begin{equation*}
-\int \exp\brackc{-\frac{1}{2}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^T\boldsymbol \Lambda_{bb}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)}\dby \boldsymbol x_b
+\int \exp\brackc{-\frac{1}{2}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^\top \boldsymbol \Lambda_{bb}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)}\dby \boldsymbol x_b
 \end{equation*}
 </div>
-We can use the Gaussian integration, like in part 1 and part 2. Now, we consider the other terms that doesn't depends on $\boldsymbol x_b$ i.e all terms that depends on $\boldsymbol x_a$ together with the <font color="#2196f3">blue term</font> that been left out. 
+
+
+Now, we consider the other terms that doesn't depends on $\boldsymbol x_b$ i.e all terms that depends on $\boldsymbol x_a$ together with the <font color="#2196f3">blue term</font> that been left out. 
 <div>
 \begin{equation*}
 \begin{aligned}
-{\color{blue}\frac{1}{2}\boldsymbol m^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m} &{\color{green} -}{\color{green} \frac{1}{2}\boldsymbol x^T_a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} {\color{yellow} + \frac{1}{2} \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b}{\color{purple}+ \frac{1}{2}\boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a} \\
+{\color{blue}\frac{1}{2}\boldsymbol m^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m} &{\color{green} -}{\color{green} \frac{1}{2}\boldsymbol x^\top _a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} {\color{yellow} + \frac{1}{2} \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b}{\color{purple}+ \frac{1}{2}\boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a} \\
 &= \begin{aligned}[t]
-    \frac{1}{2}\Big(&\boldsymbol \Lambda_{bb}\boldsymbol \mu_b -\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)\Big)^T\boldsymbol \Lambda_{bb}^{-1}\Big(\boldsymbol \Lambda_{bb}\boldsymbol \mu_b -\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)\Big) \\
-    &{\color{green} - \frac{1}{2}\boldsymbol x^T_a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b
+    \frac{1}{2}\Big(&\boldsymbol \Lambda_{bb}\boldsymbol \mu_b -\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)\Big)^\top \boldsymbol \Lambda_{bb}^{-1}\Big(\boldsymbol \Lambda_{bb}\boldsymbol \mu_b -\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)\Big) \\
+    &{\color{green} - \frac{1}{2}\boldsymbol x^\top _a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b
 \end{aligned} \\
 &= \begin{aligned}[t]
-    \frac{1}{2}\Big[ \boldsymbol \mu_b^T\boldsymbol \Lambda_{bb}\boldsymbol \mu_b &- (\boldsymbol x_a - \boldsymbol \mu_a)^T\boldsymbol \Lambda_{ba}^T\boldsymbol \mu_b \\
-    &- \boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a) + (\boldsymbol x_a - \boldsymbol \mu_a)^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a) \Big] \\
-    &{\color{green} - \frac{1}{2}\boldsymbol x^T_a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b
+    \frac{1}{2}\Big[ \boldsymbol \mu_b^\top \boldsymbol \Lambda_{bb}\boldsymbol \mu_b &- (\boldsymbol x_a - \boldsymbol \mu_a)^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \mu_b \\
+    &- \boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a) + (\boldsymbol x_a - \boldsymbol \mu_a)^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a) \Big] \\
+    &{\color{green} - \frac{1}{2}\boldsymbol x^\top _a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b
 \end{aligned} \\
 &= \begin{aligned}[t]
-    \frac{1}{2}\Big[ \boldsymbol \mu_b^T\boldsymbol \Lambda_{bb}\boldsymbol \mu_b &- \boldsymbol x_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \mu_b + \boldsymbol \mu_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \mu_b - \boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a + \boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}\boldsymbol \mu_a \\
-    &+ \boldsymbol x_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol x_a - \boldsymbol x_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol\mu_a - \boldsymbol \mu_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol x_a \\
-    &+ \boldsymbol \mu_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol \mu_a \Big] {\color{green} - \frac{1}{2}\boldsymbol x^T_a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b
+    \frac{1}{2}\Big[ \boldsymbol \mu_b^\top \boldsymbol \Lambda_{bb}\boldsymbol \mu_b &- \boldsymbol x_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \mu_b + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \mu_b - \boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a + \boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}\boldsymbol \mu_a \\
+    &+ \boldsymbol x_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol x_a - \boldsymbol x_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol\mu_a - \boldsymbol \mu_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol x_a \\
+    &+ \boldsymbol \mu_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol \mu_a \Big] {\color{green} - \frac{1}{2}\boldsymbol x^\top _a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b
 \end{aligned} \\
 &= \begin{aligned}[t]
-    \frac{1}{2}\Big[-2\boldsymbol x_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \mu_b &+ \boldsymbol x_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol x_a - 2\boldsymbol x_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol\mu_a\Big] \\
-    &{\color{green} - \frac{1}{2}\boldsymbol x^T_a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b + \text{const}
+    \frac{1}{2}\Big[-2\boldsymbol x_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \mu_b &+ \boldsymbol x_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol x_a - 2\boldsymbol x_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol\mu_a\Big] \\
+    &{\color{green} - \frac{1}{2}\boldsymbol x^\top _a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b + \text{const}
 \end{aligned} \\
 &= \begin{aligned}[t]
-    -\frac{1}{2}\boldsymbol x_a^T\Big[\boldsymbol \Lambda_{aa} - \boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\Big]\boldsymbol x_a &+ \boldsymbol x_a^T\Big[\boldsymbol \Lambda_{aa} - \boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\Big]\boldsymbol\mu_a + \text{const}
+    -\frac{1}{2}\boldsymbol x_a^\top \Big[\boldsymbol \Lambda_{aa} - \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\Big]\boldsymbol x_a &+ \boldsymbol x_a^\top \Big[\boldsymbol \Lambda_{aa} - \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\Big]\boldsymbol\mu_a + \text{const}
 \end{aligned} \\
 \end{aligned}
 \end{equation*}
 </div>
-If we comparing this form to the normal quadratic expanision of Gaussian, we can set the $\boldsymbol \mu$ of marginalised Gaussian is $\boldsymbol \mu_a$, while the covariance is $(\boldsymbol \Lambda_{aa} - \boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba})^{-1}$. If we compare this to the inverse matrix partition, we can see that this is equal to $\boldsymbol \Sigma_{aa}$. Thus complete the proof. 
+If we comparing this form to the normal quadratic expanision of Gaussian, we can set the $\boldsymbol \mu$ of marginalised Gaussian is $\boldsymbol \mu_a$, while the covariance is $(\boldsymbol \Lambda_{aa} - \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba})^{-1}$. If we compare this to the inverse matrix partition, we can see that this is equal to $\boldsymbol \Sigma_{aa}$. Thus complete the proof. 
 
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
-**Proposition (Linear Gaussian Model)**: Consider the distribution to be: $p(\boldsymbol x) = \mathcal{N}(\boldsymbol x \vline {\color{yellow} \boldsymbol \mu} , {\color{blue} \boldsymbol \Lambda^{-1}})$ and $p(\boldsymbol y \vline \boldsymbol x) = \mathcal{N}(\boldsymbol y \vline {\color{purple}\boldsymbol A}\boldsymbol x + {\color{green} \boldsymbol b}, {\color{red} \boldsymbol L^{-1}})$. We can show that the following holds:
-<div>
-\begin{equation*}
-p(\boldsymbol y) = \mathcal{N}(\boldsymbol y \vline {\color{purple}\boldsymbol A}{\color{yellow} \boldsymbol \mu} + {\color{green} \boldsymbol b}, {\color{red} \boldsymbol L^{-1}} + {\color{purple}\boldsymbol A}{\color{blue} \boldsymbol \Lambda^{-1}}{\color{purple}\boldsymbol A^T}) \qquad p(\boldsymbol x \vline \boldsymbol y) = \mathcal{N}\bracka{ \boldsymbol x \vline {\color{grey} \boldsymbol \Sigma}\brackc{ {\color{purple}\boldsymbol A^T} {\color{red} \boldsymbol L}(\boldsymbol y-{\color{green} \boldsymbol b}) + {\color{blue} \boldsymbol \Lambda}{\color{yellow} \boldsymbol \mu}}, {\color{grey} \boldsymbol \Sigma} }
-\end{equation*}
-</div>
-where we have ${\color{grey} \boldsymbol \Sigma} = ({\color{blue} \boldsymbol \Lambda} + {\color{purple}\boldsymbol A^T}{\color{red} \boldsymbol L}{\color{purple}\boldsymbol A})^{-1}$
+::: {.callout-tip}
+## Propositions 
+:::{#prp-lin-gauss-model}
 
-*Proof*: We will consider the joint random variable $\boldsymbol z = (\boldsymbol x, \boldsymbol y)^T$. Let's consider the joint distribution and the inside of exponential: 
+**(Linear Gaussian Model)**: Consider the distribution to be: $p(\boldsymbol x) = \mathcal{N}(\boldsymbol x  |  {\color{yellow} \boldsymbol \mu} , {\color{blue} \boldsymbol \Lambda^{-1}})$ and $p(\boldsymbol y  |  \boldsymbol x) = \mathcal{N}(\boldsymbol y  |  {\color{purple}\boldsymbol A}\boldsymbol x + {\color{green} \boldsymbol b}, {\color{red} \boldsymbol L^{-1}})$. We can show that the following holds:
+
 <div>
 \begin{equation*}
 \begin{aligned}
--\frac{1}{2}&(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Lambda(\boldsymbol x - \boldsymbol \mu) - \frac{1}{2}(\boldsymbol y - \boldsymbol A\boldsymbol x - \boldsymbol b)^T\boldsymbol L(\boldsymbol y - \boldsymbol A\boldsymbol x - \boldsymbol b) + \text{const} \\
+p(\boldsymbol y) &= \mathcal{N}(\boldsymbol y  |  {\color{purple}\boldsymbol A}{\color{yellow} \boldsymbol \mu} + {\color{green} \boldsymbol b}, {\color{red} \boldsymbol L^{-1}} + {\color{purple}\boldsymbol A}{\color{blue} \boldsymbol \Lambda^{-1}}{\color{purple}\boldsymbol A^\top }) \\
+p(\boldsymbol x  |  \boldsymbol y) &= \mathcal{N}\bracka{ \boldsymbol x  |  {\color{grey} \boldsymbol \Sigma}\brackc{ {\color{purple}\boldsymbol A^\top } {\color{red} \boldsymbol L}(\boldsymbol y-{\color{green} \boldsymbol b}) + {\color{blue} \boldsymbol \Lambda}{\color{yellow} \boldsymbol \mu}}, {\color{grey} \boldsymbol \Sigma} }
+\end{aligned}
+\end{equation*}
+</div>
+where we have ${\color{grey} \boldsymbol \Sigma} = ({\color{blue} \boldsymbol \Lambda} + {\color{purple}\boldsymbol A^\top }{\color{red} \boldsymbol L}{\color{purple}\boldsymbol A})^{-1}$
+
+:::
+:::
+
+<details>
+
+We will consider the joint random variable $\boldsymbol z = (\boldsymbol x, \boldsymbol y)^\top$. Let's consider the joint distribution and the inside of exponential: 
+
+<div>
+\begin{equation*}
+\begin{aligned}
+-\frac{1}{2}&(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Lambda(\boldsymbol x - \boldsymbol \mu) - \frac{1}{2}(\boldsymbol y - \boldsymbol A\boldsymbol x - \boldsymbol b)^\top \boldsymbol L(\boldsymbol y - \boldsymbol A\boldsymbol x - \boldsymbol b) + \text{const} \\
 &= \begin{aligned}[t]
-    -\frac{1}{2}\Big[ \boldsymbol x^T\boldsymbol \Lambda\boldsymbol x &- 2\boldsymbol \mu^T\boldsymbol \Lambda\boldsymbol x + \boldsymbol \mu^T\boldsymbol \Lambda\boldsymbol \mu + \boldsymbol y^T\boldsymbol L\boldsymbol y - \boldsymbol y^T\boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol y^T\boldsymbol L\boldsymbol b\\
-    &-\boldsymbol x^T\boldsymbol A^T\boldsymbol L\boldsymbol y + \boldsymbol x^T\boldsymbol A^T \boldsymbol L \boldsymbol A\boldsymbol x + \boldsymbol x^T\boldsymbol A^T \boldsymbol L \boldsymbol b - \boldsymbol b^T\boldsymbol L\boldsymbol y +\boldsymbol b^T\boldsymbol L\boldsymbol A\boldsymbol x + \boldsymbol b^T\boldsymbol L\boldsymbol b \Big] + \text{const}
+    -\frac{1}{2}\Big[ \boldsymbol x^\top \boldsymbol \Lambda\boldsymbol x &- 2\boldsymbol \mu^\top \boldsymbol \Lambda\boldsymbol x + \boldsymbol \mu^\top \boldsymbol \Lambda\boldsymbol \mu + \boldsymbol y^\top \boldsymbol L\boldsymbol y - \boldsymbol y^\top \boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol y^\top \boldsymbol L\boldsymbol b\\
+    &-\boldsymbol x^\top \boldsymbol A^\top \boldsymbol L\boldsymbol y + \boldsymbol x^\top \boldsymbol A^\top  \boldsymbol L \boldsymbol A\boldsymbol x + \boldsymbol x^\top \boldsymbol A^\top  \boldsymbol L \boldsymbol b - \boldsymbol b^\top \boldsymbol L\boldsymbol y +\boldsymbol b^\top \boldsymbol L\boldsymbol A\boldsymbol x + \boldsymbol b^\top \boldsymbol L\boldsymbol b \Big] + \text{const}
 \end{aligned} \\
 &= \begin{aligned}[t]
-    -\frac{1}{2}\Big[ \boldsymbol x^T\boldsymbol \Lambda\boldsymbol x &- 2\boldsymbol \mu^T\boldsymbol \Lambda\boldsymbol x + \boldsymbol y^T\boldsymbol L\boldsymbol y - \boldsymbol y^T\boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol y^T\boldsymbol L\boldsymbol b\\
-    &-\boldsymbol x^T\boldsymbol A^T\boldsymbol L\boldsymbol y + \boldsymbol x^T\boldsymbol A^T \boldsymbol L \boldsymbol A\boldsymbol x + \boldsymbol x^T\boldsymbol A^T \boldsymbol L \boldsymbol b - \boldsymbol b^T\boldsymbol L\boldsymbol y +\boldsymbol b^T\boldsymbol L\boldsymbol A\boldsymbol x  \Big] + \text{const}
+    -\frac{1}{2}\Big[ \boldsymbol x^\top \boldsymbol \Lambda\boldsymbol x &- 2\boldsymbol \mu^\top \boldsymbol \Lambda\boldsymbol x + \boldsymbol y^\top \boldsymbol L\boldsymbol y - \boldsymbol y^\top \boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol y^\top \boldsymbol L\boldsymbol b\\
+    &-\boldsymbol x^\top \boldsymbol A^\top \boldsymbol L\boldsymbol y + \boldsymbol x^\top \boldsymbol A^\top  \boldsymbol L \boldsymbol A\boldsymbol x + \boldsymbol x^\top \boldsymbol A^\top  \boldsymbol L \boldsymbol b - \boldsymbol b^\top \boldsymbol L\boldsymbol y +\boldsymbol b^\top \boldsymbol L\boldsymbol A\boldsymbol x  \Big] + \text{const}
 \end{aligned} \\
 &= \begin{aligned}[t]
-    -\frac{1}{2}\Big[ \boldsymbol x^T\Big(\boldsymbol \Lambda + \boldsymbol A^T \boldsymbol L \boldsymbol A\Big)\boldsymbol x &+ \boldsymbol y^T\boldsymbol L\boldsymbol y - \boldsymbol y^T\boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol x^T\boldsymbol A^T\boldsymbol L\boldsymbol y\\
-    &+ 2\boldsymbol x^T\boldsymbol A^T \boldsymbol L \boldsymbol b  - 2\boldsymbol \mu^T\boldsymbol \Lambda\boldsymbol x - 2\boldsymbol y^T\boldsymbol L\boldsymbol b \Big] + \text{const}
+    -\frac{1}{2}\Big[ \boldsymbol x^\top \Big(\boldsymbol \Lambda + \boldsymbol A^\top  \boldsymbol L \boldsymbol A\Big)\boldsymbol x &+ \boldsymbol y^\top \boldsymbol L\boldsymbol y - \boldsymbol y^\top \boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol x^\top \boldsymbol A^\top \boldsymbol L\boldsymbol y\\
+    &+ 2\boldsymbol x^\top \boldsymbol A^\top  \boldsymbol L \boldsymbol b  - 2\boldsymbol \mu^\top \boldsymbol \Lambda\boldsymbol x - 2\boldsymbol y^\top \boldsymbol L\boldsymbol b \Big] + \text{const}
 \end{aligned} \\
 &= \begin{aligned}[t]
-    -\frac{1}{2}\Big[ \boldsymbol x^T\Big(\boldsymbol \Lambda + \boldsymbol A^T \boldsymbol L \boldsymbol A\Big)\boldsymbol x &+ \boldsymbol y^T\boldsymbol L\boldsymbol y - \boldsymbol y^T\boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol x^T\boldsymbol A^T\boldsymbol L\boldsymbol y\Big]\\
-    &- \boldsymbol x^T\boldsymbol A^T \boldsymbol L \boldsymbol b + \boldsymbol \mu^T\boldsymbol \Lambda\boldsymbol x + \boldsymbol y^T\boldsymbol L\boldsymbol b  + \text{const}
+    -\frac{1}{2}\Big[ \boldsymbol x^\top \Big(\boldsymbol \Lambda + \boldsymbol A^\top  \boldsymbol L \boldsymbol A\Big)\boldsymbol x &+ \boldsymbol y^\top \boldsymbol L\boldsymbol y - \boldsymbol y^\top \boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol x^\top \boldsymbol A^\top \boldsymbol L\boldsymbol y\Big]\\
+    &- \boldsymbol x^\top \boldsymbol A^\top  \boldsymbol L \boldsymbol b + \boldsymbol \mu^\top \boldsymbol \Lambda\boldsymbol x + \boldsymbol y^\top \boldsymbol L\boldsymbol b  + \text{const}
 \end{aligned} \\
 &= \begin{aligned}[t]
     -\frac{1}{2}
     \begin{pmatrix}
         \boldsymbol x \\ \boldsymbol y
-    \end{pmatrix}^T
+    \end{pmatrix}^\top 
     \begin{pmatrix}
-        \boldsymbol \Lambda + \boldsymbol A^T\boldsymbol L\boldsymbol A & -\boldsymbol A^T\boldsymbol L \\
+        \boldsymbol \Lambda + \boldsymbol A^\top \boldsymbol L\boldsymbol A & -\boldsymbol A^\top \boldsymbol L \\
         -\boldsymbol L\boldsymbol A & \boldsymbol L
     \end{pmatrix}
     \begin{pmatrix}
@@ -889,26 +1230,26 @@ where we have ${\color{grey} \boldsymbol \Sigma} = ({\color{blue} \boldsymbol \L
     \end{pmatrix}  + 
     \begin{pmatrix}
         \boldsymbol x \\ \boldsymbol y
-    \end{pmatrix}^T
+    \end{pmatrix}^\top 
     \begin{pmatrix}
-        \boldsymbol \Lambda\boldsymbol \mu - \boldsymbol A^T\boldsymbol L\boldsymbol b \\
+        \boldsymbol \Lambda\boldsymbol \mu - \boldsymbol A^\top \boldsymbol L\boldsymbol b \\
         \boldsymbol L\boldsymbol b
     \end{pmatrix} + \text{const}
 \end{aligned} \\
 \end{aligned}
 \end{equation*}
 </div>
-We can use the <a href="#prop-1">block-matrix inverse result</a>, to show that:
+We can use @prp-block-inv, to show that:
 <div>
 \begin{equation*}
 \begin{aligned}
 \begin{pmatrix}
-    \boldsymbol \Lambda + \boldsymbol A^T\boldsymbol L\boldsymbol A & -\boldsymbol A^T\boldsymbol L \\
+    \boldsymbol \Lambda + \boldsymbol A^\top \boldsymbol L\boldsymbol A & -\boldsymbol A^\top \boldsymbol L \\
     -\boldsymbol L\boldsymbol A & \boldsymbol L
 \end{pmatrix}^{-1} = 
 \begin{pmatrix}
-    \boldsymbol \Lambda^{-1} & \boldsymbol \Lambda^{-1}\boldsymbol A^T \\
-    \boldsymbol A\boldsymbol \Lambda^{-1} & \boldsymbol L^{-1} + \boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^T
+    \boldsymbol \Lambda^{-1} & \boldsymbol \Lambda^{-1}\boldsymbol A^\top  \\
+    \boldsymbol A\boldsymbol \Lambda^{-1} & \boldsymbol L^{-1} + \boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^\top 
 \end{pmatrix}
 \end{aligned}
 \end{equation*}
@@ -918,11 +1259,11 @@ Recall the Gaussian pattern matching, we can see that the mean is equal to:
 \begin{equation*}
 \begin{aligned}
 \begin{pmatrix}
-    \boldsymbol \Lambda^{-1} & \boldsymbol \Lambda^{-1}\boldsymbol A^T \\
-    \boldsymbol A\boldsymbol \Lambda^{-1} & \boldsymbol L^{-1} + \boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^T
+    \boldsymbol \Lambda^{-1} & \boldsymbol \Lambda^{-1}\boldsymbol A^\top  \\
+    \boldsymbol A\boldsymbol \Lambda^{-1} & \boldsymbol L^{-1} + \boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^\top 
 \end{pmatrix}
 \begin{pmatrix}
-    \boldsymbol \Lambda\boldsymbol \mu - \boldsymbol A^T\boldsymbol L\boldsymbol b \\
+    \boldsymbol \Lambda\boldsymbol \mu - \boldsymbol A^\top \boldsymbol L\boldsymbol b \\
     \boldsymbol L\boldsymbol b
 \end{pmatrix} = \begin{pmatrix}
     \boldsymbol \mu \\ \boldsymbol A\boldsymbol \mu + \boldsymbol b
@@ -930,40 +1271,40 @@ Recall the Gaussian pattern matching, we can see that the mean is equal to:
 \end{aligned}
 \end{equation*}
 </div>
-Please note that with <a href="#prop-2">marginalisation result</a>, it is obvious to see how this leads to the final result. Now, for the <a href="#prop-3">conditional result</a>, we have the usual result that $\boldsymbol \Sigma= \boldsymbol \Lambda_{xx} = (\boldsymbol \Lambda + \boldsymbol A^T\boldsymbol L\boldsymbol A)^{-1}$, for the mean:
+Please note that with @prp-margin-gauss, it is obvious to see how this leads to the final result. Now, for the @prp-cond-gauss, we have the usual result that $\boldsymbol \Sigma= \boldsymbol \Lambda_{xx} = (\boldsymbol \Lambda + \boldsymbol A^\top \boldsymbol L\boldsymbol A)^{-1}$, for the mean:
 <div>
 \begin{equation*}
 \begin{aligned}
-    \boldsymbol \mu - &(\boldsymbol \Lambda + \boldsymbol A^T\boldsymbol L\boldsymbol A)^{-1}(\boldsymbol A^T\boldsymbol L)(-\boldsymbol y + A\boldsymbol \mu + \boldsymbol b) \\
-    &= \boldsymbol \Sigma\boldsymbol A^T\boldsymbol L(\boldsymbol y - \boldsymbol b) + \boldsymbol \mu - \boldsymbol \Sigma\boldsymbol A^T\boldsymbol L\boldsymbol A\boldsymbol \mu
+    \boldsymbol \mu - &(\boldsymbol \Lambda + \boldsymbol A^\top \boldsymbol L\boldsymbol A)^{-1}(\boldsymbol A^\top \boldsymbol L)(-\boldsymbol y + A\boldsymbol \mu + \boldsymbol b) \\
+    &= \boldsymbol \Sigma\boldsymbol A^\top \boldsymbol L(\boldsymbol y - \boldsymbol b) + \boldsymbol \mu - \boldsymbol \Sigma\boldsymbol A^\top \boldsymbol L\boldsymbol A\boldsymbol \mu
 \end{aligned}
 \end{equation*}
 </div>
-We want to show that $\boldsymbol \mu - \boldsymbol \Sigma\boldsymbol A^T\boldsymbol L\boldsymbol A\boldsymbol \mu = \boldsymbol \Sigma\boldsymbol \Lambda\boldsymbol \mu$. 
+We want to show that $\boldsymbol \mu - \boldsymbol \Sigma\boldsymbol A^\top \boldsymbol L\boldsymbol A\boldsymbol \mu = \boldsymbol \Sigma\boldsymbol \Lambda\boldsymbol \mu$. 
 
 :::: {.columns}
 
 ::: {.column width="50%"}
 
-*LHS*: Apply <a href="#prop-4">inverse indentity</a>, where we consider the section highlight in <font color="#e91e62">pink</font>:
+*LHS*: Apply @prp-inv-id, where we consider the section highlight in <font color="#e91e62">pink</font>:
 
 $$
 \begin{aligned}
-    \boldsymbol \mu &- \boldsymbol \Sigma\boldsymbol A^T\boldsymbol L\boldsymbol A\boldsymbol \mu \\
-    &= \boldsymbol \mu - {\color{pink}(\boldsymbol \Lambda + \boldsymbol A^T\boldsymbol L\boldsymbol A)^{-1}\boldsymbol A^T\boldsymbol L}\boldsymbol A\boldsymbol \mu \\
-    &= \boldsymbol \mu - \boldsymbol \Lambda^{-1}\boldsymbol A^T(\boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^T + \boldsymbol L^{-1})^{-1}\boldsymbol A\boldsymbol \mu
+    \boldsymbol \mu &- \boldsymbol \Sigma\boldsymbol A^\top \boldsymbol L\boldsymbol A\boldsymbol \mu \\
+    &= \boldsymbol \mu - {\color{pink}(\boldsymbol \Lambda + \boldsymbol A^\top \boldsymbol L\boldsymbol A)^{-1}\boldsymbol A^\top \boldsymbol L}\boldsymbol A\boldsymbol \mu \\
+    &= \boldsymbol \mu - \boldsymbol \Lambda^{-1}\boldsymbol A^\top (\boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^\top  + \boldsymbol L^{-1})^{-1}\boldsymbol A\boldsymbol \mu
 \end{aligned}
 $$
 :::
 
 ::: {.column width="50%"}
 
-*RHS:* We consider the section highlight in <font color="#2196f3">blue</font> and use <a href="#prop-5">Woodbury Identity</a>:
+*RHS:* We consider the section highlight in <font color="#2196f3">blue</font> and use @prp-woodbury:
 
 $$
 \begin{aligned}
-    \boldsymbol \Sigma\boldsymbol \Lambda\boldsymbol \mu &= {\color{blue}(\boldsymbol \Lambda + \boldsymbol A^T\boldsymbol L\boldsymbol A)^{-1}}\boldsymbol \Lambda\boldsymbol \mu \\
-    &= \boldsymbol \mu - \boldsymbol \Lambda^{-1}\boldsymbol A^T(\boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^T + \boldsymbol L^{-1})^{-1}\boldsymbol A\boldsymbol \mu
+    \boldsymbol \Sigma\boldsymbol \Lambda\boldsymbol \mu &= {\color{blue}(\boldsymbol \Lambda + \boldsymbol A^\top \boldsymbol L\boldsymbol A)^{-1}}\boldsymbol \Lambda\boldsymbol \mu \\
+    &= \boldsymbol \mu - \boldsymbol \Lambda^{-1}\boldsymbol A^\top (\boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^\top  + \boldsymbol L^{-1})^{-1}\boldsymbol A\boldsymbol \mu
 \end{aligned}
 $$
 
@@ -973,3 +1314,5 @@ $$
 Now we have show that both are equal, thus we conclude the proof. 
 
 <div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
