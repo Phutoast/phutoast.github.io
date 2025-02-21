@@ -9,7 +9,7 @@
 <meta name="dcterms.date" content="2022-11-27">
 <meta name="description" content="A cheat sheet/overview of the applications and useful tricks in relation to Gaussian distribution within a field of machine learning.">
 
-<title>Gaussian That I Have Known and Loved – Phu’s Website</title>
+<title>Gaussian That I Have Known and Loved (1) – Phu’s Website</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -146,7 +166,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Gaussian That I Have Known and Loved</h1>
+      <h1 class="title">Gaussian That I Have Known and Loved (1)</h1>
                   <div>
         <div class="description">
           A cheat sheet/overview of the applications and useful tricks in relation to Gaussian distribution within a field of machine learning.
@@ -190,7 +210,7 @@ window.Quarto = {
   <li><a href="#miscellaneous" id="toc-miscellaneous" class="nav-link" data-scroll-target="#miscellaneous">Miscellaneous</a></li>
   </ul></li>
   <li><a href="#multivariate-guassian-distribution-introduction" id="toc-multivariate-guassian-distribution-introduction" class="nav-link" data-scroll-target="#multivariate-guassian-distribution-introduction">Multivariate Guassian Distribution: Introduction</a></li>
-  <li><a href="#useful-backgrounds-1" id="toc-useful-backgrounds-1" class="nav-link" data-scroll-target="#useful-backgrounds-1">Useful Backgrounds</a></li>
+  <li><a href="#more-useful-backgrounds" id="toc-more-useful-backgrounds" class="nav-link" data-scroll-target="#more-useful-backgrounds">More Useful Backgrounds</a></li>
   <li><a href="#conditional-marginalisation" id="toc-conditional-marginalisation" class="nav-link" data-scroll-target="#conditional-marginalisation">Conditional &amp; Marginalisation</a></li>
   </ul>
 </nav>
@@ -202,25 +222,55 @@ window.Quarto = {
 
 
 
-<p>This write is based from the book: Pattern Recognition and Machine Learning, partly from <a href="http://cs229.stanford.edu/section/gaussians.pdf" target="_blank">CS229 notes on Guassian</a>, and The Principles of Deep Learning Theory: An Effective Theory Approach to Understanding Neural Networks (especially on the chapter on Wick’s theorem, in which in this written we have provided the exposition on the proof too), where we aim to give and expands most proofs and interesting results regarding Gaussian distributions, together with some results that makes the complete picture.</p>
+<p>This writing is based from: Bishop’s <em>Pattern Recognition and Machine Learning</em> (<span class="citation" data-cites="bishop2006pattern">Bishop (<a href="#ref-bishop2006pattern" role="doc-biblioref">2006</a>)</span>), and partly from <a href="http://cs229.stanford.edu/section/gaussians.pdf" target="_blank">CS229 notes on Guassian</a></p>
 <section id="gaussian-definition-and-fundamental-integral" class="level2">
 <h2 class="anchored" data-anchor-id="gaussian-definition-and-fundamental-integral">Gaussian Definition and Fundamental Integral</h2>
-<p><strong>Definition (Single Variable Gaussian Distribution)</strong>: The Gaussian distribution is defined as</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-sing-var-gaussian" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1</strong></span> <strong>(Single Variable Gaussian Distribution)</strong>: The Gaussian distribution is defined as</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
-\newcommand{\dby}{\ \mathrm{d}}\newcommand{\argmax}[1]{\underset{#1}{\arg\max \ }}\newcommand{\argmin}[1]{\underset{#1}{\arg\min \ }}\newcommand{\const}{\text{const.}}\newcommand{\bracka}[1]{\left( #1 \right)}\newcommand{\brackb}[1]{\left[ #1 \right]}\newcommand{\brackc}[1]{\left\{ #1 \right\}}\newcommand{\brackd}[1]{\left\langle #1 \right\rangle}\newcommand{\correctquote}[1]{``#1''}\newcommand{\norm}[1]{\left\lVert#1\right\rVert}\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\dby}{\ \mathrm{d}}\newcommand{\bracka}[1]{\left( #1 \right)}\newcommand{\brackb}[1]{\left[ #1 \right]}\newcommand{\brackc}[1]{\left\{ #1 \right\}}\newcommand{\abs}[1]{\left|#1\right|}
     p(x) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left\{ -\frac{1}{2\sigma^2}(x-\mu)^2\right\}
 \end{equation*}\]</span></p>
 </div>
-<p>where <span class="math inline">\(\mu\)</span> is a parameter called mean, while <span class="math inline">\(\sigma\)</span> is a parameter called standard derivation. However, we also define <span class="math inline">\(\sigma^2\)</span> as variance. Finally, the standard normal distribution is Gaussian distribution with mean <span class="math inline">\(0\)</span> and variance <span class="math inline">\(1\)</span>.</p>
-<p><strong>Proposition (Gaussian integral)</strong>: The integration of <span class="math inline">\(\exp(-x^2)\)</span> is equal to</p>
+<p>where <span class="math inline">\(\mu\)</span> is a parameter called mean, while <span class="math inline">\(\sigma\)</span> is a parameter called standard derivation, and we call <span class="math inline">\(\sigma^2\)</span> as variance.</p>
+<p>Finally, the standard normal distribution is Gaussian distribution with mean <span class="math inline">\(0\)</span> and variance <span class="math inline">\(1\)</span>.</p>
+</div>
+</div>
+</div>
+<p>To find the normalizing factor of Gaussian distribution, we use the following integral:</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-gauss-int" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 1</strong></span> <strong>(Gaussian integral)</strong>: The integration of <span class="math inline">\(\exp(-x^2)\)</span> is equal to</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
     \int^\infty_{-\infty}\exp(-x^2)\dby x = \sqrt{\pi}
 \end{equation*}\]</span></p>
 </div>
-<p>We can use this identity to find the normalizing factor of Gaussian distribution.</p>
-<p><em>Proof</em>: We will transform the problem into <span class="math inline">\(2\)</span>D polar coordinate system, which make the integration easier.</p>
+</div>
+</div>
+</div>
+<details>
+<p>We will transform the problem into <span class="math inline">\(2\)</span>D polar coordinate system, which make the integration easier.</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
@@ -235,13 +285,32 @@ Please note that we use <span class="math inline">\(u\)</span>-substution with <
 <div style="text-align: right">
 □
 </div>
-<span id="corollary-1" class="anchor"></span><strong>Corollary (Normalization of Gaussian Distribution)</strong>: We consider the integration
+<summary>
+Proof
+</summary>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Corollary
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="cor-normalize-fact-gauss" class="theorem corollary">
+<p><span class="theorem-title"><strong>Corollary 1</strong></span> <strong>(Normalization of Gaussian Distribution)</strong>: We consider the integration</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
     \int^\infty_{-\infty}\exp\left\{ -\frac{(x-\mu)^2}{2\sigma^2}\right\} \dby x = \sqrt{2\pi\sigma^2}
 \end{equation*}\]</span></p>
 </div>
-<em>Proof</em>: Starting by setting <span class="math inline">\(z=x-\mu\)</span>, which we have:
+</div>
+</div>
+</div>
+<details>
+Starting by setting <span class="math inline">\(z=x-\mu\)</span>, which we have:
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
@@ -250,19 +319,52 @@ Please note that we use <span class="math inline">\(u\)</span>-substution with <
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-where we have <span class="math inline">\(y = z/(\sqrt{2}\sigma)\)</span>, and we finishes the proof.
+where we have <span class="math inline">\(y = z/(\sqrt{2}\sigma)\)</span>.
 <div style="text-align: right">
 □
 </div>
+<summary>
+Proof
+</summary>
+</details>
 </section>
 <section id="statistics-of-single-variable-gaussian-distribution" class="level2">
 <h2 class="anchored" data-anchor-id="statistics-of-single-variable-gaussian-distribution">Statistics of Single Variable Gaussian Distribution</h2>
-<p><strong>Definition (Odd Function)</strong>: The function <span class="math inline">\(f(x)\)</span> is an odd function iff <span class="math inline">\(f(-x) = -x\)</span></p>
-<span id="lemma-1" class="anchor"></span><strong>Lemma (Odd Function Integration):</strong> The integral over <span class="math inline">\([-a, a]\)</span>, where <span class="math inline">\(a\in\mathbb{R}^+\)</span> of an odd function <span class="math inline">\(f(x)\)</span> is <span class="math inline">\(0\)</span> i.e
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-odd-funct" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 2</strong></span> <strong>(Odd Function)</strong>: The function <span class="math inline">\(f(x)\)</span> is an odd function iff <span class="math inline">\(f(-x) = -x\)</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Lemma
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="lem-odd-funct-int" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 1</strong></span> <strong>(Odd Function Integration):</strong> The integral over <span class="math inline">\([-a, a]\)</span>, where <span class="math inline">\(a\in\mathbb{R}^+\)</span> of an odd function <span class="math inline">\(f(x)\)</span> is <span class="math inline">\(0\)</span> i.e</p>
 <div>
 <p><span class="math display">\[\begin{equation*}\int^a_{-a}f(x)\dby x = 0\end{equation*}\]</span></p>
 </div>
-<em>Proof</em>: We can see that:
+</div>
+</div>
+</div>
+<details>
+We can see that:
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
@@ -272,12 +374,30 @@ where we have <span class="math inline">\(y = z/(\sqrt{2}\sigma)\)</span>, and w
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-Thus complete the proof
 <div style="text-align: right">
 □
 </div>
-<p><strong>Proposition (Mean of Gaussian)</strong>: The expectation <span class="math inline">\(\mathbb{E}_{x}[x]\)</span> of nornally distributed Gaussian is <span class="math inline">\(\mu\)</span></p>
-<em>Proof</em>: Let’s consider the following integral
+<summary>
+Proof
+</summary>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-mean-gaussian" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 2</strong></span> <strong>(Mean of Gaussian)</strong>: The expectation <span class="math inline">\(\mathbb{E}_{x}[x]\)</span> of nornally distributed Gaussian is <span class="math inline">\(\mu\)</span></p>
+</div>
+</div>
+</div>
+<details>
+Let’s consider the following integral
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
@@ -300,7 +420,7 @@ Let’s consider <span class="math inline">\(I_1\)</span>, where it is clear tha
     g(x) = \exp\bracka{-\frac{z^2}{2\sigma^2}}z = -\bracka{-\exp\bracka{-\frac{(-z)^2}{2\sigma^2}}z} = -g(-x)
 \end{equation*}\]</span></p>
 </div>
-Thus the function <span class="math inline">\(g(x)\)</span> is and odd function. Therefore, making the integration <span class="math inline">\(I_1\)</span> vanishes to <span class="math inline">\(0\)</span>. Please see the <a href="#lemma-1">Lemma</a> above for the proof. Now, for the second integration, we can simply recall the <a href="#corollary-1">normalization result</a> of the Gaussian, where
+Thus the function <span class="math inline">\(g(x)\)</span> is and odd function. Therefore, making the integration <span class="math inline">\(I_1\)</span> vanishes to <span class="math inline">\(0\)</span> (<a href="#lem-odd-funct-int" class="quarto-xref">Lemma&nbsp;1</a>). Now, for the second integration, we use <a href="#cor-normalize-fact-gauss" class="quarto-xref">Corollary&nbsp;1</a> of the Gaussian, where
 <div>
 <p><span class="math display">\[\begin{equation*}
     \int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}\mu\dby z = \mu\int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}\dby z = \mu\sqrt{2\pi\sigma^2}
@@ -318,8 +438,27 @@ Thus complete the proof.
 <div style="text-align: right">
 □
 </div>
-<p><strong>Lemma</strong>: The variance <span class="math inline">\(\operatorname{var}(x) = \mathbb{E}[(x - \mu)^2]\)</span> is equal to <span class="math inline">\(\mathbb{E}[x^2] - \mathbb{E}[x]^2\)</span></p>
-<em>Proof</em>: This is an application of expanding the definition
+<summary>
+Proof
+</summary>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Lemma
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="lem-var-snd-moment" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 2</strong></span> <strong>:</strong> The variance <span class="math inline">\(\operatorname{var}(x) = \mathbb{E}[(x - \mu)^2]\)</span> is equal to <span class="math inline">\(\mathbb{E}[x^2] - \mathbb{E}[x]^2\)</span></p>
+</div>
+</div>
+</div>
+<details>
+<p>This is an application of expanding the definition</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
@@ -333,12 +472,32 @@ Thus complete the proof.
 <div style="text-align: right">
 □
 </div>
-<p><strong>Proposition</strong>: The variance of normal distribution is <span class="math inline">\(\sigma^2\)</span></p>
-<em>Proof</em>: Let’s consider the following equation, where we set <span class="math inline">\(z = x-\mu\)</span>:
+<summary>
+Proof
+</summary>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-var-gauss" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 3</strong></span> <strong>:</strong> The variance of normal distribution is <span class="math inline">\(\sigma^2\)</span></p>
+</div>
+</div>
+</div>
+<details>
+Let’s consider the following equation, where we set <span class="math inline">\(z = x-\mu\)</span>:
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-    \frac{1}{\sqrt{2\pi\sigma^2}}&amp; \int^\infty_{-\infty} \exp\bracka{-\frac{(x-\mu)^2}{2\sigma^2}}x^2\dby x  = \frac{1}{\sqrt{2\pi\sigma^2}} \int^\infty_{-\infty} \exp\bracka{-\frac{z^2}{2\sigma^2}}(z+\mu)^2\dby z \\
+    \frac{1}{\sqrt{2\pi\sigma^2}}&amp; \int^\infty_{-\infty} \exp\bracka{-\frac{(x-\mu)^2}{2\sigma^2}}x^2\dby x  \\
+    &amp;= \frac{1}{\sqrt{2\pi\sigma^2}} \int^\infty_{-\infty} \exp\bracka{-\frac{z^2}{2\sigma^2}}(z+\mu)^2\dby z \\
     &amp;=\frac{1}{\sqrt{2\pi\sigma^2}}\brackb{\int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}z^2\dby z + \int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}2\mu z\dby z + \int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}\mu^2\dby z } \\
     &amp;=\frac{1}{\sqrt{2\pi\sigma^2}}\brackb{\int^\infty_{-\infty}\exp\bracka{-\frac{z^2}{2\sigma^2}}z^2\dby z + 0 + \mu^2\sqrt{2\pi\sigma^2} \dby z }
 \end{aligned}
@@ -378,56 +537,114 @@ The first equality comes from L’Hospital’s rule. Combinding the results:
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-Thus complete the proof.
 <div style="text-align: right">
 □
 </div>
+<summary>
+Proof
+</summary>
+</details>
 <p>This second part is to introduce some of the mathematical basics such as linear algebra. Further results of linear Gaussian models and others will be presented in the next part.</p>
 </section>
 <section id="useful-backgrounds" class="level2">
 <h2 class="anchored" data-anchor-id="useful-backgrounds">Useful Backgrounds</h2>
 <section id="covariance-and-covariance-matrix" class="level3">
 <h3 class="anchored" data-anchor-id="covariance-and-covariance-matrix">Covariance and Covariance Matrix</h3>
-<strong>Definition (Covariance)</strong>: Given 2 random variables <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, the covariance is defined as:
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-covar" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 3</strong></span> <strong>(Covariance)</strong>: Given 2 random variables <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, the covariance is defined as:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
-\newcommand{\dby}{\ \mathrm{d}}\newcommand{\argmax}[1]{\underset{#1}{\arg\max \ }}\newcommand{\argmin}[1]{\underset{#1}{\arg\min \ }}\newcommand{\const}{\text{const.}}\newcommand{\bracka}[1]{\left( #1 \right)}\newcommand{\brackb}[1]{\left[ #1 \right]}\newcommand{\brackc}[1]{\left\{ #1 \right\}}\newcommand{\brackd}[1]{\left\langle #1 \right\rangle}\newcommand{\correctquote}[1]{``#1''}\newcommand{\norm}[1]{\left\lVert#1\right\rVert}\newcommand{\abs}[1]{\left|#1\right|}
 \operatorname{cov}(X, Y) = \mathbb{E}\Big[ (X - \mathbb{E}[X])(Y - \mathbb{E}[Y]) \Big]
 \end{equation*}\]</span></p>
 </div>
-<p>It is clear that $(X, Y) = (Y, X) $</p>
-<strong>Definition (Covariance Matrix)</strong>: Now, if we have the collection of random variables in the random vector <span class="math inline">\(\boldsymbol x\)</span> (of size <span class="math inline">\(n\)</span>), then the collection of covariance between its elements are collected in covariance matrix
+<p>It is clear that <span class="math inline">\(\operatorname{cov}(X, Y) = \operatorname{cov}(Y, X)\)</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-covar-matrix" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4</strong></span> <strong>(Covariance Matrix)</strong>: Now, if we have the collection of random variables in the random vector <span class="math inline">\(\boldsymbol x\)</span> (of size <span class="math inline">\(n\)</span>), then the collection of covariance between its elements are collected in covariance matrix</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
-\operatorname{cov}(\boldsymbol x) =
+\begin{aligned}
+\operatorname{cov}(\boldsymbol x) &amp;=
 \begin{bmatrix}
     \operatorname{cov}(x_1, x_1) &amp; \operatorname{cov}(x_1, x_2) &amp; \cdots &amp; \operatorname{cov}(x_1, x_n)  \\
     \operatorname{cov}(x_2, x_1) &amp; \operatorname{cov}(x_2, x_2) &amp; \cdots &amp; \operatorname{cov}(x_2, x_n)  \\
     \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
     \operatorname{cov}(x_n, x_1) &amp; \operatorname{cov}(x_n, x_2) &amp; \cdots &amp; \operatorname{cov}(x_n, x_n)  \\
-\end{bmatrix} = \mathbb{E}\Big[ (\boldsymbol x - \mathbb{E}[\boldsymbol x])(\boldsymbol x - \mathbb{E}[\boldsymbol x])^T \Big]
+\end{bmatrix} \\
+&amp;= \mathbb{E}\Big[ (\boldsymbol x - \mathbb{E}[\boldsymbol x])(\boldsymbol x - \mathbb{E}[\boldsymbol x])^\top  \Big]
+\end{aligned}
 \end{equation*}\]</span></p>
 </div>
 <p>The equivalent is clear when we perform the matrix multiplication over this.</p>
-<p><strong>Remark (Property of Covariance Matrix)</strong>: It is clear that the covariance matrix is (from its defintion):</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-prop-cov-matrx" class="proof remark">
+<p><span class="proof-title"><em>Remark 1</em>. </span><em>(Property of Covariance Matrix)</em>: It is clear that the covariance matrix is (from its defintion):</p>
 <ul>
 <li><em>Symmetric</em>, as <span class="math inline">\(\operatorname{cov}(x_a, x_b) = \operatorname{cov}(x_b, x_a)\)</span></li>
 <li><em>Positive semidefinite</em>, if we consider arbitary constant vector <span class="math inline">\(\boldsymbol a \in \mathbb{R}^n\)</span>, then by the linearity of expectation, we have:
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-\boldsymbol a^T \operatorname{cov}(\boldsymbol x)\boldsymbol a
-&amp;= \boldsymbol a^T \mathbb{E}\Big[ (\boldsymbol x - \mathbb{E}[\boldsymbol x])(\boldsymbol x - \mathbb{E}[\boldsymbol x])^T \Big]\boldsymbol a  \\
-&amp;= \mathbb{E}\Big[ \boldsymbol a^T (\boldsymbol x - \mathbb{E}[\boldsymbol x])(\boldsymbol x - \mathbb{E}[\boldsymbol x])^T\boldsymbol a \Big]  \\
-&amp;= \mathbb{E}\Big[ \big(\boldsymbol a^T (\boldsymbol x - \mathbb{E}[\boldsymbol x])\big)^2 \Big] &gt; 0 \\
+\boldsymbol a^\top  \operatorname{cov}(\boldsymbol x)\boldsymbol a
+&amp;= \boldsymbol a^\top  \mathbb{E}\Big[ (\boldsymbol x - \mathbb{E}[\boldsymbol x])(\boldsymbol x - \mathbb{E}[\boldsymbol x])^\top  \Big]\boldsymbol a  \\
+&amp;= \mathbb{E}\Big[ \boldsymbol a^\top  (\boldsymbol x - \mathbb{E}[\boldsymbol x])(\boldsymbol x - \mathbb{E}[\boldsymbol x])^\top \boldsymbol a \Big]  \\
+&amp;= \mathbb{E}\Big[ \big(\boldsymbol a^\top  (\boldsymbol x - \mathbb{E}[\boldsymbol x])\big)^2 \Big] &gt; 0 \\
 \end{aligned}
 \end{equation*}\]</span></p>
 </div></li>
 </ul>
+</div>
+</div>
+</div>
 </section>
 <section id="linear-algebra" class="level3">
 <h3 class="anchored" data-anchor-id="linear-algebra">Linear Algebra</h3>
-<strong>Definition (Eigenvalues and Eigenvectors)</strong>: Given the matrix <span class="math inline">\(\boldsymbol X \in \mathbb{C}^{n\times n}\)</span>, then the pair of vector <span class="math inline">\(\boldsymbol v \in \mathbb{C}^n\)</span> and number <span class="math inline">\(\lambda \in \mathbb{C}\)</span> are called eigenvector and eigenvalue iff
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-eigen-val-eigen-vec" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 5</strong></span> <strong>(Eigenvalues and Eigenvectors)</strong>: Given the matrix <span class="math inline">\(\boldsymbol X \in \mathbb{C}^{n\times n}\)</span>, then the pair of vector <span class="math inline">\(\boldsymbol v \in \mathbb{C}^n\)</span> and number <span class="math inline">\(\lambda \in \mathbb{C}\)</span> are called eigenvector and eigenvalue if</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
@@ -435,27 +652,64 @@ Thus complete the proof.
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-<p><strong>Proposition (Eigenvalue of Symmetric Matrix)</strong>: One can show that the eigenvalue of symmetric (real) matrix is always real.</p>
-<em>Proof (From <a href="http://pi.math.cornell.edu/~jerison/math2940/real-eigenvalues.pdf" target="_blank">here</a>)</em>: Let’s consider the pairs of eigenvalues/eigenvectors <span class="math inline">\(\boldsymbol v \in \mathbb{C}^n\)</span> and <span class="math inline">\(\lambda \in \mathbb{C}\)</span> of symmetric (real) matrix <span class="math inline">\(\boldsymbol A\)</span> i.e <span class="math inline">\(\boldsymbol A\boldsymbol v = \lambda\boldsymbol v\)</span>. Please note that <span class="math inline">\((x+yi)(x-yi) = x^2 + y^2 \ge 0\)</span>, this means that <span class="math inline">\(\bar{\boldsymbol v}^T\boldsymbol v \ge 0\)</span> (<span class="math inline">\(\bar{\boldsymbol v}\)</span> is vector that contains conjugate element of <span class="math inline">\(\boldsymbol v\)</span>). Now, see that:
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-eigen-symmetr-matrix" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 4</strong></span> <strong>(Eigenvalue of Symmetric Matrix)</strong>: One can show that the eigenvalue of symmetric (real) matrix is always real.</p>
+</div>
+</div>
+</div>
+<details>
+<p>Let’s consider the pairs of eigenvalues/eigenvectors <span class="math inline">\(\boldsymbol v \in \mathbb{C}^n\)</span> and <span class="math inline">\(\lambda \in \mathbb{C}\)</span> of symmetric (real) matrix <span class="math inline">\(\boldsymbol A\)</span> i.e <span class="math inline">\(\boldsymbol A\boldsymbol v = \lambda\boldsymbol v\)</span>. Please note that <span class="math inline">\((x+yi)(x-yi) = x^2 + y^2 &gt; 0\)</span> (assume non-zero eigenvalue), this means that <span class="math inline">\(\bar{\boldsymbol v}^\top \boldsymbol v &gt; 0\)</span> (<span class="math inline">\(\bar{\boldsymbol v}\)</span> is vector that contains conjugate element of <span class="math inline">\(\boldsymbol v\)</span>). Now, see that:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-\bar{\boldsymbol v}^T\boldsymbol A\boldsymbol v
-&amp;= \bar{\boldsymbol v}^T(\boldsymbol A\boldsymbol v) = \lambda\bar{\boldsymbol v}^T\boldsymbol v  \\
-&amp;= (\bar{\boldsymbol v}^T\boldsymbol A^T)\boldsymbol v = \bar{\lambda}\bar{\boldsymbol v}^T\boldsymbol v  \\
+\bar{\boldsymbol v}^\top \boldsymbol A\boldsymbol v
+&amp;= \bar{\boldsymbol v}^\top (\boldsymbol A\boldsymbol v) = \lambda\bar{\boldsymbol v}^\top \boldsymbol v  \\
+&amp;= (\bar{\boldsymbol v}^\top \boldsymbol A^\top )\boldsymbol v = \bar{\lambda}\bar{\boldsymbol v}^\top \boldsymbol v  \\
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-<p>Note that <span class="math inline">\(\overline{\boldsymbol A\boldsymbol v} = \bar{\lambda}\bar{\boldsymbol v}\)</span> Since <span class="math inline">\(\bar{\boldsymbol v}^T\boldsymbol v &gt; 0\)</span> we see that <span class="math inline">\(\bar{\lambda} = \lambda\)</span>, which implies that <span class="math inline">\(\bar{\lambda}\)</span> is real.</p>
+<p>Note that <span class="math inline">\(\overline{\boldsymbol A\boldsymbol v} = \bar{\lambda}\bar{\boldsymbol v}\)</span> Since <span class="math inline">\(\bar{\boldsymbol v}^\top \boldsymbol v &gt; 0\)</span> we see that <span class="math inline">\(\bar{\lambda} = \lambda\)</span>, which implies that <span class="math inline">\(\bar{\lambda}\)</span> is real.</p>
 <div style="text-align: right">
 □
 </div>
-<p><strong>Proposition (Eigenvalue of Positive Definite Matrix)</strong>: One can show that the eigenvalue of positive definite matrix is non-negative.</p>
-<em>Proof</em>: We consider the following equations:
+<summary>
+Proof (Following from <a href="http://pi.math.cornell.edu/~jerison/math2940/real-eigenvalues.pdf" target="_blank">here</a>)
+</summary>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-pd-matrix" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 5</strong></span> <strong>(Eigenvalue of Positive Definite Matrix)</strong>: One can show that the eigenvalue of positive definite matrix is non-negative.</p>
+</div>
+</div>
+</div>
+<details>
+We consider the following equations:
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-\boldsymbol v^T\boldsymbol A\boldsymbol v = \lambda\boldsymbol v^T\boldsymbol v &gt; 0
+\boldsymbol v^\top \boldsymbol A\boldsymbol v = \lambda\boldsymbol v^\top \boldsymbol v &gt; 0
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
@@ -463,7 +717,22 @@ Thus complete the proof.
 <div style="text-align: right">
 □
 </div>
-<strong>Definition (Linear Transformation)</strong>: Given the function <span class="math inline">\(A: V \rightarrow W\)</span>, where <span class="math inline">\(V\)</span> and <span class="math inline">\(W\)</span> are vector spaces. Then, for <span class="math inline">\(\boldsymbol v \in V, \boldsymbol w \in W\)</span> and <span class="math inline">\(a, b \in \mathbb{R}\)</span>
+<summary>
+Proof
+</summary>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-lin-transform" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 6</strong></span> <strong>(Linear Transformation)</strong>: Given the function <span class="math inline">\(A: V \rightarrow W\)</span>, where <span class="math inline">\(V\)</span> and <span class="math inline">\(W\)</span> are vector spaces. Then, for <span class="math inline">\(\boldsymbol v \in V, \boldsymbol w \in W\)</span> and <span class="math inline">\(a, b \in \mathbb{R}\)</span></p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
@@ -471,7 +740,21 @@ A(a\boldsymbol v + b\boldsymbol w) = aA(\boldsymbol v) + bA(\boldsymbol w)
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-<strong>Remark (Matrix Multipliacation and Linear Transformation)</strong>: We can represent the linear transformation <span class="math inline">\(L : V \rightarrow W\)</span> in terms of matrix. Let’s consider the vector <span class="math inline">\(\boldsymbol v \in V\)</span> (of dimension <span class="math inline">\(n\)</span>) together with basis vectors <span class="math inline">\(\brackc{\boldsymbol b_1,\dots,\boldsymbol b_n}\)</span> of <span class="math inline">\(V\)</span> and basis vectors <span class="math inline">\(\brackc{\boldsymbol c_1, \dots, \boldsymbol c_m}\)</span> of <span class="math inline">\(W\)</span>. Then we can represen the vector <span class="math inline">\(\boldsymbol v\)</span> as:
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-matrix-mult-lin-trans" class="proof remark">
+<p><span class="proof-title"><em>Remark 2</em>. </span><em>(Matrix Multipliacation and Linear Transformation):</em> We can represent the linear transformation <span class="math inline">\(L : V \rightarrow W\)</span> in terms of matrix. Let’s consider the vector <span class="math inline">\(\boldsymbol v \in V\)</span> (of dimension <span class="math inline">\(n\)</span>) together with basis vectors <span class="math inline">\(\brackc{\boldsymbol b_1,\dots,\boldsymbol b_n}\)</span> of <span class="math inline">\(V\)</span> and basis vectors <span class="math inline">\(\brackc{\boldsymbol c_1, \dots, \boldsymbol c_m}\)</span> of <span class="math inline">\(W\)</span>. Then we can represen the vector <span class="math inline">\(\boldsymbol v\)</span> as:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
@@ -479,7 +762,7 @@ A(a\boldsymbol v + b\boldsymbol w) = aA(\boldsymbol v) + bA(\boldsymbol w)
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-This means that we can represent the vector <span class="math inline">\(\boldsymbol v\)</span> as: <span class="math inline">\((\boldsymbol v_1, \boldsymbol v_2, \dots, \boldsymbol v_n)^T\)</span> Furthermore, we can characterized the transformation of the basis vector:
+This means that we can represent the vector <span class="math inline">\(\boldsymbol v\)</span> as: $(v_1, v_2, , v_n)^$ Furthermore, we can characterized the transformation of the basis vector:
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
@@ -512,21 +795,49 @@ for <span class="math inline">\(i=1,\dots,n\)</span>. Then we can see that the d
 \end{equation*}\]</span></p>
 </div>
 <p>and so we have show that the linear transformation can be represented as matrix multiplication (in finite space).</p>
-<p><strong>Theorem (Spectral Theorem)</strong> (follows from <a href="https://mast.queensu.ca/~br66/419/spectraltheoremproof.pdf" target="_blank">here</a>): Let <span class="math inline">\(n \le N\)</span> and <span class="math inline">\(W\)</span> be an n-dimensional subspace of <span class="math inline">\(\mathbb{R}^n\)</span>. Given a linear transformation <span class="math inline">\(A:W\rightarrow W\)</span> that is symmetric. There are eigenvectors <span class="math inline">\(\boldsymbol v_1,\dots,\boldsymbol v_n\in W\)</span> of <span class="math inline">\(A\)</span> such that <span class="math inline">\(\brackc{\boldsymbol v_1,\dots,\boldsymbol v_n}\)</span> is an orthonormal basis for <span class="math inline">\(W\)</span>. For normal matrix, we let <span class="math inline">\(n=N\)</span> and <span class="math inline">\(W=\mathbb{R}^n\)</span>.</p>
-<strong>Remark (Eigendecomposition)</strong>: Let’s consider the matrix of eigenvectors <span class="math inline">\(\boldsymbol v_1,\boldsymbol v_2\dots,\boldsymbol v_n \in \mathbb{R}^n\)</span> of symmetric matrix <span class="math inline">\(\boldsymbol A \in \mathbb{R}^{n\times n}\)</span> together with eigenvalues <span class="math inline">\(\lambda_1,\lambda_2,\dots,\lambda_n\)</span>, then we have :
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Theorem
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="thm-spec" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 1</strong></span> <strong>(Spectral Theorem, from <a href="https://mast.queensu.ca/~br66/419/spectraltheoremproof.pdf" target="_blank">here</a>)</strong>: Let <span class="math inline">\(n \le N\)</span> and <span class="math inline">\(W\)</span> be an n-dimensional subspace of <span class="math inline">\(\mathbb{R}^n\)</span>. Given a linear transformation <span class="math inline">\(A:W\rightarrow W\)</span> that is symmetric. There are eigenvectors <span class="math inline">\(\boldsymbol v_1,\dots,\boldsymbol v_n\in W\)</span> of <span class="math inline">\(A\)</span> such that <span class="math inline">\(\brackc{\boldsymbol v_1,\dots,\boldsymbol v_n}\)</span> is an orthonormal basis for <span class="math inline">\(W\)</span>. For normal matrix, we let <span class="math inline">\(n=N\)</span> and <span class="math inline">\(W=\mathbb{R}^n\)</span>.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-eigen-decom" class="proof remark">
+<p><span class="proof-title"><em>Remark 3</em>. </span><em>(Eigendecomposition)</em>: Let’s consider the matrix of eigenvectors <span class="math inline">\(\boldsymbol v_1,\boldsymbol v_2\dots,\boldsymbol v_n \in \mathbb{R}^n\)</span> of symmetric matrix <span class="math inline">\(\boldsymbol A \in \mathbb{R}^{n\times n}\)</span> together with eigenvalues <span class="math inline">\(\lambda_1,\lambda_2,\dots,\lambda_n\)</span>, then we have :</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
     \boldsymbol A
     \begin{bmatrix}
-        \kern.6em\vline &amp; \kern.2em\vline\kern.2em &amp; &amp; \vline\kern.6em \\
+        \kern.6em |  &amp; \kern.2em | \kern.2em &amp; &amp;  | \kern.6em \\
         \kern.6em\boldsymbol v_1 &amp; \kern.2em\boldsymbol v_2\kern.2em &amp; \kern.2em\cdots\kern.2em &amp;  \boldsymbol v_n\kern.6em  \\
-        \kern.6em\vline &amp; \kern.2em\vline\kern.2em &amp; &amp; \vline\kern.6em \\
+        \kern.6em |  &amp; \kern.2em | \kern.2em &amp; &amp;  | \kern.6em \\
     \end{bmatrix} &amp;=
     \begin{bmatrix}
-        \kern.6em\vline &amp; \kern.2em\vline\kern.2em &amp; &amp; \vline\kern.6em \\
+        \kern.6em |  &amp; \kern.2em | \kern.2em &amp; &amp;  | \kern.6em \\
         \kern.6em\boldsymbol v_1 &amp; \kern.2em\boldsymbol v_2\kern.2em &amp; \kern.2em\cdots\kern.2em &amp;  \boldsymbol v_n\kern.6em  \\
-        \kern.6em\vline &amp; \kern.2em\vline\kern.2em &amp; &amp; \vline\kern.6em \\
+        \kern.6em |  &amp; \kern.2em | \kern.2em &amp; &amp;  | \kern.6em \\
     \end{bmatrix}\begin{bmatrix}
         \lambda_1 &amp; 0 &amp; \cdots &amp; 0 \\
         0 &amp; \lambda_2 &amp; \cdots &amp; 0 \\
@@ -536,26 +847,45 @@ for <span class="math inline">\(i=1,\dots,n\)</span>. Then we can see that the d
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-This is equivalent to <span class="math inline">\(\boldsymbol A\boldsymbol Q = \boldsymbol Q\boldsymbol \Lambda\)</span>, which mean that if we right multiply by <span class="math inline">\(\boldsymbol Q^T\)</span> (as we have <em>orthogonal</em> eigenvectors), then we have (or in vectorized format):
+This is equivalent to <span class="math inline">\(\boldsymbol A\boldsymbol Q = \boldsymbol Q\boldsymbol \Lambda\)</span>, which mean that if we right multiply by <span class="math inline">\({\boldsymbol Q}^\top\)</span> (as we have <em>orthogonal</em> eigenvectors), then we have (or in vectorized format):
 <div>
 <p><span class="math display">\[\begin{equation*}
-\boldsymbol A = \boldsymbol Q\boldsymbol \Lambda\boldsymbol Q^T = \sum^n_{i=1}\lambda_i\boldsymbol v_i\boldsymbol v_i^T
+\boldsymbol A = \boldsymbol Q\boldsymbol \Lambda\boldsymbol Q^\top  = \sum^n_{i=1}\lambda_i\boldsymbol v_i\boldsymbol v_i^\top
 \end{equation*}\]</span></p>
 </div>
 Please note that <span class="math inline">\(\boldsymbol A^{-1}\)</span> can be represented as:
 <div>
 <p><span class="math display">\[\begin{equation*}
-\boldsymbol A^{-1} = \boldsymbol Q\boldsymbol \Lambda^{-1}\boldsymbol Q^T = \sum^n_{i=1}\frac{1}{\lambda_i}\boldsymbol v_i\boldsymbol v_i^T
+\boldsymbol A^{-1} = \boldsymbol Q\boldsymbol \Lambda^{-1}\boldsymbol Q^\top  = \sum^n_{i=1}\frac{1}{\lambda_i}\boldsymbol v_i\boldsymbol v_i^\top
 \end{equation*}\]</span></p>
 </div>
-<p>as it is clear that <span class="math inline">\(\boldsymbol A\boldsymbol A^{-1} = \boldsymbol Q\boldsymbol \Lambda\boldsymbol Q^T\boldsymbol Q\boldsymbol \Lambda^{-1}\boldsymbol Q^T = \boldsymbol I\)</span>.</p>
-<strong>Proposition (Determinant and Eigenvalues)</strong>: Give matrix <span class="math inline">\(\boldsymbol A\)</span> together with eigenvalues of <span class="math inline">\(\lambda_1,\lambda_2,\dots,\lambda_n\)</span>, then we can show that
+<p>as it is clear that <span class="math inline">\(\boldsymbol A\boldsymbol A^{-1} = \boldsymbol Q\boldsymbol \Lambda\boldsymbol Q^\top \boldsymbol Q\boldsymbol \Lambda^{-1}\boldsymbol Q^\top  = \boldsymbol I\)</span>.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-det-eigen-val" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 6</strong></span> <strong>(Determinant and Eigenvalues)</strong>: Give matrix <span class="math inline">\(\boldsymbol A\)</span> together with eigenvalues of <span class="math inline">\(\lambda_1,\lambda_2,\dots,\lambda_n\)</span>, then we can show that</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
     \abs{\boldsymbol A} = \prod^n_{i=1}\lambda_i
 \end{equation*}\]</span></p>
 </div>
-<em>Proof (Diagonalizable Matrix)</em>: We consider the eigendecomposition of <span class="math inline">\(\boldsymbol A\)</span> (if it exists, which is most of the cases here. For more general proof, see linear algebra notes), as we have:
+<p>We will only consider the case where <span class="math inline">\(\boldsymbol A\)</span> is diagonalizable.</p>
+</div>
+</div>
+</div>
+<details>
+<p>We consider the eigendecomposition of <span class="math inline">\(\boldsymbol A\)</span>, as we have:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
     \abs{\boldsymbol A} = \abs{\boldsymbol Q\boldsymbol \Lambda\boldsymbol Q^{-1}} = \abs{\boldsymbol Q}\abs{\boldsymbol \Lambda}\abs{\boldsymbol Q^{-1}} = \frac{\abs{\boldsymbol Q}}{\abs{\boldsymbol Q}}\abs{\boldsymbol \Lambda} =  \prod^n_{i=1}\lambda_i
@@ -564,22 +894,60 @@ Please note that <span class="math inline">\(\boldsymbol A^{-1}\)</span> can be 
 <div style="text-align: right">
 □
 </div>
-<strong>Proposition (Trace and Eigenvalues)</strong>: Given a matrix <span class="math inline">\(\boldsymbol A\)</span> together with eigenvalues of <span class="math inline">\(\lambda_1,\lambda_2,\dots,\lambda_n\)</span>, then we can show that:
+<summary>
+Proof
+</summary>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prptrace-eigen-val">
+<p><strong>(Trace and Eigenvalues)</strong>: Given a matrix <span class="math inline">\(\boldsymbol A\)</span> together with eigenvalues of <span class="math inline">\(\lambda_1,\lambda_2,\dots,\lambda_n\)</span>, then we can show that:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
     \operatorname{Tr}(\boldsymbol A) = \sum^n_{i=1}\lambda_i
 \end{equation*}\]</span></p>
 </div>
-<em>Proof (Diagonalizable Matrix)</em>: We consider the eigendecomposition of <span class="math inline">\(\boldsymbol A\)</span>. Consider the trace over it, as we have:
+<p>We will only consider the case where <span class="math inline">\(\boldsymbol A\)</span> is diagonalizable.</p>
+</div>
+</div>
+</div>
+<details>
+We consider the eigendecomposition of <span class="math inline">\(\boldsymbol A\)</span>. Consider the trace over it, as we have:
 <div>
 <p><span class="math display">\[\begin{equation*}
     \operatorname{Tr}(\boldsymbol A) = \operatorname{Tr}(\boldsymbol Q\boldsymbol \Lambda\boldsymbol Q^{-1}) = \operatorname{Tr}(\boldsymbol \Lambda\boldsymbol Q\boldsymbol Q^{-1}) = \operatorname{Tr}(\boldsymbol \Lambda) = \sum^n_{i=1}\lambda_i
 \end{equation*}\]</span></p>
 </div>
+<div style="text-align: right">
+□
+</div>
+<summary>
+Proof
+</summary>
+</details>
 </section>
 <section id="miscellaneous" class="level3">
 <h3 class="anchored" data-anchor-id="miscellaneous">Miscellaneous</h3>
-<strong>Proposition (Change of Variable)</strong>: If we consider the transformation of the variables where <span class="math inline">\(T : \mathbb{R}^k \supset X \rightarrow \mathbb{R}^k\)</span>. Then we can show that:
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-change-of-var" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 7</strong></span> <strong>(Change of Variable)</strong>: If we consider the transformation of the variables where <span class="math inline">\(T : \mathbb{R}^k \supset X \rightarrow \mathbb{R}^k\)</span>. Then we can show that:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \int_{\mathbb{R}^k} f(\boldsymbol y)\dby \boldsymbol y = \int_{\mathbb{R}^k} f(\boldsymbol T(\boldsymbol x))\abs{\boldsymbol J_T(\boldsymbol x)}\dby \boldsymbol x
@@ -596,6 +964,9 @@ where <span class="math inline">\(\boldsymbol J_T(\boldsymbol x)\)</span> is the
 \end{pmatrix}
 \end{equation*}\]</span></p>
 </div>
+</div>
+</div>
+</div>
 <!-- *Proof*: Let's consider the induction:
 
 - Starting with $n=1$, the result is obvious.
@@ -603,19 +974,19 @@ where <span class="math inline">\(\boldsymbol J_T(\boldsymbol x)\)</span> is the
 <div>
 \begin{equation*}
 \begin{aligned}
-  \max & \quad (\boldsymbol A\boldsymbol w)^T\boldsymbol w \\
-  \text{ subject to } & \quad \boldsymbol w^T\boldsymbol w = 1
+  \max & \quad (\boldsymbol A\boldsymbol w)^\top \boldsymbol w \\
+  \text{ subject to } & \quad \boldsymbol w^\top \boldsymbol w = 1
 \end{aligned}
 \end{equation*}
 </div>
-Note that $(\boldsymbol A\boldsymbol w)^T\boldsymbol w = \boldsymbol w^T(\boldsymbol A\boldsymbol w)$
+Note that $(\boldsymbol A\boldsymbol w)^\top \boldsymbol w = \boldsymbol w^\top (\boldsymbol A\boldsymbol w)$
 Let's try to solve this constraint problem, as we have the Lagragian (together with its derivative with respected to $\boldsymbol w$) to be:
 <div>
 \begin{equation*}
 \begin{aligned}
-&\mathcal{L}(\boldsymbol w, \lambda) = \boldsymbol w^T\boldsymbol A\boldsymbol w - \lambda\Big(  \boldsymbol w^T\boldsymbol w -1 \Big) \\
+&\mathcal{L}(\boldsymbol w, \lambda) = \boldsymbol w^\top \boldsymbol A\boldsymbol w - \lambda\Big(  \boldsymbol w^\top \boldsymbol w -1 \Big) \\
 \iff&\begin{aligned}[t]
-    \frac{\partial}{\partial \boldsymbol w}\mathcal{L}(\boldsymbol w, \lambda) &= \frac{\partial}{\partial \boldsymbol w} \boldsymbol w^T\boldsymbol A\boldsymbol w - \lambda\Big(  \boldsymbol w^T\boldsymbol w -1 \Big) \\
+    \frac{\partial}{\partial \boldsymbol w}\mathcal{L}(\boldsymbol w, \lambda) &= \frac{\partial}{\partial \boldsymbol w} \boldsymbol w^\top \boldsymbol A\boldsymbol w - \lambda\Big(  \boldsymbol w^\top \boldsymbol w -1 \Big) \\
     &= 2\boldsymbol A\boldsymbol w - 2\lambda \boldsymbol w
 \end{aligned}
 \end{aligned}
@@ -624,7 +995,7 @@ Let's try to solve this constraint problem, as we have the Lagragian (together w
 This means that: $\boldsymbol A\boldsymbol w^* = \lambda\boldsymbol w^*$ meaing that $\boldsymbol w^*$ is the eigenvector of $\boldsymbol A$ with real eigenvalue $\lambda$. If we consider the orthogonal complement of $\boldsymbol w^*$ i.e $W' = \operatorname{span}(\boldsymbol w^*)^{\perp}$. Then, we see that for a vector $\boldsymbol w' \in W'$, we have
 <div>
 \begin{equation*}
-    0 = (\boldsymbol w')^T (\lambda\boldsymbol w^*) = (\boldsymbol w')^T (\boldsymbol A\boldsymbol w^*) = (\boldsymbol A\boldsymbol w')^T\boldsymbol w^*
+    0 = (\boldsymbol w')^\top  (\lambda\boldsymbol w^*) = (\boldsymbol w')^\top  (\boldsymbol A\boldsymbol w^*) = (\boldsymbol A\boldsymbol w')^\top \boldsymbol w^*
 \end{equation*}
 </div>
 Note that we use the matrix form here. This means that $\boldsymbol A\boldsymbol w' \in W'$ (for $A : W' \rightarrow W'$). Using induction hypothesis ($n-1$ subspace has the eigenbasis to be $\brackc{\boldsymbol u_1,\dots,\boldsymbol u_{n-1}}$), we have $\brackc{\boldsymbol u_1,\dots,\boldsymbol u_{n-1}, \boldsymbol u_n}$ to be an orthogonal basis of $W$, where we note that $\operatorname{span}(\boldsymbol w^*)^{\perp} \oplus \operatorname{span}(\boldsymbol w^*)= W$ -->
@@ -632,14 +1003,39 @@ Note that we use the matrix form here. This means that $\boldsymbol A\boldsymbol
 </section>
 <section id="multivariate-guassian-distribution-introduction" class="level2">
 <h2 class="anchored" data-anchor-id="multivariate-guassian-distribution-introduction">Multivariate Guassian Distribution: Introduction</h2>
-<strong>Definition (Multivariate Gaussian)</strong>: It is defined as:
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="def-lin-transform" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 7</strong></span> <strong>(Multivariate Gaussian)</strong>: It is defined as:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
-\mathcal{N}(\boldsymbol x | \boldsymbol \mu, \boldsymbol \Sigma) = \frac{1}{\sqrt{\abs{2\pi\boldsymbol \Sigma}}}\exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\}
+\mathcal{N}(\boldsymbol x | \boldsymbol \mu, \boldsymbol \Sigma) = \frac{1}{\sqrt{\abs{2\pi\boldsymbol \Sigma}}}\exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\}
 \end{equation*}\]</span></p>
 </div>
 <p>where we call <span class="math inline">\(\boldsymbol \mu \in \mathbb{R}^n\)</span> a mean and <span class="math inline">\(\boldsymbol \Sigma \in \mathbb{R}^{n\times n}\)</span> covariance, which should be symmetric and positive semidefinite (since the covariance is always positive semidefinite and symmetric).</p>
-<strong>Remark (2D Independent Gaussian)</strong>: Now, let’s consider, multivariate Gaussian but in the case that both variables are independent to each other with difference variances, as we define the parameters to be:
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-2d-ind-gaussian" class="proof remark">
+<p><span class="proof-title"><em>Remark 4</em>. </span><em>(2D Independent Gaussian)</em>: Now, let’s consider, multivariate Gaussian but in the case that both variables are independent to each other with difference variances, as we define the parameters to be:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \boldsymbol \mu = \begin{bmatrix}
@@ -655,11 +1051,11 @@ Now, let’s expand the multivariate Guassian, please note that <span class="mat
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-\mathcal{N}(\boldsymbol x | \boldsymbol \mu, \boldsymbol \Sigma) &amp;= \frac{1}{\sqrt{\abs{2\pi\boldsymbol \Sigma}}}\exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\} \\
-&amp;= \frac{1}{4\pi^2\sigma_1^2\sigma_2^2} \exp\brackc{-\frac{1}{2} \begin{bmatrix} x_1-\mu_1 \\ x_2-\mu_2 \end{bmatrix}^T
+\mathcal{N}(\boldsymbol x | \boldsymbol \mu, \boldsymbol \Sigma) &amp;= \frac{1}{\sqrt{\abs{2\pi\boldsymbol \Sigma}}}\exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\} \\
+&amp;= \frac{1}{4\pi^2\sigma_1^2\sigma_2^2} \exp\brackc{-\frac{1}{2} \begin{bmatrix} x_1-\mu_1 \\ x_2-\mu_2 \end{bmatrix}^\top
 \begin{bmatrix}
-    \sigma_1^2 &amp; 0 \\
-    0 &amp; \sigma_2^2 \\
+    \sigma_1^{-2} &amp; 0 \\
+    0 &amp; \sigma_2^{-2} \\
 \end{bmatrix}
 \begin{bmatrix} x_1-\mu_1 \\ x_2-\mu_2 \end{bmatrix}} \\
 &amp;= \frac{1}{4\pi^2\sigma_1^2\sigma_2^2} \exp\brackc{-\frac{1}{2} \brackb{ \bracka{\frac{x_1-\mu_1}{\sigma_1}}^2 + \bracka{\frac{x_2-\mu_2}{\sigma_2}}^2 }}\\
@@ -668,11 +1064,25 @@ Now, let’s expand the multivariate Guassian, please note that <span class="mat
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-<strong>Remark (Shape of Gaussian)</strong>: Let’s consider the eigendecomposition of the inverse covariance matrix (which is positive semidefinite and symmetric), as we have
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-shape-gauss" class="proof remark">
+<p><span class="proof-title"><em>Remark 5</em>. </span><em>(Shape of Gaussian)</em>: Let’s consider the eigendecomposition of the inverse covariance matrix (which is positive semidefinite and symmetric), as we have</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-\boldsymbol \Sigma^{-1} = \sum^n_{i=1}\frac{1}{\lambda_i}\boldsymbol u_i\boldsymbol u_i^T
+\boldsymbol \Sigma^{-1} = \sum^n_{i=1}\frac{1}{\lambda_i}\boldsymbol u_i\boldsymbol u_i^\top
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
@@ -680,22 +1090,45 @@ where <span class="math inline">\(\lambda_1,\dots,\lambda_n\)</span> and <span c
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x - \boldsymbol \mu)
-= \sum^n_{i=1}\frac{(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol u_i\boldsymbol u_i^T(\boldsymbol x - \boldsymbol \mu)}{\lambda_i}
+(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x - \boldsymbol \mu)
+= \sum^n_{i=1}\frac{(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol u_i\boldsymbol u_i^\top (\boldsymbol x - \boldsymbol \mu)}{\lambda_i}
 = \sum^n_{i=1}\frac{y_i^2}{\lambda_i}
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-<p>where we have <span class="math inline">\(y_i = (\boldsymbol x - \boldsymbol \mu)^T\boldsymbol u_i\)</span>. Consider the vector to be <span class="math inline">\(\boldsymbol y = (y_1,y_2,\dots,y_n)^T = \boldsymbol U(\boldsymbol x - \boldsymbol \mu)\)</span>. This gives us the linear transformation over <span class="math inline">\(\boldsymbol x\)</span>, which implies the following shape of Gaussian: - Ellipsoids with the center <span class="math inline">\(\boldsymbol \mu\)</span> - Axis is in the direction of eigenvector <span class="math inline">\(\boldsymbol u_i\)</span> - Scaling of each direction is the eigenvector <span class="math inline">\(\lambda_i\)</span> associated with <span class="math inline">\(\boldsymbol u_i\)</span></p>
-<strong>Proposition (Normalization of Gaussian)</strong>: We can show that:
+<p>where we have <span class="math inline">\(y_i = (\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol u_i\)</span>. Consider the vector to be <span class="math inline">\(\boldsymbol y = (y_1,y_2,\dots,y_n)^\top  = \boldsymbol U(\boldsymbol x - \boldsymbol \mu)\)</span>. This gives us the linear transformation over <span class="math inline">\(\boldsymbol x\)</span>, which implies the following shape of Gaussian:</p>
+<ul>
+<li>Ellipsoids with the center <span class="math inline">\(\boldsymbol \mu\)</span></li>
+<li>Axis is in the direction of eigenvector <span class="math inline">\(\boldsymbol u_i\)</span></li>
+<li>Scaling of each direction is the eigenvector <span class="math inline">\(\lambda_i\)</span> associated with <span class="math inline">\(\boldsymbol u_i\)</span></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-norm-multi-gauss" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 8</strong></span> <strong>(Normalization of Multivariate Gaussian)</strong>: We can show that:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-\int \exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\} \dby \boldsymbol x = \sqrt{\abs{2\pi\boldsymbol \Sigma}}
+\int \exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\} \dby \boldsymbol x = \sqrt{\abs{2\pi\boldsymbol \Sigma}}
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-<em>Proof</em>: Let’s consider the change of variable, in which we will change the variable from <span class="math inline">\(x_i\)</span> to <span class="math inline">\(y_i\)</span> where <span class="math inline">\(\boldsymbol y = \boldsymbol U(\boldsymbol x - \boldsymbol \mu)\)</span>. To do this we have the find the Jacobian of the transformation, which is:
+</div>
+</div>
+</div>
+<details>
+<p>Let’s consider the change of variable, in which we will change the variable from <span class="math inline">\(x_i\)</span> to <span class="math inline">\(y_i\)</span> where <span class="math inline">\(\boldsymbol y = \boldsymbol U(\boldsymbol x - \boldsymbol \mu)\)</span>. To do this we have the find the Jacobian of the transformation, which is:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
@@ -703,11 +1136,11 @@ J_{ij} = \frac{\partial x_i}{\partial y_j} = U_{ji}
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-Consider its determinant, as we have: <span class="math inline">\(\abs{\boldsymbol J}^2 = \abs{\boldsymbol U^T}^2 = \abs{\boldsymbol U^T}\abs{\boldsymbol U} = \abs{\boldsymbol U^T\boldsymbol U} = \abs{I} = 1\)</span>. Consider the integration as we have (and use the Gaussian integrations):
+Consider its determinant, as we have: <span class="math inline">\(\abs{\boldsymbol J}^2 = \abs{\boldsymbol U^\top }^2 = \abs{\boldsymbol U^\top }\abs{\boldsymbol U} = \abs{\boldsymbol U^\top \boldsymbol U} = \abs{I} = 1\)</span>. Consider the integration as we have (and use the Gaussian integrations):
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-\int \exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\} \dby \boldsymbol x
+\int \exp\left\{-\frac{1}{2}(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu)\right\} \dby \boldsymbol x
 &amp;= \int \exp\brackc{\sum^n_{i=1}-\frac{y_i^2}{2\lambda_i}} |\boldsymbol J| \dby \boldsymbol y \\
 &amp;= \int \prod^n_{i=1}\exp\brackc{-\frac{y_i^2}{2\lambda_i}} \dby \boldsymbol y \\
 &amp;= \prod^n_{i=1}\int \exp\brackc{-\frac{y_i^2}{2\lambda_i}} \dby y_i \\
@@ -719,14 +1152,28 @@ Consider its determinant, as we have: <span class="math inline">\(\abs{\boldsymb
 <div style="text-align: right">
 □
 </div>
+<summary>
+Proof
+</summary>
+</details>
 </section>
-<section id="useful-backgrounds-1" class="level2">
-<h2 class="anchored" data-anchor-id="useful-backgrounds-1">Useful Backgrounds</h2>
-<span id="prop-1" class="anchor"></span><strong>Proposition (Inverse of Partition Matrix)</strong>: The block matrix can be inversed as:
+<section id="more-useful-backgrounds" class="level2">
+<h2 class="anchored" data-anchor-id="more-useful-backgrounds">More Useful Backgrounds</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-block-inv" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 9</strong></span> <strong>(Inverse of Partition Matrix)</strong>: The block matrix can be inversed as:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \require{color}
-\newcommand{\dby}{\ \mathrm{d}}\newcommand{\argmax}[1]{\underset{#1}{\arg\max \ }}\newcommand{\argmin}[1]{\underset{#1}{\arg\min \ }}\newcommand{\const}{\text{const.}}\newcommand{\bracka}[1]{\left( #1 \right)}\newcommand{\brackb}[1]{\left[ #1 \right]}\newcommand{\brackc}[1]{\left\{ #1 \right\}}\newcommand{\brackd}[1]{\left\langle #1 \right\rangle}\newcommand{\correctquote}[1]{``#1''}\newcommand{\norm}[1]{\left\lVert#1\right\rVert}\newcommand{\abs}[1]{\left|#1\right|}
 \definecolor{red}{RGB}{244, 67, 54}
 \definecolor{pink}{RGB}{233, 30, 99}
 \definecolor{purple}{RGB}{103, 58, 183}
@@ -745,35 +1192,72 @@ Consider its determinant, as we have: <span class="math inline">\(\abs{\boldsymb
 \end{equation*}\]</span></p>
 </div>
 <p>where we set <span class="math inline">\(\boldsymbol M = (\boldsymbol A-\boldsymbol B\boldsymbol D^{-1}\boldsymbol C)^{-1}\)</span></p>
-<span id="prop-4" class="anchor"></span><strong>Proposition (Inverse Matrix Identity)</strong>: We can show that
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-inv-id" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 10</strong></span> <strong>(Inverse Matrix Identity)</strong>: We can show that</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
-    (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1} = \boldsymbol P\boldsymbol B^T(\boldsymbol B\boldsymbol P\boldsymbol B^T + \boldsymbol R)^{-1}
+    (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1} = \boldsymbol P\boldsymbol B^\top (\boldsymbol B\boldsymbol P\boldsymbol B^\top  + \boldsymbol R)^{-1}
 \end{equation*}\]</span></p>
 </div>
-<em>Proof</em>: The can be proven by right multiply the inverse on the right hand-side:
+</div>
+</div>
+</div>
+<details>
+<p>The can be proven by right multiply the inverse on the right hand-side:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-    (\boldsymbol P^{-1} + &amp;\boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}(\boldsymbol B\boldsymbol P\boldsymbol B^T + \boldsymbol R) \\
-    &amp;= (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}\boldsymbol B\boldsymbol P\boldsymbol B^T + (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}\boldsymbol R \\
-    &amp;= (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}\boldsymbol B\boldsymbol P\boldsymbol B^T + (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B \\
-    &amp;= (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\Big[\boldsymbol B\boldsymbol R^{-1}\boldsymbol B\boldsymbol P + \boldsymbol P^{-1} \boldsymbol P\Big]\boldsymbol B^T\\
-    &amp;= (\boldsymbol P^{-1} + \boldsymbol B^T\boldsymbol R^{-1}\boldsymbol B)^{-1}\Big[\boldsymbol B\boldsymbol R^{-1}\boldsymbol B+ \boldsymbol P^{-1} \Big]\boldsymbol P\boldsymbol B^T \\
-    &amp;= \boldsymbol P\boldsymbol B^T \\
+    (\boldsymbol P^{-1} + &amp;\boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}(\boldsymbol B\boldsymbol P\boldsymbol B^\top  + \boldsymbol R) \\
+    &amp;= (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}\boldsymbol B\boldsymbol P\boldsymbol B^\top  + (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}\boldsymbol R \\
+    &amp;= (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B\boldsymbol R^{-1}\boldsymbol B\boldsymbol P\boldsymbol B^\top  + (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\boldsymbol B \\
+    &amp;= (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\Big[\boldsymbol B\boldsymbol R^{-1}\boldsymbol B\boldsymbol P + \boldsymbol P^{-1} \boldsymbol P\Big]\boldsymbol B^\top \\
+    &amp;= (\boldsymbol P^{-1} + \boldsymbol B^\top \boldsymbol R^{-1}\boldsymbol B)^{-1}\Big[\boldsymbol B\boldsymbol R^{-1}\boldsymbol B+ \boldsymbol P^{-1} \Big]\boldsymbol P\boldsymbol B^\top  \\
+    &amp;= \boldsymbol P\boldsymbol B^\top  \\
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
 <div style="text-align: right">
 □
 </div>
-<span id="prop-5" class="anchor"></span><strong>Proposition (Woodbury Identity)</strong>: We can show that
+<summary>
+Proof
+</summary>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-woodbury" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 11</strong></span> <strong>(Woodbury Identity)</strong>: We can show that</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
     (\boldsymbol A + \boldsymbol B\boldsymbol D^{-1}\boldsymbol C)^{-1} = \boldsymbol A^{-1} - \boldsymbol A^{-1}\boldsymbol B(\boldsymbol D + \boldsymbol C\boldsymbol A^{-1}\boldsymbol B)^{-1}\boldsymbol C\boldsymbol A^{-1}
 \end{equation*}\]</span></p>
 </div>
-<em>Proof</em>: The can be proven by right multiply the inverse on the right hand-side:
+</div>
+</div>
+</div>
+<details>
+<p>The can be proven by right multiply the inverse on the right hand-side:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
@@ -802,10 +1286,25 @@ Consider its determinant, as we have: <span class="math inline">\(\abs{\boldsymb
 <div style="text-align: right">
 □
 </div>
+<summary>
+Proof
+</summary>
+</details>
 </section>
 <section id="conditional-marginalisation" class="level2">
 <h2 class="anchored" data-anchor-id="conditional-marginalisation">Conditional &amp; Marginalisation</h2>
-<p><strong>Remark (Settings)</strong>: We consider the setting where we consider the partition of random variables:</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-setting-cond-margin" class="proof remark">
+<p><span class="proof-title"><em>Remark 6</em>. </span><em>(Settings)</em>: We consider the setting where we consider the partition of random variables:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{bmatrix}
@@ -820,7 +1319,7 @@ Consider its determinant, as we have: <span class="math inline">\(\abs{\boldsymb
 \end{bmatrix}}
 \end{equation*}\]</span></p>
 </div>
-Due to the symmetric of covariance, we have <span class="math inline">\(\boldsymbol \Sigma_{ab} = \boldsymbol \Sigma_{ba}^T\)</span>. Furthermore, we denote
+Due to the symmetric of covariance, we have $<em>{ab} = </em>{ba}^$. Furthermore, we denote
 <div>
 <p><span class="math display">\[\begin{equation*}
 \boldsymbol \Sigma^{-1} = \begin{bmatrix}
@@ -834,36 +1333,67 @@ Due to the symmetric of covariance, we have <span class="math inline">\(\boldsym
 \end{equation*}\]</span></p>
 </div>
 <p>where <span class="math inline">\(\boldsymbol \Lambda\)</span> is called precision matrix. One can consider the inverse of partition matrix to find such a value of <span class="math inline">\(\boldsymbol \Lambda\)</span> (will be useful afterward), thus we note that <span class="math inline">\(\boldsymbol \Sigma_{aa} \ne \boldsymbol \Lambda^{-1}_{aa}\)</span>, and so on.</p>
-<strong>Remark (Complete the Square)</strong>: To find the conditional and marginalision (together with other kinds of Gaussian manipulation), we relies on a method called completing the square. Let’s consider the quadratic form expansion:
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Remark
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="rem-complete-tech" class="proof remark">
+<p><span class="proof-title"><em>Remark 7</em>. </span><em>(Complete the Square)</em>: To find the conditional and marginalision (together with other kinds of Gaussian manipulation), we relies on a method called completing the square. Let’s consider the quadratic form expansion:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-    -\frac{1}{2}&amp;(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu) \\
-    &amp;= {\color{blue}{-\frac{1}{2}\boldsymbol x^T\boldsymbol \Sigma^{-1}\boldsymbol x + \boldsymbol \mu^T\boldsymbol \Sigma^{-1}\boldsymbol x}} -\frac{1}{2} \boldsymbol \mu^T\boldsymbol \Sigma^{-1}\boldsymbol \mu \\
+    -\frac{1}{2}&amp;(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu) \\
+    &amp;= {\color{blue}{-\frac{1}{2}\boldsymbol x^\top \boldsymbol \Sigma^{-1}\boldsymbol x + \boldsymbol \mu^\top \boldsymbol \Sigma^{-1}\boldsymbol x}} -\frac{1}{2} \boldsymbol \mu^\top \boldsymbol \Sigma^{-1}\boldsymbol \mu \\
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
 Note that the <font color="#2196f3">blue term</font> are the term that depends on <span class="math inline">\(x\)</span>. This means that to find the Gaussian, we will have to find the first and second order of <span class="math inline">\(\boldsymbol x\)</span> only. Or, we can consider each individual elements of partitioned random variable:
 <div>
-<p><span class="math display">\[\begin{equation*}
+<p><span id="eq-complete-square"><span class="math display">\[
 \begin{aligned}
-    -\frac{1}{2}&amp;(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu) \\
+    -\frac{1}{2}&amp;(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Sigma^{-1}(\boldsymbol x-\boldsymbol \mu) \\
     &amp;= \begin{aligned}[t]
-        {\color{green}{-\frac{1}{2}(\boldsymbol x_a - \boldsymbol \mu_a)^T\boldsymbol \Lambda_{aa}(\boldsymbol x_a - \boldsymbol \mu_a)}}{\color{yellow}{ - \frac{1}{2}(\boldsymbol x_a - \boldsymbol \mu_a)^T\boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b)}} \\
-        {\color{purple}{-\frac{1}{2}(\boldsymbol x_b - \boldsymbol \mu_b)^T\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)}}{\color{grey}{ - \frac{1}{2}(\boldsymbol x_b - \boldsymbol \mu_b)^T\boldsymbol \Lambda_{bb}(\boldsymbol x_b - \boldsymbol \mu_b)}} \\
+        {\color{green}{-\frac{1}{2}(\boldsymbol x_a - \boldsymbol \mu_a)^\top \boldsymbol \Lambda_{aa}(\boldsymbol x_a - \boldsymbol \mu_a)}}{\color{yellow}{ - \frac{1}{2}(\boldsymbol x_a - \boldsymbol \mu_a)^\top \boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b)}} \\
+        {\color{purple}{-\frac{1}{2}(\boldsymbol x_b - \boldsymbol \mu_b)^\top \boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)}}{\color{grey}{ - \frac{1}{2}(\boldsymbol x_b - \boldsymbol \mu_b)^\top \boldsymbol \Lambda_{bb}(\boldsymbol x_b - \boldsymbol \mu_b)}} \\
     \end{aligned} \\
     &amp;= \begin{aligned}[t]
-        &amp;{\color{green} -\frac{1}{2}\boldsymbol x^T_a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} -\frac{1}{2} \boldsymbol \mu^T\boldsymbol \Lambda_{aa}\boldsymbol \mu {\color{yellow} -\frac{1}{2}\boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol x_b + \frac{1}{2} \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b} \\
-        &amp;{\color{yellow}+\frac{1}{2}\boldsymbol \mu_a^T\boldsymbol \Lambda_{ab}\boldsymbol x_b} - \frac{1}{2}\boldsymbol \mu_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b {\color{purple} -\frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{ba} \boldsymbol \mu_a}  \\
-        &amp;- \frac{1}{2}\boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}\boldsymbol \mu_a {\color{grey} -\frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b + \boldsymbol \mu_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b} -\frac{1}{2}\boldsymbol \mu_b^T\boldsymbol \Lambda_{bb}\boldsymbol \mu_b
+        &amp;{\color{green} -\frac{1}{2}\boldsymbol x^\top _a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} -\frac{1}{2} \boldsymbol \mu^\top \boldsymbol \Lambda_{aa}\boldsymbol \mu {\color{yellow} -\frac{1}{2}\boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol x_b + \frac{1}{2} \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b} \\
+        &amp;{\color{yellow}+\frac{1}{2}\boldsymbol \mu_a^\top \boldsymbol \Lambda_{ab}\boldsymbol x_b} - \frac{1}{2}\boldsymbol \mu_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b {\color{purple} -\frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{ba} \boldsymbol \mu_a}  \\
+        &amp;- \frac{1}{2}\boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}\boldsymbol \mu_a {\color{grey} -\frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b + \boldsymbol \mu_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b} -\frac{1}{2}\boldsymbol \mu_b^\top \boldsymbol \Lambda_{bb}\boldsymbol \mu_b
     \end{aligned} \\
 \end{aligned}
-\label{eqn:1}\tag{1}
-\end{equation*}\]</span></p>
+\tag{1}\]</span></span></p>
 </div>
-<p>Completing the square is to match this pattern into our formula in order to get new Gaussian distribution. There are <span class="math inline">\(2\)</span> ways to complete the squre that depends on the scenario: - When we want to find the Gaussian in difference form (but still being Gaussian) i.e conditional - When we want to marginalise some variables out <em>or</em> when we have to find the true for of the distribution without relying on knowing the final form (or when we are not really sure about the final form) i.e marginalisation, posterior</p>
+<p>Completing the square is to match this pattern into our formula in order to get new Gaussian distribution. There are <span class="math inline">\(2\)</span> ways to complete the squre that depends on the scenario:</p>
+<ul>
+<li>When we want to find the Gaussian in difference form (but still being Gaussian) i.e conditional</li>
+<li>When we want to marginalise some variables out <em>or</em> when we have to find the true for of the distribution without relying on knowing the final form (or when we are not really sure about the final form) i.e marginalisation, posterior</li>
+</ul>
+</div>
+</div>
+</div>
 <p>Let’s just show how it works with examples.</p>
-<span id="prop-3" class="anchor"></span><strong>Proposition (Conditional)</strong>: Consider the following Gaussian
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-cond-gauss" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 12</strong></span> <strong>(Conditional)</strong>: Consider the following Gaussian</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{bmatrix}
@@ -878,40 +1408,52 @@ Note that the <font color="#2196f3">blue term</font> are the term that depends o
 \end{bmatrix}}
 \end{equation*}\]</span></p>
 </div>
-We can show that: <span class="math inline">\(p(\boldsymbol x_a | \boldsymbol x_b) = \mathcal{N}(\boldsymbol x | \boldsymbol \mu_{a|b}, \boldsymbol \Lambda^{-1}_{aa})\)</span>, where we have - <span class="math inline">\(\boldsymbol \mu_{a\lvert b} = \boldsymbol \mu_a - \boldsymbol \Lambda_{aa}^{-1}\boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b)\)</span> - Or, we can set <span class="math inline">\(\boldsymbol K = \boldsymbol \Sigma_{ab}\boldsymbol \Sigma_{bb}^{-1}\)</span>, where we have
+<p>We can show that: <span class="math inline">\(p(\boldsymbol x_a | \boldsymbol x_b) = \mathcal{N}(\boldsymbol x | \boldsymbol \mu_{a|b}, \boldsymbol \Lambda^{-1}_{aa})\)</span>, where we have</p>
+<ul>
+<li><span class="math inline">\(\boldsymbol \mu_{a\lvert b} = \boldsymbol \mu_a - \boldsymbol \Lambda_{aa}^{-1}\boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b)\)</span></li>
+<li>Or, we can set <span class="math inline">\(\boldsymbol K = \boldsymbol \Sigma_{ab}\boldsymbol \Sigma_{bb}^{-1}\)</span>, where we have</li>
+</ul>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
     &amp;\boldsymbol \mu_{a|b} = \boldsymbol \mu_a + \boldsymbol K(\boldsymbol x_b - \boldsymbol \mu_b)  \qquad \begin{aligned}[t]
-        \boldsymbol \Sigma_{a|b} &amp;= \boldsymbol \Sigma_{aa} - \boldsymbol K\boldsymbol \Sigma_{bb}\boldsymbol K^T \\
+        \boldsymbol \Sigma_{a|b} &amp;= \boldsymbol \Sigma_{aa} - \boldsymbol K\boldsymbol \Sigma_{bb}\boldsymbol K^\top  \\
         &amp;= \boldsymbol \Sigma_{aa} - \boldsymbol \Sigma_{ab}\boldsymbol \Sigma_{bb}^{-1}\boldsymbol \Sigma_{ba} \\
     \end{aligned}
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-<p>Please note that this follows from <a href="#prop-1">block-matrix inverse result</a> (you can try plugging the results in).</p>
-<em>Proof</em>: We consider the expansion of the conditional distribution, as we have:
+<p>Follows from <a href="#prp-block-inv" class="quarto-xref">Proposition&nbsp;9</a> (you can try plugging the results in).</p>
+</div>
+</div>
+</div>
+<details>
+<p><em>Proof</em>: We consider the expansion of the conditional distribution, as we only gather all the terms with <span class="math inline">\(\boldsymbol x_a\)</span></p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-    -\frac{1}{2}(\boldsymbol x_a - \boldsymbol \mu_{a|b})^T\boldsymbol \Sigma_{a|b}^{-1}(\boldsymbol x_a - \boldsymbol \mu_{a|b}) = {\color{red}-\frac{1}{2}\boldsymbol x_a^T\boldsymbol \Sigma_{a|b}^{-1}\boldsymbol x_a} + {\color{blue}\boldsymbol x_a^T\boldsymbol \Sigma_{a|b}^{-1}\boldsymbol \mu_{a|b}} + \text{const}
+    -\frac{1}{2}(\boldsymbol x_a - \boldsymbol \mu_{a|b})^\top \boldsymbol \Sigma_{a|b}^{-1}(\boldsymbol x_a - \boldsymbol \mu_{a|b}) = {\color{red}-\frac{1}{2}\boldsymbol x_a^\top \boldsymbol \Sigma_{a|b}^{-1}\boldsymbol x_a} + {\color{blue}\boldsymbol x_a^\top \boldsymbol \Sigma_{a|b}^{-1}\boldsymbol \mu_{a|b}} + \text{const}
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-Let’s consider the values, which should be equal to equation <span class="math inline">\(\eqref{eqn:1}\)</span>, as we can see that: - The <font color="#f44336">red term</font>: we set <span class="math inline">\(\boldsymbol \Sigma_{a\lvert b}^{-1} = \boldsymbol \Lambda_{aa}\)</span> (consider the first <font color="#009688">green term</font> of the equation <span class="math inline">\(\eqref{eqn:1}\)</span>) - The <font color="#2196f3">blue term</font>., we will have to consider <span class="math inline">\((\dots)^T\boldsymbol x_a\)</span>. We have:
+<p>Let’s consider the values, which should be equal to equation <a href="#eq-complete-square" class="quarto-xref">Equation&nbsp;1</a>, as we can see that:</p>
+<ul>
+<li>The <font color="#f44336">red term</font>: we set <span class="math inline">\(\boldsymbol \Sigma_{a\lvert b}^{-1} = \boldsymbol \Lambda_{aa}\)</span> (consider the first <font color="#009688">green term</font> of the equation <a href="#eq-complete-square" class="quarto-xref">Equation&nbsp;1</a>)</li>
+<li>The <font color="#2196f3">blue term</font>, we will have to consider <span class="math inline">\((\dots)^\top \boldsymbol x_a\)</span>. We have:</li>
+</ul>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-{\color{green} \boldsymbol \mu_{a}^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} &amp;{\color{yellow} - \frac{1}{2}\boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol x_b + \frac{1}{2} \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b} {\color{purple} - \frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a} \\
-&amp;= \boldsymbol x_a^T\Big[ \boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{ab}\boldsymbol x_b + \boldsymbol \Lambda_{ab}\boldsymbol \mu_b \Big] = \boldsymbol x_a^T\Big[ \boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b) \Big] \\
+{\color{green} \boldsymbol \mu_{a}^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} &amp;{\color{yellow} - \frac{1}{2}\boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol x_b + \frac{1}{2} \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b} {\color{purple} - \frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a} \\
+&amp;= \boldsymbol x_a^\top \Big[ \boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{ab}\boldsymbol x_b + \boldsymbol \Lambda_{ab}\boldsymbol \mu_b \Big] = \boldsymbol x_a^\top \Big[ \boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b) \Big] \\
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-Please note that <span class="math inline">\(\boldsymbol \Lambda_{ab}^T = \boldsymbol \Lambda_{ba}\)</span>. Now, let’s do “pattern” matching, as we have:
+Please note that <span class="math inline">\(\boldsymbol \Lambda_{ab}^\top  = \boldsymbol \Lambda_{ba}\)</span>. Now, let’s do “pattern” matching, as we have:
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-\boldsymbol x_a^T&amp;\boldsymbol \Lambda_{aa}\boldsymbol \mu_{a|b} = \boldsymbol x_a^T\Big[ \boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b) \Big] \\
+\boldsymbol x_a^\top &amp;\boldsymbol \Lambda_{aa}\boldsymbol \mu_{a|b} = \boldsymbol x_a^\top \Big[ \boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b) \Big] \\
 \implies&amp;\boldsymbol \mu_{a|b} \begin{aligned}[t]
     &amp;= \boldsymbol \Lambda_{aa}^{-1}\boldsymbol \Lambda_{aa}\boldsymbol \mu_a - \boldsymbol \Lambda_{aa}^{-1}\boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b) \\
     &amp;= \boldsymbol \mu_a - \boldsymbol \Lambda_{aa}^{-1}\boldsymbol \Lambda_{ab}(\boldsymbol x_b - \boldsymbol \mu_b) \\
@@ -923,7 +1465,22 @@ Please note that <span class="math inline">\(\boldsymbol \Lambda_{ab}^T = \bolds
 <div style="text-align: right">
 □
 </div>
-<span id="prop-2" class="anchor"></span><strong>Proposition (Marginalisation)</strong>: Consider the following Gaussian
+<summary>
+Proof
+</summary>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-margin-gauss" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 13</strong></span> <strong>(Marginalisation)</strong>: Consider the following Gaussian</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{bmatrix}
@@ -939,94 +1496,120 @@ Please note that <span class="math inline">\(\boldsymbol \Lambda_{ab}^T = \bolds
 \end{equation*}\]</span></p>
 </div>
 <p>We can show that: <span class="math inline">\(p(\boldsymbol x_a) = \mathcal{N}(\boldsymbol x | \boldsymbol \mu_{a}, \boldsymbol \Sigma_{aa})\)</span></p>
-<em>Proof</em>: We collect the terms that contains <span class="math inline">\(\boldsymbol x_b\)</span> so that we can integrate it out, as we have:
+</div>
+</div>
+</div>
+<details>
+<p>We collect the terms that contains <span class="math inline">\(\boldsymbol x_b\)</span> so that we can integrate it out, as we have:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-{\color{grey} -\frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b} &amp;{\color{grey} +} {\color{grey}\boldsymbol \mu_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b}
-{\color{purple} -\frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{ba} \boldsymbol \mu_a}
-{\color{yellow} -\frac{1}{2}\boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol x_b+\frac{1}{2}\boldsymbol \mu_a^T\boldsymbol \Lambda_{ab}\boldsymbol x_b} \\
-&amp;=  -\frac{1}{2}\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b + \boldsymbol \mu_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b -\boldsymbol x_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a + \boldsymbol x_b^T\boldsymbol \Lambda_{ba} \boldsymbol \mu_a \\
-&amp;=  -\frac{1}{2}\Big[\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b - 2\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol \Lambda_{bb}^{-1}\underbrace{\Big(\boldsymbol \Lambda_{bb}\boldsymbol \mu_b -\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)\Big)}_{\boldsymbol m}\Big] \\
-&amp;=  -\frac{1}{2}\Big[\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol x_b - 2\boldsymbol x_b^T\boldsymbol \Lambda_{bb}\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m + (\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^T\boldsymbol \Lambda_{bb}(\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m) \Big] + \frac{1}{2}(\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^T\boldsymbol \Lambda_{bb}(\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)  \\
-&amp;=  -\frac{1}{2}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^T\boldsymbol \Lambda_{bb}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m) + {\color{blue}\frac{1}{2}\boldsymbol m^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m}  \\
+{\color{grey} -\frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b} &amp;{\color{grey} +} {\color{grey}\boldsymbol \mu_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b}
+{\color{purple} -\frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a + \frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{ba} \boldsymbol \mu_a}
+{\color{yellow} -\frac{1}{2}\boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol x_b+\frac{1}{2}\boldsymbol \mu_a^\top \boldsymbol \Lambda_{ab}\boldsymbol x_b} \\
+&amp;=  -\frac{1}{2}\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b + \boldsymbol \mu_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b -\boldsymbol x_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a + \boldsymbol x_b^\top \boldsymbol \Lambda_{ba} \boldsymbol \mu_a \\
+&amp;=  -\frac{1}{2}\Big[\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b - 2\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol \Lambda_{bb}^{-1}\underbrace{\Big(\boldsymbol \Lambda_{bb}\boldsymbol \mu_b -\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)\Big)}_{\boldsymbol m}\Big] \\
+&amp;=  -\frac{1}{2}\Big[\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol x_b - 2\boldsymbol x_b^\top \boldsymbol \Lambda_{bb}\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m + (\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^\top \boldsymbol \Lambda_{bb}(\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m) \Big] + \frac{1}{2}(\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^\top \boldsymbol \Lambda_{bb}(\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)  \\
+&amp;=  -\frac{1}{2}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^\top \boldsymbol \Lambda_{bb}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m) + {\color{blue}\frac{1}{2}\boldsymbol m^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m}  \\
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-If we integrate our the quantity, to be:
+So we integrate out the quantity by Gaussian integration (if we want)
 <div>
 <p><span class="math display">\[\begin{equation*}
-\int \exp\brackc{-\frac{1}{2}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^T\boldsymbol \Lambda_{bb}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)}\dby \boldsymbol x_b
+\int \exp\brackc{-\frac{1}{2}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)^\top \boldsymbol \Lambda_{bb}(\boldsymbol x_b - \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m)}\dby \boldsymbol x_b
 \end{equation*}\]</span></p>
 </div>
-We can use the Gaussian integration, like in part 1 and part 2. Now, we consider the other terms that doesn’t depends on <span class="math inline">\(\boldsymbol x_b\)</span> i.e all terms that depends on <span class="math inline">\(\boldsymbol x_a\)</span> together with the <font color="#2196f3">blue term</font> that been left out.
+Now, we consider the other terms that doesn’t depends on <span class="math inline">\(\boldsymbol x_b\)</span> i.e all terms that depends on <span class="math inline">\(\boldsymbol x_a\)</span> together with the <font color="#2196f3">blue term</font> that been left out.
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-{\color{blue}\frac{1}{2}\boldsymbol m^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol m} &amp;{\color{green} -}{\color{green} \frac{1}{2}\boldsymbol x^T_a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} {\color{yellow} + \frac{1}{2} \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b}{\color{purple}+ \frac{1}{2}\boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a} \\
+{\color{blue}\frac{1}{2}\boldsymbol m^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol m} &amp;{\color{green} -}{\color{green} \frac{1}{2}\boldsymbol x^\top _a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} {\color{yellow} + \frac{1}{2} \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b}{\color{purple}+ \frac{1}{2}\boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a} \\
 &amp;= \begin{aligned}[t]
-    \frac{1}{2}\Big(&amp;\boldsymbol \Lambda_{bb}\boldsymbol \mu_b -\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)\Big)^T\boldsymbol \Lambda_{bb}^{-1}\Big(\boldsymbol \Lambda_{bb}\boldsymbol \mu_b -\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)\Big) \\
-    &amp;{\color{green} - \frac{1}{2}\boldsymbol x^T_a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b
+    \frac{1}{2}\Big(&amp;\boldsymbol \Lambda_{bb}\boldsymbol \mu_b -\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)\Big)^\top \boldsymbol \Lambda_{bb}^{-1}\Big(\boldsymbol \Lambda_{bb}\boldsymbol \mu_b -\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a)\Big) \\
+    &amp;{\color{green} - \frac{1}{2}\boldsymbol x^\top _a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b
 \end{aligned} \\
 &amp;= \begin{aligned}[t]
-    \frac{1}{2}\Big[ \boldsymbol \mu_b^T\boldsymbol \Lambda_{bb}\boldsymbol \mu_b &amp;- (\boldsymbol x_a - \boldsymbol \mu_a)^T\boldsymbol \Lambda_{ba}^T\boldsymbol \mu_b \\
-    &amp;- \boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a) + (\boldsymbol x_a - \boldsymbol \mu_a)^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a) \Big] \\
-    &amp;{\color{green} - \frac{1}{2}\boldsymbol x^T_a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b
+    \frac{1}{2}\Big[ \boldsymbol \mu_b^\top \boldsymbol \Lambda_{bb}\boldsymbol \mu_b &amp;- (\boldsymbol x_a - \boldsymbol \mu_a)^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \mu_b \\
+    &amp;- \boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a) + (\boldsymbol x_a - \boldsymbol \mu_a)^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}(\boldsymbol x_a - \boldsymbol \mu_a) \Big] \\
+    &amp;{\color{green} - \frac{1}{2}\boldsymbol x^\top _a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b
 \end{aligned} \\
 &amp;= \begin{aligned}[t]
-    \frac{1}{2}\Big[ \boldsymbol \mu_b^T\boldsymbol \Lambda_{bb}\boldsymbol \mu_b &amp;- \boldsymbol x_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \mu_b + \boldsymbol \mu_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \mu_b - \boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}\boldsymbol x_a + \boldsymbol \mu_b^T\boldsymbol \Lambda_{ba}\boldsymbol \mu_a \\
-    &amp;+ \boldsymbol x_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol x_a - \boldsymbol x_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol\mu_a - \boldsymbol \mu_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol x_a \\
-    &amp;+ \boldsymbol \mu_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol \mu_a \Big] {\color{green} - \frac{1}{2}\boldsymbol x^T_a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b
+    \frac{1}{2}\Big[ \boldsymbol \mu_b^\top \boldsymbol \Lambda_{bb}\boldsymbol \mu_b &amp;- \boldsymbol x_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \mu_b + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \mu_b - \boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}\boldsymbol x_a + \boldsymbol \mu_b^\top \boldsymbol \Lambda_{ba}\boldsymbol \mu_a \\
+    &amp;+ \boldsymbol x_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol x_a - \boldsymbol x_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol\mu_a - \boldsymbol \mu_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol x_a \\
+    &amp;+ \boldsymbol \mu_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol \mu_a \Big] {\color{green} - \frac{1}{2}\boldsymbol x^\top _a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b
 \end{aligned} \\
 &amp;= \begin{aligned}[t]
-    \frac{1}{2}\Big[-2\boldsymbol x_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \mu_b &amp;+ \boldsymbol x_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol x_a - 2\boldsymbol x_a^T\boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol\mu_a\Big] \\
-    &amp;{\color{green} - \frac{1}{2}\boldsymbol x^T_a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^T\boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^T\boldsymbol \Lambda_{ab}\boldsymbol \mu_b + \text{const}
+    \frac{1}{2}\Big[-2\boldsymbol x_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \mu_b &amp;+ \boldsymbol x_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol x_a - 2\boldsymbol x_a^\top \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\boldsymbol\mu_a\Big] \\
+    &amp;{\color{green} - \frac{1}{2}\boldsymbol x^\top _a\boldsymbol \Lambda_{aa}\boldsymbol x_a + \boldsymbol \mu_a^\top \boldsymbol \Lambda_{aa}\boldsymbol x_a} + \boldsymbol x_a^\top \boldsymbol \Lambda_{ab}\boldsymbol \mu_b + \text{const}
 \end{aligned} \\
 &amp;= \begin{aligned}[t]
-    -\frac{1}{2}\boldsymbol x_a^T\Big[\boldsymbol \Lambda_{aa} - \boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\Big]\boldsymbol x_a &amp;+ \boldsymbol x_a^T\Big[\boldsymbol \Lambda_{aa} - \boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\Big]\boldsymbol\mu_a + \text{const}
+    -\frac{1}{2}\boldsymbol x_a^\top \Big[\boldsymbol \Lambda_{aa} - \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\Big]\boldsymbol x_a &amp;+ \boldsymbol x_a^\top \Big[\boldsymbol \Lambda_{aa} - \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba}\Big]\boldsymbol\mu_a + \text{const}
 \end{aligned} \\
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-<p>If we comparing this form to the normal quadratic expanision of Gaussian, we can set the <span class="math inline">\(\boldsymbol \mu\)</span> of marginalised Gaussian is <span class="math inline">\(\boldsymbol \mu_a\)</span>, while the covariance is <span class="math inline">\((\boldsymbol \Lambda_{aa} - \boldsymbol \Lambda_{ba}^T\boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba})^{-1}\)</span>. If we compare this to the inverse matrix partition, we can see that this is equal to <span class="math inline">\(\boldsymbol \Sigma_{aa}\)</span>. Thus complete the proof.</p>
+<p>If we comparing this form to the normal quadratic expanision of Gaussian, we can set the <span class="math inline">\(\boldsymbol \mu\)</span> of marginalised Gaussian is <span class="math inline">\(\boldsymbol \mu_a\)</span>, while the covariance is <span class="math inline">\((\boldsymbol \Lambda_{aa} - \boldsymbol \Lambda_{ba}^\top \boldsymbol \Lambda_{bb}^{-1}\boldsymbol \Lambda_{ba})^{-1}\)</span>. If we compare this to the inverse matrix partition, we can see that this is equal to <span class="math inline">\(\boldsymbol \Sigma_{aa}\)</span>. Thus complete the proof.</p>
 <div style="text-align: right">
 □
 </div>
-<strong>Proposition (Linear Gaussian Model)</strong>: Consider the distribution to be: <span class="math inline">\(p(\boldsymbol x) = \mathcal{N}(\boldsymbol x \vline {\color{yellow} \boldsymbol \mu} , {\color{blue} \boldsymbol \Lambda^{-1}})\)</span> and <span class="math inline">\(p(\boldsymbol y \vline \boldsymbol x) = \mathcal{N}(\boldsymbol y \vline {\color{purple}\boldsymbol A}\boldsymbol x + {\color{green} \boldsymbol b}, {\color{red} \boldsymbol L^{-1}})\)</span>. We can show that the following holds:
-<div>
-<p><span class="math display">\[\begin{equation*}
-p(\boldsymbol y) = \mathcal{N}(\boldsymbol y \vline {\color{purple}\boldsymbol A}{\color{yellow} \boldsymbol \mu} + {\color{green} \boldsymbol b}, {\color{red} \boldsymbol L^{-1}} + {\color{purple}\boldsymbol A}{\color{blue} \boldsymbol \Lambda^{-1}}{\color{purple}\boldsymbol A^T}) \qquad p(\boldsymbol x \vline \boldsymbol y) = \mathcal{N}\bracka{ \boldsymbol x \vline {\color{grey} \boldsymbol \Sigma}\brackc{ {\color{purple}\boldsymbol A^T} {\color{red} \boldsymbol L}(\boldsymbol y-{\color{green} \boldsymbol b}) + {\color{blue} \boldsymbol \Lambda}{\color{yellow} \boldsymbol \mu}}, {\color{grey} \boldsymbol \Sigma} }
-\end{equation*}\]</span></p>
+<summary>
+Proof
+</summary>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<p>where we have <span class="math inline">\({\color{grey} \boldsymbol \Sigma} = ({\color{blue} \boldsymbol \Lambda} + {\color{purple}\boldsymbol A^T}{\color{red} \boldsymbol L}{\color{purple}\boldsymbol A})^{-1}\)</span></p>
-<em>Proof</em>: We will consider the joint random variable <span class="math inline">\(\boldsymbol z = (\boldsymbol x, \boldsymbol y)^T\)</span>. Let’s consider the joint distribution and the inside of exponential:
+<div class="callout-title-container flex-fill">
+Propositions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="prp-lin-gauss-model" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 14</strong></span> <strong>(Linear Gaussian Model)</strong>: Consider the distribution to be: <span class="math inline">\(p(\boldsymbol x) = \mathcal{N}(\boldsymbol x  |  {\color{yellow} \boldsymbol \mu} , {\color{blue} \boldsymbol \Lambda^{-1}})\)</span> and <span class="math inline">\(p(\boldsymbol y  |  \boldsymbol x) = \mathcal{N}(\boldsymbol y  |  {\color{purple}\boldsymbol A}\boldsymbol x + {\color{green} \boldsymbol b}, {\color{red} \boldsymbol L^{-1}})\)</span>. We can show that the following holds:</p>
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
--\frac{1}{2}&amp;(\boldsymbol x - \boldsymbol \mu)^T\boldsymbol \Lambda(\boldsymbol x - \boldsymbol \mu) - \frac{1}{2}(\boldsymbol y - \boldsymbol A\boldsymbol x - \boldsymbol b)^T\boldsymbol L(\boldsymbol y - \boldsymbol A\boldsymbol x - \boldsymbol b) + \text{const} \\
+p(\boldsymbol y) &amp;= \mathcal{N}(\boldsymbol y  |  {\color{purple}\boldsymbol A}{\color{yellow} \boldsymbol \mu} + {\color{green} \boldsymbol b}, {\color{red} \boldsymbol L^{-1}} + {\color{purple}\boldsymbol A}{\color{blue} \boldsymbol \Lambda^{-1}}{\color{purple}\boldsymbol A^\top }) \\
+p(\boldsymbol x  |  \boldsymbol y) &amp;= \mathcal{N}\bracka{ \boldsymbol x  |  {\color{grey} \boldsymbol \Sigma}\brackc{ {\color{purple}\boldsymbol A^\top } {\color{red} \boldsymbol L}(\boldsymbol y-{\color{green} \boldsymbol b}) + {\color{blue} \boldsymbol \Lambda}{\color{yellow} \boldsymbol \mu}}, {\color{grey} \boldsymbol \Sigma} }
+\end{aligned}
+\end{equation*}\]</span></p>
+</div>
+<p>where we have <span class="math inline">\({\color{grey} \boldsymbol \Sigma} = ({\color{blue} \boldsymbol \Lambda} + {\color{purple}\boldsymbol A^\top }{\color{red} \boldsymbol L}{\color{purple}\boldsymbol A})^{-1}\)</span></p>
+</div>
+</div>
+</div>
+<details>
+<p>We will consider the joint random variable <span class="math inline">\(\boldsymbol z = (\boldsymbol x, \boldsymbol y)^\top\)</span>. Let’s consider the joint distribution and the inside of exponential:</p>
+<div>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+-\frac{1}{2}&amp;(\boldsymbol x - \boldsymbol \mu)^\top \boldsymbol \Lambda(\boldsymbol x - \boldsymbol \mu) - \frac{1}{2}(\boldsymbol y - \boldsymbol A\boldsymbol x - \boldsymbol b)^\top \boldsymbol L(\boldsymbol y - \boldsymbol A\boldsymbol x - \boldsymbol b) + \text{const} \\
 &amp;= \begin{aligned}[t]
-    -\frac{1}{2}\Big[ \boldsymbol x^T\boldsymbol \Lambda\boldsymbol x &amp;- 2\boldsymbol \mu^T\boldsymbol \Lambda\boldsymbol x + \boldsymbol \mu^T\boldsymbol \Lambda\boldsymbol \mu + \boldsymbol y^T\boldsymbol L\boldsymbol y - \boldsymbol y^T\boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol y^T\boldsymbol L\boldsymbol b\\
-    &amp;-\boldsymbol x^T\boldsymbol A^T\boldsymbol L\boldsymbol y + \boldsymbol x^T\boldsymbol A^T \boldsymbol L \boldsymbol A\boldsymbol x + \boldsymbol x^T\boldsymbol A^T \boldsymbol L \boldsymbol b - \boldsymbol b^T\boldsymbol L\boldsymbol y +\boldsymbol b^T\boldsymbol L\boldsymbol A\boldsymbol x + \boldsymbol b^T\boldsymbol L\boldsymbol b \Big] + \text{const}
+    -\frac{1}{2}\Big[ \boldsymbol x^\top \boldsymbol \Lambda\boldsymbol x &amp;- 2\boldsymbol \mu^\top \boldsymbol \Lambda\boldsymbol x + \boldsymbol \mu^\top \boldsymbol \Lambda\boldsymbol \mu + \boldsymbol y^\top \boldsymbol L\boldsymbol y - \boldsymbol y^\top \boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol y^\top \boldsymbol L\boldsymbol b\\
+    &amp;-\boldsymbol x^\top \boldsymbol A^\top \boldsymbol L\boldsymbol y + \boldsymbol x^\top \boldsymbol A^\top  \boldsymbol L \boldsymbol A\boldsymbol x + \boldsymbol x^\top \boldsymbol A^\top  \boldsymbol L \boldsymbol b - \boldsymbol b^\top \boldsymbol L\boldsymbol y +\boldsymbol b^\top \boldsymbol L\boldsymbol A\boldsymbol x + \boldsymbol b^\top \boldsymbol L\boldsymbol b \Big] + \text{const}
 \end{aligned} \\
 &amp;= \begin{aligned}[t]
-    -\frac{1}{2}\Big[ \boldsymbol x^T\boldsymbol \Lambda\boldsymbol x &amp;- 2\boldsymbol \mu^T\boldsymbol \Lambda\boldsymbol x + \boldsymbol y^T\boldsymbol L\boldsymbol y - \boldsymbol y^T\boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol y^T\boldsymbol L\boldsymbol b\\
-    &amp;-\boldsymbol x^T\boldsymbol A^T\boldsymbol L\boldsymbol y + \boldsymbol x^T\boldsymbol A^T \boldsymbol L \boldsymbol A\boldsymbol x + \boldsymbol x^T\boldsymbol A^T \boldsymbol L \boldsymbol b - \boldsymbol b^T\boldsymbol L\boldsymbol y +\boldsymbol b^T\boldsymbol L\boldsymbol A\boldsymbol x  \Big] + \text{const}
+    -\frac{1}{2}\Big[ \boldsymbol x^\top \boldsymbol \Lambda\boldsymbol x &amp;- 2\boldsymbol \mu^\top \boldsymbol \Lambda\boldsymbol x + \boldsymbol y^\top \boldsymbol L\boldsymbol y - \boldsymbol y^\top \boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol y^\top \boldsymbol L\boldsymbol b\\
+    &amp;-\boldsymbol x^\top \boldsymbol A^\top \boldsymbol L\boldsymbol y + \boldsymbol x^\top \boldsymbol A^\top  \boldsymbol L \boldsymbol A\boldsymbol x + \boldsymbol x^\top \boldsymbol A^\top  \boldsymbol L \boldsymbol b - \boldsymbol b^\top \boldsymbol L\boldsymbol y +\boldsymbol b^\top \boldsymbol L\boldsymbol A\boldsymbol x  \Big] + \text{const}
 \end{aligned} \\
 &amp;= \begin{aligned}[t]
-    -\frac{1}{2}\Big[ \boldsymbol x^T\Big(\boldsymbol \Lambda + \boldsymbol A^T \boldsymbol L \boldsymbol A\Big)\boldsymbol x &amp;+ \boldsymbol y^T\boldsymbol L\boldsymbol y - \boldsymbol y^T\boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol x^T\boldsymbol A^T\boldsymbol L\boldsymbol y\\
-    &amp;+ 2\boldsymbol x^T\boldsymbol A^T \boldsymbol L \boldsymbol b  - 2\boldsymbol \mu^T\boldsymbol \Lambda\boldsymbol x - 2\boldsymbol y^T\boldsymbol L\boldsymbol b \Big] + \text{const}
+    -\frac{1}{2}\Big[ \boldsymbol x^\top \Big(\boldsymbol \Lambda + \boldsymbol A^\top  \boldsymbol L \boldsymbol A\Big)\boldsymbol x &amp;+ \boldsymbol y^\top \boldsymbol L\boldsymbol y - \boldsymbol y^\top \boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol x^\top \boldsymbol A^\top \boldsymbol L\boldsymbol y\\
+    &amp;+ 2\boldsymbol x^\top \boldsymbol A^\top  \boldsymbol L \boldsymbol b  - 2\boldsymbol \mu^\top \boldsymbol \Lambda\boldsymbol x - 2\boldsymbol y^\top \boldsymbol L\boldsymbol b \Big] + \text{const}
 \end{aligned} \\
 &amp;= \begin{aligned}[t]
-    -\frac{1}{2}\Big[ \boldsymbol x^T\Big(\boldsymbol \Lambda + \boldsymbol A^T \boldsymbol L \boldsymbol A\Big)\boldsymbol x &amp;+ \boldsymbol y^T\boldsymbol L\boldsymbol y - \boldsymbol y^T\boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol x^T\boldsymbol A^T\boldsymbol L\boldsymbol y\Big]\\
-    &amp;- \boldsymbol x^T\boldsymbol A^T \boldsymbol L \boldsymbol b + \boldsymbol \mu^T\boldsymbol \Lambda\boldsymbol x + \boldsymbol y^T\boldsymbol L\boldsymbol b  + \text{const}
+    -\frac{1}{2}\Big[ \boldsymbol x^\top \Big(\boldsymbol \Lambda + \boldsymbol A^\top  \boldsymbol L \boldsymbol A\Big)\boldsymbol x &amp;+ \boldsymbol y^\top \boldsymbol L\boldsymbol y - \boldsymbol y^\top \boldsymbol L\boldsymbol A\boldsymbol x - \boldsymbol x^\top \boldsymbol A^\top \boldsymbol L\boldsymbol y\Big]\\
+    &amp;- \boldsymbol x^\top \boldsymbol A^\top  \boldsymbol L \boldsymbol b + \boldsymbol \mu^\top \boldsymbol \Lambda\boldsymbol x + \boldsymbol y^\top \boldsymbol L\boldsymbol b  + \text{const}
 \end{aligned} \\
 &amp;= \begin{aligned}[t]
     -\frac{1}{2}
     \begin{pmatrix}
         \boldsymbol x \\ \boldsymbol y
-    \end{pmatrix}^T
+    \end{pmatrix}^\top
     \begin{pmatrix}
-        \boldsymbol \Lambda + \boldsymbol A^T\boldsymbol L\boldsymbol A &amp; -\boldsymbol A^T\boldsymbol L \\
+        \boldsymbol \Lambda + \boldsymbol A^\top \boldsymbol L\boldsymbol A &amp; -\boldsymbol A^\top \boldsymbol L \\
         -\boldsymbol L\boldsymbol A &amp; \boldsymbol L
     \end{pmatrix}
     \begin{pmatrix}
@@ -1034,26 +1617,26 @@ p(\boldsymbol y) = \mathcal{N}(\boldsymbol y \vline {\color{purple}\boldsymbol A
     \end{pmatrix}  +
     \begin{pmatrix}
         \boldsymbol x \\ \boldsymbol y
-    \end{pmatrix}^T
+    \end{pmatrix}^\top
     \begin{pmatrix}
-        \boldsymbol \Lambda\boldsymbol \mu - \boldsymbol A^T\boldsymbol L\boldsymbol b \\
+        \boldsymbol \Lambda\boldsymbol \mu - \boldsymbol A^\top \boldsymbol L\boldsymbol b \\
         \boldsymbol L\boldsymbol b
     \end{pmatrix} + \text{const}
 \end{aligned} \\
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-We can use the <a href="#prop-1">block-matrix inverse result</a>, to show that:
+We can use <a href="#prp-block-inv" class="quarto-xref">Proposition&nbsp;9</a>, to show that:
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
 \begin{pmatrix}
-    \boldsymbol \Lambda + \boldsymbol A^T\boldsymbol L\boldsymbol A &amp; -\boldsymbol A^T\boldsymbol L \\
+    \boldsymbol \Lambda + \boldsymbol A^\top \boldsymbol L\boldsymbol A &amp; -\boldsymbol A^\top \boldsymbol L \\
     -\boldsymbol L\boldsymbol A &amp; \boldsymbol L
 \end{pmatrix}^{-1} =
 \begin{pmatrix}
-    \boldsymbol \Lambda^{-1} &amp; \boldsymbol \Lambda^{-1}\boldsymbol A^T \\
-    \boldsymbol A\boldsymbol \Lambda^{-1} &amp; \boldsymbol L^{-1} + \boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^T
+    \boldsymbol \Lambda^{-1} &amp; \boldsymbol \Lambda^{-1}\boldsymbol A^\top  \\
+    \boldsymbol A\boldsymbol \Lambda^{-1} &amp; \boldsymbol L^{-1} + \boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^\top
 \end{pmatrix}
 \end{aligned}
 \end{equation*}\]</span></p>
@@ -1063,11 +1646,11 @@ Recall the Gaussian pattern matching, we can see that the mean is equal to:
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
 \begin{pmatrix}
-    \boldsymbol \Lambda^{-1} &amp; \boldsymbol \Lambda^{-1}\boldsymbol A^T \\
-    \boldsymbol A\boldsymbol \Lambda^{-1} &amp; \boldsymbol L^{-1} + \boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^T
+    \boldsymbol \Lambda^{-1} &amp; \boldsymbol \Lambda^{-1}\boldsymbol A^\top  \\
+    \boldsymbol A\boldsymbol \Lambda^{-1} &amp; \boldsymbol L^{-1} + \boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^\top
 \end{pmatrix}
 \begin{pmatrix}
-    \boldsymbol \Lambda\boldsymbol \mu - \boldsymbol A^T\boldsymbol L\boldsymbol b \\
+    \boldsymbol \Lambda\boldsymbol \mu - \boldsymbol A^\top \boldsymbol L\boldsymbol b \\
     \boldsymbol L\boldsymbol b
 \end{pmatrix} = \begin{pmatrix}
     \boldsymbol \mu \\ \boldsymbol A\boldsymbol \mu + \boldsymbol b
@@ -1075,32 +1658,32 @@ Recall the Gaussian pattern matching, we can see that the mean is equal to:
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-Please note that with <a href="#prop-2">marginalisation result</a>, it is obvious to see how this leads to the final result. Now, for the <a href="#prop-3">conditional result</a>, we have the usual result that <span class="math inline">\(\boldsymbol \Sigma= \boldsymbol \Lambda_{xx} = (\boldsymbol \Lambda + \boldsymbol A^T\boldsymbol L\boldsymbol A)^{-1}\)</span>, for the mean:
+Please note that with <a href="#prp-margin-gauss" class="quarto-xref">Proposition&nbsp;13</a>, it is obvious to see how this leads to the final result. Now, for the <a href="#prp-cond-gauss" class="quarto-xref">Proposition&nbsp;12</a>, we have the usual result that <span class="math inline">\(\boldsymbol \Sigma= \boldsymbol \Lambda_{xx} = (\boldsymbol \Lambda + \boldsymbol A^\top \boldsymbol L\boldsymbol A)^{-1}\)</span>, for the mean:
 <div>
 <p><span class="math display">\[\begin{equation*}
 \begin{aligned}
-    \boldsymbol \mu - &amp;(\boldsymbol \Lambda + \boldsymbol A^T\boldsymbol L\boldsymbol A)^{-1}(\boldsymbol A^T\boldsymbol L)(-\boldsymbol y + A\boldsymbol \mu + \boldsymbol b) \\
-    &amp;= \boldsymbol \Sigma\boldsymbol A^T\boldsymbol L(\boldsymbol y - \boldsymbol b) + \boldsymbol \mu - \boldsymbol \Sigma\boldsymbol A^T\boldsymbol L\boldsymbol A\boldsymbol \mu
+    \boldsymbol \mu - &amp;(\boldsymbol \Lambda + \boldsymbol A^\top \boldsymbol L\boldsymbol A)^{-1}(\boldsymbol A^\top \boldsymbol L)(-\boldsymbol y + A\boldsymbol \mu + \boldsymbol b) \\
+    &amp;= \boldsymbol \Sigma\boldsymbol A^\top \boldsymbol L(\boldsymbol y - \boldsymbol b) + \boldsymbol \mu - \boldsymbol \Sigma\boldsymbol A^\top \boldsymbol L\boldsymbol A\boldsymbol \mu
 \end{aligned}
 \end{equation*}\]</span></p>
 </div>
-<p>We want to show that <span class="math inline">\(\boldsymbol \mu - \boldsymbol \Sigma\boldsymbol A^T\boldsymbol L\boldsymbol A\boldsymbol \mu = \boldsymbol \Sigma\boldsymbol \Lambda\boldsymbol \mu\)</span>.</p>
+<p>We want to show that <span class="math inline">\(\boldsymbol \mu - \boldsymbol \Sigma\boldsymbol A^\top \boldsymbol L\boldsymbol A\boldsymbol \mu = \boldsymbol \Sigma\boldsymbol \Lambda\boldsymbol \mu\)</span>.</p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><em>LHS</em>: Apply <a href="#prop-4">inverse indentity</a>, where we consider the section highlight in <font color="#e91e62">pink</font>:</p>
+<p><em>LHS</em>: Apply <a href="#prp-inv-id" class="quarto-xref">Proposition&nbsp;10</a>, where we consider the section highlight in <font color="#e91e62">pink</font>:</p>
 <p><span class="math display">\[
 \begin{aligned}
-    \boldsymbol \mu &amp;- \boldsymbol \Sigma\boldsymbol A^T\boldsymbol L\boldsymbol A\boldsymbol \mu \\
-    &amp;= \boldsymbol \mu - {\color{pink}(\boldsymbol \Lambda + \boldsymbol A^T\boldsymbol L\boldsymbol A)^{-1}\boldsymbol A^T\boldsymbol L}\boldsymbol A\boldsymbol \mu \\
-    &amp;= \boldsymbol \mu - \boldsymbol \Lambda^{-1}\boldsymbol A^T(\boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^T + \boldsymbol L^{-1})^{-1}\boldsymbol A\boldsymbol \mu
+    \boldsymbol \mu &amp;- \boldsymbol \Sigma\boldsymbol A^\top \boldsymbol L\boldsymbol A\boldsymbol \mu \\
+    &amp;= \boldsymbol \mu - {\color{pink}(\boldsymbol \Lambda + \boldsymbol A^\top \boldsymbol L\boldsymbol A)^{-1}\boldsymbol A^\top \boldsymbol L}\boldsymbol A\boldsymbol \mu \\
+    &amp;= \boldsymbol \mu - \boldsymbol \Lambda^{-1}\boldsymbol A^\top (\boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^\top  + \boldsymbol L^{-1})^{-1}\boldsymbol A\boldsymbol \mu
 \end{aligned}
 \]</span></p>
 </div><div class="column" style="width:50%;">
-<p><em>RHS:</em> We consider the section highlight in <font color="#2196f3">blue</font> and use <a href="#prop-5">Woodbury Identity</a>:</p>
+<p><em>RHS:</em> We consider the section highlight in <font color="#2196f3">blue</font> and use <a href="#prp-woodbury" class="quarto-xref">Proposition&nbsp;11</a>:</p>
 <p><span class="math display">\[
 \begin{aligned}
-    \boldsymbol \Sigma\boldsymbol \Lambda\boldsymbol \mu &amp;= {\color{blue}(\boldsymbol \Lambda + \boldsymbol A^T\boldsymbol L\boldsymbol A)^{-1}}\boldsymbol \Lambda\boldsymbol \mu \\
-    &amp;= \boldsymbol \mu - \boldsymbol \Lambda^{-1}\boldsymbol A^T(\boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^T + \boldsymbol L^{-1})^{-1}\boldsymbol A\boldsymbol \mu
+    \boldsymbol \Sigma\boldsymbol \Lambda\boldsymbol \mu &amp;= {\color{blue}(\boldsymbol \Lambda + \boldsymbol A^\top \boldsymbol L\boldsymbol A)^{-1}}\boldsymbol \Lambda\boldsymbol \mu \\
+    &amp;= \boldsymbol \mu - \boldsymbol \Lambda^{-1}\boldsymbol A^\top (\boldsymbol A\boldsymbol \Lambda^{-1}\boldsymbol A^\top  + \boldsymbol L^{-1})^{-1}\boldsymbol A\boldsymbol \mu
 \end{aligned}
 \]</span></p>
 </div>
@@ -1109,11 +1692,20 @@ Please note that with <a href="#prop-2">marginalisation result</a>, it is obviou
 <div style="text-align: right">
 □
 </div>
+<summary>
+Proof
+</summary>
+</details>
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-bishop2006pattern" class="csl-entry" role="listitem">
+Bishop, Christopher M. 2006. <em>Pattern Recognition and Machine Learning</em>. Vol. 4. 4. Springer.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
