@@ -1,14 +1,213 @@
 ---
-title: "Kernel Statistical Test"
+title: "Kernel Statistical Test (WIP)"
 description: "A cheat overview of the use of kernel method to perform high dimensional statistical test."
 date: 11/28/2023
 categories: [Machine Learning]
+bibliography: references.bib
 draft: false
 ---
 
 # Kernel Testing
 
-In this document, I would like to explain how the MMD and HSIC are derived (roughly). We will start with the brief introduction to RKHS, and then moving on to the statistical testing procedures. This is based on [lecture note](https://github.com/Phutoast/UCL-CSML-Notes/blob/main/adv-topic-in-ml/adv-topic.pdf) of the course [Reproducing kernel Hilbert spaces in Machine Learning](http://www.gatsby.ucl.ac.uk/~gretton/coursefiles/rkhscourse.html)
+In this document, we explore how the MMD and HSIC are derived. We will start with the brief introduction to RKHS, and then moving on to the statistical testing procedures. This is based on [lecture note](https://github.com/Phutoast/UCL-CSML-Notes/blob/main/adv-topic-in-ml/adv-topic.pdf) of the course [Reproducing kernel Hilbert spaces in Machine Learning](http://www.gatsby.ucl.ac.uk/~gretton/coursefiles/rkhscourse.html)
+
+<div>
+\begin{equation*}
+\newcommand{\dby}{\ \mathrm{d}}\newcommand{\bracka}[1]{\left( #1 \right)}\newcommand{\brackb}[1]{\left[ #1 \right]}\newcommand{\brackc}[1]{\left\{ #1 \right\}}\newcommand{\abs}[1]{\left|#1\right|}\newcommand{\brackd}[1]{\left\langle #1\right\rangle}
+\newcommand{\norm}[1]{\left\| #1\right\|}
+\end{equation*}
+</div>
+
+## Statistical Testing
+
+Before we start with any tools related to kernel, let's review/introduce some tools for statistical testing.
+
+### U And V Statistics
+
+This section is based on @serfling2009approximation (which is cited in @muandet2016kernel). In a nutshell, U and V statistics are two ways to estimate an expectation of a function over number of sampled points. Formally:
+
+::: {.callout-warning}
+## Remark
+:::{#rem-setting-u-v-stat}
+
+Given $\boldsymbol x_1, \boldsymbol x_2,\dots,\boldsymbol x_m$ be independent observation on a distribution $P$. Consider the functional $\theta = \theta(P)$ defined as:
+
+$$
+\begin{aligned}
+    \theta(P) &= \mathbb{E}_{P}[h(\boldsymbol x_1, \boldsymbol x_2, \dots, \boldsymbol x_m)] \\
+    &= \int\cdots\int h(\boldsymbol x_1,\boldsymbol x_2,\dots, \boldsymbol x_m)\dby P(\boldsymbol x_1)\cdots P(\boldsymbol x_m)
+\end{aligned}
+$$
+
+where $h(\boldsymbol x_1,\boldsymbol x_2,\dots,\boldsymbol x_m)$  is called kernel (not related to reproducing kernel below) and is a real-valued measurable function. Usually, we assume $h(\boldsymbol x_1,\boldsymbol x_2,\dots,\boldsymbol x_m)$ to be symmetric (permuttion of the inputs doesn't affect the output) and:
+
+$$
+\mathbb{E}_{P}[h^2(\boldsymbol x_1,\boldsymbol x_2,\dots,\boldsymbol x_c)] < \infty
+$$
+
+:::
+:::
+
+We can have unbiased estimate of this (hence the name $U$), defined to be:
+
+::: {.callout-note}
+## Definition 
+:::{#def-u-stat}
+
+**(U Statistics):** Given the sample $\boldsymbol x_1, \boldsymbol x_2,\dots, \boldsymbol x_n$ where $n\ge m$, then U-statistics of order $m$ is defined as:
+
+$$
+U_n = U(\boldsymbol x_1,\boldsymbol x_2,\dots,\boldsymbol x_n) = \cfrac{1}{\begin{pmatrix}n \\m \end{pmatrix}} \sum^{(1,2,\dots,n)}_{(i_1,i_2,\dots,i_m)} h(\boldsymbol x_{i_1},\boldsymbol x_{i_2},\dots,\boldsymbol x_{i_m})
+$$
+
+where $\sum^{(1,2,\dots,n)}_{(i_1,i_2,\dots,i_m)}$ is taken over the combination of $m$ distinct element $\brackc{i_1,i_2,\dots,i_m}$ from $\brackc{1,2,\dots,n}$.
+
+:::
+:::
+
+A good example of this is unbiased variance estimate:
+
+::: {.callout-warning}
+## Remark
+:::{#rem-u-stat-var-example}
+
+Let's turn the variance into an expectation of some kernels: 
+
+$$
+\begin{aligned}
+    \operatorname{Var}_P(x) &= \mathbb{E}[x^2] - \mathbb{E}[x]^2 \\
+    &= \frac{1}{2}\Big[\mathbb{E}_{x_1}[x_1^2] - \mathbb{E}_{x_1}[x_1]^2 + \mathbb{E}_{x_2}[x_2^2] - \mathbb{E}_{x_2}[x_{2}]^2\Big] \\
+    &= \frac{1}{2}\mathbb{E}_{x_1x_2}\Big[x_1^2 - 2x_1x_2 +x_2^2\Big] = \frac{1}{2}\mathbb{E}_{x_1x_2}\Big[(x_1 - x_2)^2\Big] \\
+\end{aligned}
+$$
+
+This implies that we have the kernel $h(x_1, x_2) = 1/2 (x_1 - x_2)^2$, thus the U-statistics is given by:
+
+$$
+\begin{aligned}
+    U_n &= \frac{2}{n(n-1)}\sum_{1\le i < j \le n} \frac{1}{2} (x_i - x_j)^2 \\
+    &= \frac{1}{n(n-1)} \bracka{\sum^n_{i=1}x_i^2 - \brackb{\sum^n_{j=1} x_j}^2}
+\end{aligned}
+$$
+
+:::
+:::
+
+::: {.callout-note}
+## Definition 
+:::{#def-degen-u-stat}
+
+**(Degenerate U-Statistics):** We can further define the function (From @serfling2009approximation, section 5.2.1)
+
+$$
+\begin{aligned}
+h_c(\boldsymbol x_1, &\boldsymbol x_2,\dots, \boldsymbol x_c) \\
+&= \mathbb{E}_{P}[h(\boldsymbol x_1, \dots, \boldsymbol x_c, \boldsymbol X_{c+1},\dots,\boldsymbol X_m)]
+\end{aligned}
+$$
+
+And, with $\sigma^2_c = \operatorname{var}_{P}(h_c)$, we can show that:
+
+$$
+0 = \sigma_0^2 \le\sigma^2_2\le\cdots\le\sigma^2_m = \operatorname{Var}_P(h)
+$$
+
+U-statistics is called degenerate of order $k$ if $\sigma_1^2 = \sigma^2_2 = \cdots = \sigma^2_k = 0$. 
+
+:::
+:::
+
+Then, we have the following asymptotics results for both non-degenerate and degenerate U statistics:
+
+::: {.callout-tip}
+## Theorem 
+:::{#thm-asym-no-degen-u}
+
+**(@serfling2009approximation Section 5.5.1, Theorem A):** If $\mathbb{E}_{P}[h^2] < \infty$ and $\sigma^2_1 > 0$ then, the asymptotics behavior of non-degenerate U-statistics is characterized by:
+$$
+\sqrt{n} (U_n - \theta) \xrightarrow[]{d} \mathcal{N}(0, m^2(\sigma^2_1)^2)
+$$
+As $\xrightarrow[]{d}$ means converges in distribution. 
+
+:::
+:::
+
+::: {.callout-tip}
+## Theorem 
+:::{#thm-asym-1-degen-u}
+
+**(@serfling2009approximation Section 5.5.2):** Asume that $\sigma_1^2=0<\sigma_2$ and $\mathbb{E}_{P}[h^2] < \infty$, then:
+
+$$
+n(U_n-\theta) \xrightarrow{d} \frac{m(m-1)}{2}\sum^\infty_{j=1}\lambda_j(\chi^2_{1j}-1)
+$$
+
+where $\chi^2_{11}, \chi^2_{12},\dots$ are independent $\chi^2$-distribution of order one random variables. And $\lambda_j$ is the eigenvalue of operatorn $A$, for $g\in L_2$ and $x\in\mathbb{R}$:
+
+$$
+Ag(x) = \int^\infty_{-\infty} \widetilde{h}_2(x_1, x_2)g(y)\text{ d}P(y)
+$$
+
+where $\widetilde{h}_2 = h_2-\theta$ (centered kernel).
+
+:::
+:::
+
+In the case where the estimator of U-statistics may be hard to compute, we can use V-statistics instead (although the )
+
+::: {.callout-note}
+## Definition 
+:::{#def-v-stat}
+
+**(V-Statistics):** The related statistics of U-Statistics is called V-statistics, which is also easier to compute:
+
+$$
+V_n = \frac{1}{n^m}\sum^n_{i_1=1}\cdots\sum^n_{i_m=1} h(\boldsymbol x_{i_1},\boldsymbol x_{i_2},\dots,\boldsymbol x_{i_m}) 
+$$
+
+This is equivalent $\theta(P_n)$ where $P_n$ is the discrete uniform distribution over the set $\brackc{\boldsymbol x_{1},\boldsymbol x_{2},\dots,\boldsymbol x_{n}}$
+
+:::
+:::
+
+### Quality of Statistical Test
+
+To judge/pick the statistical test, we would have to define the concept of errors, in which there are two types. Suppose, we are given a test $\phi(\brackc{X_n}^N_{n=1})$ that takes $N$ data points, where it returns $0$ if $\mathcal{H}_0$ is true and $1$ otherwise. Then:
+
+::: {.callout-note}
+## Definition 
+:::{#def-type-1-error}
+
+**(Type-I Error/Correct Error Rate):** This happens when the null hypothesis is true but the test reject anyways. Furthermore, the test has *correct type 1 error rate* if for $P \in \mathcal{H}_0$ (under null hypothesis):
+
+$$P
+\bracka{\phi\bracka{\brackc{X_n}^N_{n=1}} = 1} \le \alpha
+$$
+
+with significance level $\alpha$.
+
+:::
+:::
+
+On the other hand, we can also have error when we are under $\mathcal{H}_1$
+
+::: {.callout-note}
+## Definition 
+:::{#def-type-2-error}
+
+*(Type-II Error/Power/Consistence):* This happens when the null hypothesis is wrong but the test accepts the null hypothesis. 
+
+In which, a *power* is the probability that the test correctly rejects the null hypothesis under alternative hypothesis setting i.e under $P\in \mathcal{H}_1$:
+
+$$
+\operatorname{Power} = P\bracka{\phi\bracka{\brackc{X_n}^N_{n=1}} = 1}
+$$
+
+Furthermore, the test $\phi$ is *consistence* if $P \in \mathcal{H}_1$ then: $$\lim_{N\rightarrow\infty} P\bracka{\phi\bracka{\brackc{X_n}^N_{n=1}} = 1} = 1$$
+
+:::
+:::
+
 
 ## Quick Introduction to RKHS
 
@@ -18,7 +217,7 @@ We recall that the Hilbert space (HS) is a vector space that are equipped with a
 ## Definition 
 :::{#def-kernel}
 
-**(Kernel):**  Given the non-empty set $\mathcal{X}$, we define a *kernel* to be $k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}$ such that there is a Hilber space $\mathcal{H}$ and a function (called *feature map*) $\phi:\mathcal{X}\rightarrow\mathcal{H}$ where:
+**(Kernel):**  Given the non-empty set $\mathcal{X}$, we define a *kernel* to be $k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}$ such that there is a Hilbert space $\mathcal{H}$ and a function (called *feature map*) $\phi:\mathcal{X}\rightarrow\mathcal{H}$ where:
 
 $$k(x, y) = \langle \phi(x), \phi(y)\rangle_\mathcal{H}$$
 
@@ -63,7 +262,7 @@ Now, we are ready to define the RKHS, in which it is a special Hilbert space wit
 ## Definition 
 :::{#def-rkhs}
 
-**(Reproducing Kernel Hilber Space):** Given a Hilbert space $\mathcal{H}$ of $\mathbb{R}$ valued functions on non-empty set $\mathcal{X}$, the kernel $k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}$ is called *reproducing* and $\mathcal{H}$ is called RKHS if:
+**(Reproducing Kernel Hilbert Space):** Given a Hilbert space $\mathcal{H}$ of $\mathbb{R}$ valued functions on non-empty set $\mathcal{X}$, the kernel $k:\mathcal{X}\times\mathcal{X}\rightarrow\mathbb{R}$ is called *reproducing* and $\mathcal{H}$ is called RKHS if:
 
 - For all $x\in\mathcal{X}$, $k(\cdot, x) \in\mathcal{H}$, then $k(\cdot, x)\in\mathcal{H}$
 - For all $x\in\mathcal{X}$, $\langle{f(\cdot), k(\cdot,x)\rangle}_\mathcal{H} = f(x)$
@@ -78,19 +277,61 @@ $$
 \langle k(\cdot, x), k(\cdot, y)\rangle_\mathcal{H} = k(x, y)
 $$
 
-which means that $k(\cdot,x)$ for any $x\in\mathcal{X}$ can be seen as the feature map (recall that it doesn't have to be unique), we will call this a *canonical feature map*. We also have the follows result that illustrate why RKHS is preferable compared to the normal HS of functions. 
+which means that $k(\cdot,x)$ for any $x\in\mathcal{X}$ can be seen as the feature map (recall that it doesn't have to be unique), we will call this a *canonical feature map*. The following result on the Hilbert space will be useful
+
+::: {.callout-tip}
+## Theorem 
+:::{#thm-riesz-rep}
+
+**(Riesz Representation):** In Hilbert space $\mathcal{H}$, all bounded linear function $f$ is of form $\brackd{\cdot,g}_\mathcal{H}$ for some $g\in\mathcal{H}$.
+
+:::
+:::
+
+
+We also have the follows result that illustrate why RKHS is preferable compared to the normal Hilbert space of functions. 
 
 ::: {.callout-warning}
 ## Remark
 :::{#rem-further-obv-rkhs}
 
-**Advanced Topics:**  Intuitively, we just say that the functions in RKHS acts "smoothly" and "predictably", in the sense that:
+*(Advanced Topics):*  Intuitively, we just say that the functions in RKHS acts "smoothly" and "predictably": 
 
-- If the distance between functions $\|f-g\|_\mathcal{H}$ is close to each other then its pointwise evaluation $|f(x)-g(x)|$ for any $x$ would also be close to each other.
-- This can be shown by the fact that the HS $\mathcal{H}$ has reproducing kernel iff the evaluation operator (defined as $\delta_x : \mathcal{H}\rightarrow\mathbb{R}$ where $\delta_x(f)=f(x)$) is bounded i.e  $|\delta_x(f)|\le \lambda_x\|f\|_\mathcal{H}$ for positive constant $\lambda_x\in\mathbb{R}$ (the proof uses the Riesz representation theorem)
+If the distance between functions $\|f-g\|_\mathcal{H}$ is close to each other then its pointwise evaluation $|f(x)-g(x)|$ for any $x$ would also be close to each other.
+:::
+:::
+
+And, the evaluation operation makes sense i.e it is bounded.
+
+::: {.callout-tip}
+## Propositions 
+:::{#prp-alt-def-rkhs}
+
+A Hilbert space $\mathcal{H}$ is an RKHS iff the operator $\delta_x$ such that for all $f\in\mathcal{H}, x\in\mathcal{X}$, we have $\delta_x f = f(x)$ is bounded and linear. 
 
 :::
 :::
+
+<details>
+
+$\boldsymbol{(\implies):}$ Since $\mathcal{H}$ is an RKHS, then there is a kernel $k:\mathcal{X}\times\mathcal{X}\to\mathbb{R}$. 
+
+Assuming that the evaluating operator is unique, we can define an evaluating operator to be $\delta_x(f)=\brackd{f, k(\cdot, x)}_\mathcal{H}$, we can consider Cauchy-Schwarz inequality, for all $f\in\mathcal{H}$, we have
+
+$$
+\begin{aligned}
+\abs{\delta_x(f)} &= \abs{\brackd{f, k(\cdot, x)}_\mathcal{H}} \le \norm{f}_\mathcal{H}\norm{k(\cdot, x)}_\mathcal{H} \\
+&= \norm{f}_\mathcal{H}\sqrt{\brackd{k(\cdot, x), k(\cdot, x)}} = \norm{f}_\mathcal{H}\sqrt{k(x, x)} < \infty
+\end{aligned}
+$$
+
+The linear property is straightforward.
+
+$\boldsymbol{(\impliedby):}$ We can define the reproducing kernel $k(\cdot, x)$ for each point $x$ to be the element such that $\delta_x=\brackd{\cdot, k(\cdot, x)}$ per Riesz representation theorem (@thm-riesz-rep) as $\delta_x$ is bounded and linear.
+
+<div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
 
 
 Furthermore, if the kernel satisfies the special property, then there is going to be an RHKS that is equipped with the given kernel as:
@@ -119,13 +360,14 @@ $$
 $$
 
 We can observe 2 things here:
+
 1. If we set the feature extraction function to be $\phi(a)=[a \ a^2]$, then we are able to compare both means and variance.
 2. One can set the feature extraction function to be arbitrary, as long as one can find the appropriate corresponding kernel (that should be easier to compute than just an inner product of each other). For instance, with RBF, one can have feature extraction function with infinite features! (via Taylor series). 
 
 Therefore, intuitively, we can perform a more power/non-linear relationship between samples. Let's now move to the actual formulation of the statistical testing. 
 
 
-## Statistical Testing with Kernel Method
+## Maximum Mean Discrepancy (MMD)
 
 In this section, we are going to given the description of 2 main statistical testing technique that relies on the kernel method: MMD and HSIC (together with its variations). Let's start with some operators that will be useful for both.
 
@@ -133,8 +375,16 @@ In this section, we are going to given the description of 2 main statistical tes
 
 Given the example above in the interlude, we can generalizes the *mean* of the features map given an element $x\sim P$, as follows.
 
-> **Definition (Mean Embedding):** Given positive definite kernel $k(x,x')$ with probability distribution $P$ and $Q$, we define $\mu_P$ and $\mu_Q$ such that: $$\langle{\mu_P, \mu_Q\rangle} = \mathbb{E}_{P, Q}[k(x, y)]$$
-> where $x\sim P$ and $y \sim Q$. We can consider the expectation in an RKHS as $\mathbb{E}_P[f(x)] = \langle{f, \mu_P}\rangle_\mathcal{H}$ for any function $f\in\mathcal{H}$, the function in the corresponding RKHS
+::: {.callout-note}
+## Definition 
+:::{#def-mean-emb}
+
+**(Mean Embedding):** Given positive definite kernel $k(x,x')$ with probability distribution $P$ and $Q$, we define $\mu_P$ and $\mu_Q$ such that: $$\langle{\mu_P, \mu_Q\rangle} = \mathbb{E}_{P, Q}[k(x, y)]$$
+
+where $x\sim P$ and $y \sim Q$. We can consider the expectation in an RKHS as $\mathbb{E}_P[f(x)] = \langle{f, \mu_P}\rangle_\mathcal{H}$ for any function $f\in\mathcal{H}$, the function in the corresponding RKHS
+
+:::
+:::
 
 
 With this, one can see that the empirical mean embedding can be given in the form of:
@@ -143,93 +393,247 @@ $$
 \hat{\mu}_P = \frac{1}{m}\sum^m_{i=1}\phi(x_i) \qquad \text{ where } \qquad x_i\sim P
 $$
 
-In which, one can show that this element exists.
+In which, one can show that $\mu_P$ actually exists.
 
-> **Theorem:** The element $\mu_P\in\mathcal{F}$ defined as $$\mathbb{E}_P[f(x)] = \langle{f, \mu_P}\rangle_\mathcal{H}$$
-> if the kernel $k$ of RKHS has the property that $\mathbb{E}_P[\sqrt{k(x, x)}]<
+::: {.callout-tip}
+## Theorem 
+:::{#thm-mean-emb-exists}
+
+**:** The element $\mu_P\in\mathcal{F}$ defined as $$\mathbb{E}_P[f(x)] = \langle{f, \mu_P}\rangle_\mathcal{H}$$
+
+exists, if the kernel $k$ of RKHS has the property that $\mathbb{E}_P[\sqrt{k(x, x)}]<
 \infty$ 
 
-*Proof Sketch:* We can use the Riesz representation theorem by showing that the operator $T_Pf=\mathbb{E}_P[f(x)]$ is boudned, and thus there is $\mu_P$ such that $T_Pf=\langle f,\mu_P\rangle$). 
+:::
+:::
 
+<details>
 
-### Maximum Mean Discrepancy (MMD)
+Using Riesz representation theorem (@thm-riesz-rep), we see that the operator $E(f) = \mathbb{E}_P[f(x)]$ is linear as the expectation is linear. And, it is bounded because:
+
+$$
+\begin{aligned}
+\big|\mathbb{E}_P[f(x)]\big| &\le \mathbb{E}_{P} \Big[ \big|f(x)\big| \Big] =  \mathbb{E}_{P} \Big[ \big|\brackd{f, k(\cdot, x)}_\mathcal{H}\big| \Big] \\
+&\le \mathbb{E}_P\big[ \norm{f}_\mathcal{H}\cdot\norm{k(\cdot, x)}_\mathcal{H} \big] \\
+&= \norm{f}_\mathcal{H} \mathbb{E}_P\brackb{ \sqrt{k(x, x)} } <\infty
+\end{aligned}
+$$
+
+So $\mu_P$ exists. 
+
+<div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
+
+### Estimators and Statistics
 
 Let's formally define the notion of MMD, which tries to answer the question, does the samples $\{x_i\}^n_{i=1}$ and $\{y_i\}^n_{i=1}$ comes from the same distribution or not ?
 
-> **Definition (MMD):** Now, we define the quantity of MMD being the distance between $2$ probability distributions $P$ and $Q$ as (together with its, more computable form) 
-> $$ \begin{aligned} \operatorname{MMD}^2&(P, Q) = \|\mu_P-\mu_Q\|^2_\mathcal{F} \\ &= \mathbb{E}_P[k(x, x')] + \mathbb{E}_Q[k(y, y')] - 2\mathbb{E}_{P, Q}[k(x, y)] \end{aligned} $$
-> whereby, we have the following unbiased estimate of its quantity:
-> $$ \widehat{\operatorname{MMD}}^2(P, Q) = \frac{1}{n(n-1)}\sum_{i\ne j}k(x_i, x_j) + \frac{1}{n(n-1)}\sum_{i\ne j}k(y_i, y_j) - \frac{2}{n^2}\sum_{i,j}k(x_i, y_j) $$
-> for $x_i\sim P$ and $y_i\sim Q$
+::: {.callout-note}
+## Definition 
+:::{#def-mmd}
+
+**(MMD):** MMD is the distance between $2$ probability distributions $P$ and $Q$ as (together with its, more computable form) 
+
+$$ 
+\begin{aligned}
+\operatorname{MMD}^2&(P, Q) = \|\mu_P-\mu_Q\|^2_\mathcal{F} \\ 
+&= \mathbb{E}_P[k(x, x')] + \mathbb{E}_Q[k(y, y')] - 2\mathbb{E}_{P, Q}[k(x, y)] 
+\end{aligned} 
+$$
+
+whereby, we have the following unbiased estimate of its quantity:
+
+$$ 
+\begin{aligned}
+\widehat{\operatorname{MMD}}^2(P, Q) = \frac{1}{n(n-1)}\sum_{i\ne j}k(x_i, x_j) &+ \frac{1}{n(n-1)}\sum_{i\ne j}k(y_i, y_j) \\
+&- \frac{2}{n^2}\sum_{i,j}k(x_i, y_j) 
+\end{aligned}
+$$
+
+for $x_i\sim P$ and $y_i\sim Q$
+
+:::
+:::
 
 You may wonder, why does MMD is called *maximum mean* discrepancy ? One can show MMD can be written in an alternative form of:
 
-> **Theorem:** We can show that the MMD can be written in an alternative form of: 
-> $$\operatorname{MMD}(P, Q) = \sup_{\|f\|\le1}\big(\mathbb{E}_P[f(x)] - \mathbb{E}_Q[f(x)]\big)$$
+::: {.callout-note}
+## Definition 
+:::{#def-mmd-alt-form}
 
-This can be interpreted as, given "smooth" function within a ball (therefore not being too extream), we find such a function that maximally distingush the sample of $P$ and $Q$, and the maximum disagreement is the MMD value. 
+**:** Alternatively MMD can be written as:
 
-Now, back to the statistical testing, we can show that the value of MMD will have the following asympototics distribution of: 
+$$\operatorname{MMD}(P, Q) = \sup_{\|f\|\le1}\big(\mathbb{E}_P[f(x)] - \mathbb{E}_Q[f(x)]\big)$$
 
-> **Theorem:** We have the following distribution of the empirical MMD statistics as follows:
-> - When $P\ne Q$, we have: $$\frac{\widehat{\operatorname{MMD}}^2 - \operatorname{MMD}(P, Q)^2}{\sqrt{V_n(P, Q)}} \xrightarrow{D} \mathcal{N}(0, 1)$$where the variance $V_n(P, Q) = \mathcal{O}(n^{-1})$ but depends on the chosen kernel.
-> - When $P=Q$, we have: $$n\widehat{\operatorname{MMD}}^2 \sim \sum^\infty_{l=1} \lambda_l[z^2_l - 2] \qquad \text{ where } \qquad \lambda_i\phi_i(x) = \int_\mathcal{X}\widetilde{k}(x,\widetilde{x})\phi_i(x)\text{ d}P(x)$$where $\widetilde{k}$ is a centered kernel and $z_l\sim\mathcal{N}(0, 2)$
+That is, given "smooth" function within a ball (therefore not being too extream), we find such a function that maximally distingush the sample of $P$ and $Q$, and this maximum disagreement is the MMD value. 
+
+:::
+:::
+
+<details>
+
+We have that:
+
+$$
+\begin{aligned}
+\sup_{\|f\|\le1}\big(\mathbb{E}_P[f(x)] - \mathbb{E}_Q&[f(x)]\big) = \sup_{\|f\|\le1}\big(\brackd{f, \mu_P} - \brackd{f, \mu_Q}\big) \\
+&= \sup_{\|f\|\le1}\brackd{f, \mu_P-\mu_Q} \\
+&= \brackd{\frac{\mu_p-\mu_Q}{\norm{\mu_P-\mu_Q}_\mathcal{F}}, \mu_P-\mu_Q} \\
+&= \frac{\norm{\mu_P-\mu_Q}_\mathcal{F}^2}{\norm{\mu_P-\mu_Q}_\mathcal{F}} = \norm{\mu_P-\mu_Q}_\mathcal{F} \\
+\end{aligned}
+$$
+
+The third equation follows from the fact that the inner product is maximized when $\mu_P-\mu_Q$ are in the same direction at $f$.
+
+<div style="text-align: right">□</div>
+<summary>Proof</summary>
+</details>
+
+
+Now, back to the statistical testing, we can show that the value of MMD will have the following asymptotics distribution of: 
+
+::: {.callout-tip}
+## Theorem 
+:::{#thm-asym-dist-mmd}
+
+**:** We have the following distribution of the empirical MMD statistics:
+
+- When $P\ne Q$, we have: $$\frac{\widehat{\operatorname{MMD}}^2 - \operatorname{MMD}(P, Q)^2}{\sqrt{V_n(P, Q)}} \xrightarrow{D} \mathcal{N}(0, 1)$$where the variance $V_n(P, Q) = \mathcal{O}(n^{-1})$ depending on the kernel.
+
+- When $P=Q$, we have: $$n\widehat{\operatorname{MMD}}^2 \sim \sum^\infty_{l=1} \lambda_l[z^2_l - 2] \qquad \text{ where } \qquad \lambda_i\phi_i(x) = \int_\mathcal{X}\widetilde{k}(x,\widetilde{x})\phi_i(x)\text{ d}P(x)$$where $\widetilde{k}$ is a centered kernel and $z_l\sim\mathcal{N}(0, 2)$
+
+:::
+:::
+
+<details>
+
+For the first case, we see that the unbiased estimate in is a non-degenerate U-statistics (see @gretton2012kernel, lemma 6), so @thm-asym-no-degen-u is applied.
+
+For the second case, it can be shown that if $P=Q$, then the U-statistics is degenerate (see @gretton2012kernel, appendix B.1) so we can use @thm-asym-1-degen-u. 
+
+<div style="text-align: right">□</div>
+<summary>Proof (Sketch)</summary>
+</details>
 
 However, to compute such a distribution with null-hypothesis $P=Q$ in closed form is hard, therefore:
 
 - We have to rely on using a boostrap method which is done by *permuting* the set $X$ and $Y$ before testing (i.e mixing them up)
 - This would gives us the estimate of the MMD statistics when $P=Q$, which can them be used to compute the threshold for statistical test.
 
-Now, to find a best kernel, we have that:
+Now, to find a best kernel, we can try to maximize its power:
 
-> *Remark (Finding a best kernek):* Given the distribution when $P=Q$, one can see that the power of the test is given to be:
-> $$\text{Pr}_1\left({n\widehat{\operatorname{MMD}} > \hat{c}_\alpha }\right) \rightarrow  \Phi\left({\frac{\operatorname{MMD}^2(P, Q)}{\sqrt{V_n(P, Q)}} - \frac{c_\alpha}{n\sqrt{V_n(P, Q)}} }\right)$$
-> To find the best kernel, we can find the kernel that maximize the test power. We would like to note the following:
-> $$\frac{\operatorname{MMD}^2(P, Q)}{\sqrt{V_n(P, Q)}} = \mathcal{O}(\sqrt{n}) \qquad \frac{c_\alpha}{n\sqrt{V_n(P, Q)}} =\mathcal{O}(n^{-1/2})$$
-> therefore, we can ignore the second term, and we can maximize the first term only, by setting this to be the objective of the neural network (that perform the feature extraction of the kernel). Note that we can derive the estimator for $V_n$ too.
+::: {.callout-warning}
+## Remark
+:::{#rem-set-intial-terminal}
 
-For example, one can use the following kernel [from](https://arxiv.org/abs/2002.09116)
+*(Finding a best kernel):* Given the distribution when $P=Q$, using @def-type-2-error of power, we denote $\text{Pr}_1$ as the probability under this condition, then:
+
+$$
+\text{Pr}_1\left({n\widehat{\operatorname{MMD}} > \hat{c}_\alpha }\right) \rightarrow  \Phi\left({\frac{\operatorname{MMD}^2(P, Q)}{\sqrt{V_n(P, Q)}} - \frac{c_\alpha}{n\sqrt{V_n(P, Q)}} }\right)
+$$
+
+So, we can find the kernel that maximize the test power. Furthermore, it canbe shown that:
+
+$$
+\frac{\operatorname{MMD}^2(P, Q)}{\sqrt{V_n(P, Q)}} = \mathcal{O}(\sqrt{n}) \qquad \frac{c_\alpha}{n\sqrt{V_n(P, Q)}} =\mathcal{O}(n^{-1/2})
+$$
+
+Therefore, we can ignore the second term, and maximize the first term only. 
+
+:::
+:::
+
+We can even use neural network as feature extractor in kernel, and do the backpropagation of them, as in @liu2020learning
 
 $$
 k_\theta(x, y) = \big[(1-\varepsilon)\kappa(\Phi_\theta(x), \Phi_\theta(y))+\varepsilon\big]q(x, y)
 $$
 
-where $\Phi_\theta$ is a neural network and $\kappa$ and $q$ are Gaussian kernel, which is able to distinguish between CIFAR-10 vs CIFAR-10 (image dataset).
+where $\Phi_\theta$ is a neural network and $\kappa$ and $q$ are Gaussian kernel, which is able to distinguish between CIFAR-10 vs CIFAR-10.1.
 
-Now come the more important question, can we use any kernel to give us the appropriate MMD test ? The answer is obviously no, but what kind of kernel would be approriate ? Starting with a defintion of a good kernel (or we will call it characteristic):
+### In search for the appropriate kernel
 
-> **Definition (Charateristic kernel):** A RKHS (with corresponding kernel) is called *characteristic* if $\operatorname{MMD}(P, Q; \mathcal{F}) = 0$ iff $P = Q$
+Starting with a defintion of a good kernel (or we will call it characteristic):
 
-That is when $P$ and $Q$ are the same, the value of MMD should be zero. What would be an appropriate kernel ? In this case, we would like to assume that kernel that we are working on is *Translation Invariance* i.e
+::: {.callout-note}
+## Definition 
+:::{#def-char-kernel}
 
-> **Definition (Translation Invariance):** The kernel $k$ is called *Translation Invariance* if there is a function $f$ such that:
-> $$k(x,y)=f(x-y)$$
-> for any $x$ and $y$
+**(Characterisic):** A RKHS (with corresponding kernel) is called *characteristic* if $\operatorname{MMD}(P, Q; \mathcal{F}) = 0$ iff $P = Q$
 
-Then, one can have a fourier representation/coefficient of the kernel to be (assume we are within the domain of $[-\pi,\pi]$) the multiple within the fourier series expansion:
+:::
+:::
+
+We would like to assume that kernel that we are working on is *Translation Invariance* i.e
+
+::: {.callout-note}
+## Definition 
+:::{#def-trans-invar}
+
+**(Translation Invariance):** The kernel $k$ is called *Translation Invariance* if there is a function $f$ such that:
+
+$$k(x,y)=f(x-y)$$
+
+for any $x$ and $y$
+
+:::
+:::
+
+
+Consider Fourier representation/coefficient of the kernel (assume we are within the domain of $[-\pi,\pi]$):
 
 $$
-k(x, y) = \sum^\infty_{l=-\infty} \hat{k}_l \exp(il(x-y)) = \sum^\infty_{l=-\infty}\underbrace{\left[{\sqrt{\hat{k}_l} \exp(ilx) }\right]}_{\phi_l(x)}\underbrace{\left[{\sqrt{\hat{k}_l}\exp(-ily)}\right]}_{\overline{\phi_l(y)}}
+\begin{aligned}
+k(x, y) &= \sum^\infty_{l=-\infty} \hat{k}_l \exp(il(x-y)) \\
+&= \sum^\infty_{l=-\infty}\underbrace{\left[{\sqrt{\hat{k}_l} \exp(ilx) }\right]}_{\phi_l(x)}\underbrace{\left[{\sqrt{\hat{k}_l}\exp(-ily)}\right]}_{\overline{\phi_l(y)}}
+\end{aligned}
 $$
 
-$\hat{k}_l$ is called the fourier coefficient of the kernel. For the probability distribution, one can also have a similar way to find the fourier coefficient of them. We have the following result.
+where $\hat{k}_l$ is called the fourier coefficient of the kernel. We can also do find the Fourier representation of the probability distribution. In which one can show that:
 
-> **Theorem:** The value of MMD can be written as:
-> $$\operatorname{MMD}^2(P, Q;\mathcal{F}) = \sum^\infty_{l=-\infty} |\phi_{P,l} - \phi_{Q, l}|^2\hat{k}_l$$
-> for $\hat{k}_l$ being the fourier coefficient of the kernel, $\phi_{P,l}$ and $\phi_{Q,l}$ are fourier coefficient of the probability distributions $P$ and $Q$, respectively.
+::: {.callout-tip}
+## Theorem 
+:::{#thm-mmd-fourier}
+
+**:** The value of MMD can be written as:
+
+$$
+\operatorname{MMD}^2(P, Q;\mathcal{F}) = \sum^\infty_{l=-\infty} |\phi_{P,l} - \phi_{Q, l}|^2\hat{k}_l
+$$
+
+where $\hat{k}_l$, $\phi_{P,l}$ and $\phi_{Q,l}$ are Fourier coefficient of the kernel, probability distributions $P$ and $Q$, respectively.
+
+:::
+:::
 
 Therefore, the kernel is characterisic iff none of the $\hat{k}_l$ is equal to zero.
 
-On the other hand, instead of considering within specific range $[\pi,-\pi]$, one can also define the RKHS to be universal, which is when:
+On the other hand, instead of considering within specific range $[\pi,-\pi]$, one can also define the RKHS to be universal i.e
 
-> **Definition (Universal RKHS):** Given RKHS, it is *universal* if when:
-> - $k(x, x')$ is continuous
-> - $\mathcal{X}$ is compact.
-> - $\mathcal{F}$ is dense in $C(\mathcal{X})$ wrt. $L_\infty$ i.e for $\varepsilon>0$ and $f\in C(\mathcal{X})$, there is $g\in\mathcal{F}$ such that: $$\|f-g\|_\infty\le\varepsilon$$
+::: {.callout-note}
+## Definition 
+:::{#def-univer-kernel}
 
-in which we can show that:
+**(Universal RKHS):** Given RKHS, it is *universal* if when:
 
-> **Theorem:** If $\mathcal{F}$ is universal then $\operatorname{MMD}(P, Q;\mathcal{F}) = 0$ iff $P = Q$
+- $k(x, x')$ is continuous
+- $\mathcal{X}$ is compact.
+- $\mathcal{F}$ is dense in $C(\mathcal{X})$ wrt. $L_\infty$ i.e for $\varepsilon>0$ and $f\in C(\mathcal{X})$, there is $g\in\mathcal{F}$ such that: $$\|f-g\|_\infty\le\varepsilon$$
+
+:::
+:::
+
+Then, we can show that:
+
+::: {.callout-tip}
+## Theorem 
+:::{#thm-mmd-universal}
+
+If $\mathcal{F}$ is universal then $\operatorname{MMD}(P, Q;\mathcal{F}) = 0$ iff $P = Q$
+
+:::
+:::
 
 
 ## Hilbert-Schmidt Indepdent Criterion
@@ -240,7 +644,7 @@ Now, we are interested in given a pair of variables $\{(x_i, y_i)\}^n_{i=1}\sim 
 
 ### Preliminary Defintions + Covariance Operators
 
-We start off by defining the tensor product between elements in the Hilber space. 
+We start off by defining the tensor product between elements in the Hilbert space. 
 
 > **Definition (Tensor Product):** Given element $a,b,c\in\mathcal{H}$ of the Hilbert space, the *tensor product* between $a$ and $b$ is denoted as $a\otimes b$ such that: 
 > $$(a\otimes b)c = \langle b,c\rangle_\mathcal{H}a$$
